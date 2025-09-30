@@ -40,7 +40,7 @@ function AppRoutes() {
         </Route>
       </Route>
 
-      <Route element={<Layout type="curation" title="설정" scrollbar={false} paddingX={false} paddingB={false} />}>
+      <Route element={<Layout type="setting" title="설정" scrollbar={false} paddingX={false} paddingB={false} />}>
         <Route path="setting" element={<SettingPage />} />
       </Route>
     </Routes>
