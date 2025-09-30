@@ -6,7 +6,7 @@ const ScrollbarLayout = () => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-full">
       <Scrollbar scrollableRef={contentRef} />
 
       <div
