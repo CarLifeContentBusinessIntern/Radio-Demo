@@ -7,9 +7,10 @@ import type { HeaderType } from "../types";
 interface LayoutProps {
   type: HeaderType;
   title?: string;
+  scrollbar: boolean;
 }
 
-function Layout({ type, title }: LayoutProps) {
+function Layout({ type, title, scrollbar }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
 
@@ -21,16 +22,27 @@ function Layout({ type, title }: LayoutProps) {
     <div className="flex flex-col h-screen bg-black text-white">
       <Header type={type} title={title} />
 
-      <div className="flex flex-1 overflow-y-hidden">
-        <Scrollbar scrollableRef={contentRef} />
+      {scrollbar && (
+        <div className="flex flex-1 overflow-y-hidden">
+          <Scrollbar scrollableRef={contentRef} />
 
+          <main
+            ref={contentRef}
+            className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
+          >
+            <Outlet />
+          </main>
+        </div>
+      )}
+
+      {!scrollbar && (
         <main
           ref={contentRef}
           className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
         >
           <Outlet />
         </main>
-      </div>
+      )}
     </div>
   );
 }
