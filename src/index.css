@@ -7,3 +7,12 @@
     @apply bg-black text-white;
   }
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+  scrollbar-width: none; /* Firefox */
+}

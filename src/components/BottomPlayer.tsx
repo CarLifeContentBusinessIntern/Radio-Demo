@@ -16,7 +16,7 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <div className="w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer">
+    <div className="w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-black">
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img
