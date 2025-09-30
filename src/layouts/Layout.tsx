@@ -26,7 +26,7 @@ function Layout({ type, title }: LayoutProps) {
 
         <main
           ref={contentRef}
-          className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide"
+          className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
         >
           <Outlet />
         </main>

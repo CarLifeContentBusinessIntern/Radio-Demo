@@ -4,6 +4,7 @@ import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import GridViewPage from "./pages/GridViewPage.tsx";
 import Home from "./pages/Home.tsx";
 import ListViewPage from "./pages/ListViewPage.tsx";
+import Search from "./pages/Search.tsx";
 
 function AppRoutes() {
   return (
@@ -16,13 +17,19 @@ function AppRoutes() {
 
       <Route element={<Layout type="curation" title="채널 명" />}>
         <Route element={<PlayerLayout />}>
-          <Route path="/channels/detail" element={<ListViewPage />} />
+          <Route path="channels/detail" element={<ListViewPage />} />
         </Route>
       </Route>
 
       <Route element={<Layout type="curation" title="큐레이션 명" />}>
         <Route element={<PlayerLayout />}>
           <Route path="curation" element={<GridViewPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<Layout type="curation" title="검색" />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="search" element={<Search />} />
         </Route>
       </Route>
     </Routes>
