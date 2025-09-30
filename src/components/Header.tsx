@@ -14,7 +14,7 @@ interface HeaderProps {
 function Header({ type, title }: HeaderProps) {
     const navigate = useNavigate();
     return (
-        <div className="flex flex-row justify-between py-4 px-8 bg-black">
+        <div className="flex flex-row justify-between py-4 px-10 bg-black">
             {/* 왼쪽부분 */}
             {type === "home" ?
                 <div className="flex flex-row sm:gap-7 md:gap-11 lg:gap-20">
