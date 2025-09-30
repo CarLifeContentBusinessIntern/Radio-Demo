@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Header from "../components/Header";
 import Scrollbar from "../components/Scrollbar";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { HeaderType } from "../types";
 
 interface LayoutProps {
@@ -11,6 +11,11 @@ interface LayoutProps {
 
 function Layout({ type, title }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    contentRef.current?.scrollTo(0, 0);
+  }, [pathname]);
 
   return (
     <div className="flex flex-col h-screen bg-black text-white">

@@ -33,7 +33,7 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
+      {/* <ScrollToTop /> */}
       <AppRoutes />
     </BrowserRouter>
   );
