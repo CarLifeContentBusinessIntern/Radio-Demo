@@ -12,7 +12,7 @@ type BottomPlayerProps = {
   channel: string;
 };
 
-const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
+function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
@@ -63,6 +63,6 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
       </div>
     </div>
   );
-};
+}
 
 export default BottomPlayer;
