@@ -74,8 +74,8 @@ function Header({ type, title }: HeaderProps) {
               autoFocus
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <button>
-                <IoClose size={30} onClick={() => setSearchQuery("")} />
+              <button onClick={() => setSearchQuery("")}>
+                <IoClose size={30} />
               </button>
             </div>
           </div>

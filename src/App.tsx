@@ -85,7 +85,6 @@ function AppRoutes() {
           />
         }
       >
-        {" "}
         <Route path="/player/:id" element={<Player />} />
       </Route>
 

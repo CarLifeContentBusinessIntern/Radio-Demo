@@ -18,20 +18,22 @@ function Player() {
   const [duration, setDuration] = useState(2712);
 
   useEffect(() => {
-    let intervalId: number | undefined;
-
-    if (isPlaying && currentTime < duration) {
-      intervalId = setInterval(() => {
-        setCurrentTime((prevTime) => prevTime + 1);
-      }, 1000);
+    if (!isPlaying) {
+      return;
     }
 
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);
-      }
-    };
-  }, [isPlaying, currentTime, duration]);
+    const intervalId = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        if (prevTime >= duration) {
+          setIsPlaying(false);
+          return duration;
+        }
+        return prevTime + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, [isPlaying, duration]);
 
   if (!id) return;
   const episodeData = mockEpisodeData.find(
