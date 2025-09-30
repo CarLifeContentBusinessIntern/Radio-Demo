@@ -1,6 +1,6 @@
 import ListViewItem from "../components/ListViewItem";
 
-const mockData = [
+export const mockData = [
   {
     id: 1,
     imgUrl: "https://picsum.photos/id/10/112/112",
@@ -31,6 +31,13 @@ const mockData = [
     imgUrl: "https://picsum.photos/id/30/112/112",
     title: "네 번째 아이템: 심플한 데이터",
     channel: "Vite 개발 채널",
+    playTime: "00:00",
+    totalTime: "22:40",
+  },
+  {
+    id: 5,
+    title: "오늘은 뭐 듣지?",
+    channel: "P!CKLE",
     playTime: "00:00",
     totalTime: "22:40",
   },
