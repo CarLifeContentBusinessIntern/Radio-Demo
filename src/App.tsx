@@ -5,6 +5,7 @@ import GridViewPage from "./pages/GridViewPage.tsx";
 import Home from "./pages/Home.tsx";
 import ListViewPage from "./pages/ListViewPage.tsx";
 import Search from "./pages/Search.tsx";
+import Player from "./pages/Player.tsx";
 
 function AppRoutes() {
   return (
@@ -37,6 +38,14 @@ function AppRoutes() {
         <Route element={<PlayerLayout />}>
           <Route path="search" element={<Search />} />
         </Route>
+      </Route>
+
+      <Route
+        element={
+          <Layout type="curation" title="지금 재생 중" scrollbar={false} />
+        }
+      >
+        <Route path="/player/:id" element={<Player />} />
       </Route>
     </Routes>
   );
