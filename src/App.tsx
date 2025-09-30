@@ -61,7 +61,7 @@ function AppRoutes() {
       <Route
         element={
           <Layout
-            type="curation"
+            type="search"
             title="검색"
             scrollbar={true}
             paddingX={true}
