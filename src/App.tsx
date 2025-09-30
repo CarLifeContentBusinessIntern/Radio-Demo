@@ -9,9 +9,8 @@ function AppRoutes() {
   return (
     <Routes>
       <Route element={<Layout type="home" />}>
-        <Route path="/" element={<Home />} />
-
         <Route element={<PlayerLayout />}>
+          <Route path="/" element={<Home />} />
           <Route path="/channels/detail" element={<ListViewPage />} />
         </Route>
       </Route>

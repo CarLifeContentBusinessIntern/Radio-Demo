@@ -42,7 +42,7 @@ export const mockData = [
     totalTime: "22:40",
   },
   {
-    id: 1,
+    id: 6,
     imgUrl: "https://picsum.photos/id/10/112/112",
     title: "첫 번째 아이템: 모든 데이터가 완벽하게 들어간 일반적인 케이스",
     channel: "React 컴포넌트 월드",
@@ -50,7 +50,7 @@ export const mockData = [
     totalTime: "45:12",
   },
   {
-    id: 2,
+    id: 7,
     // imgUrl을 일부러 생략하여 플레이스홀더가 잘 나오는지 확인
     title: "두 번째 아이템: 썸네일 이미지가 없는 경우",
     channel: "Tailwind CSS 마스터",
@@ -58,7 +58,7 @@ export const mockData = [
     totalTime: "10:05",
   },
   {
-    id: 3,
+    id: 8,
     imgUrl: "https://picsum.photos/id/20/112/112",
     title:
       "세 번째 아이템은 제목이 아주 아주 아주 아주 길어서 말줄임표(truncate)가 정상적으로 표시되는지 확인하기 위한 것입니다.",
@@ -67,7 +67,7 @@ export const mockData = [
     totalTime: "01:12:30",
   },
   {
-    id: 4,
+    id: 9,
     imgUrl: "https://picsum.photos/id/30/112/112",
     title: "네 번째 아이템: 심플한 데이터",
     channel: "Vite 개발 채널",
@@ -75,7 +75,7 @@ export const mockData = [
     totalTime: "22:40",
   },
   {
-    id: 5,
+    id: 10,
     title: "오늘은 뭐 듣지?",
     channel: "P!CKLE",
     playTime: "00:00",

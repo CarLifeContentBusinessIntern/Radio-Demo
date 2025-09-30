@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Scrollbar from "../components/ScrollBar";
 import { useRef } from "react";
+import Scrollbar from "../components/ScrollBar";
 
 const ScrollbarLayout = () => {
   const contentRef = useRef<HTMLDivElement>(null);

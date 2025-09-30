@@ -29,7 +29,7 @@ const ListViewItem = ({
 
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
         <div className="font-semibold truncate">{title}</div>
-        <div className="text-[#A6A6A9]">{channel}</div>
+        <div className="text-[#A6A6A9] truncate">{channel}</div>
       </div>
 
       <div>

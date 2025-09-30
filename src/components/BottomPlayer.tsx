@@ -16,7 +16,7 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <div className="w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-black">
+    <div className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-black">
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img
@@ -29,15 +29,18 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
         )}
       </div>
 
-      <div className="flex flex-col flex-grow min-w-0">
-        <div className="font-semibold truncate text-[32px]">{title}</div>
-        <div className="text-[28px]">{channel}</div>
+      <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
+        <p className="font-semibold truncate text-[32px]">{title}</p>
+        <p className="text-[28px] truncate">{channel}</p>
       </div>
 
-      <div className="flex gap-x-[105px] mr-10">
+      <div className="flex gap-x-16 lg:gap-x-[105px] mr-10">
         <TbPlayerSkipBackFilled size={30} />
 
-        <div className="relative w-6 h-6">
+        <div
+          className="relative w-6 h-6"
+          onClick={() => setIsPlaying(!isPlaying)}
+        >
           <TbPlayerPlayFilled
             size={30}
             className={`absolute left-0 top-0 transition-all duration-300 ease-in-out ${
@@ -45,7 +48,6 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
                 ? "opacity-0 scale-90 pointer-events-none"
                 : "opacity-100 scale-100"
             }`}
-            onClick={() => setIsPlaying(!isPlaying)}
           />
           <TbPlayerPauseFilled
             size={30}
@@ -54,7 +56,6 @@ const BottomPlayer = ({ imgUrl, title, channel }: BottomPlayerProps) => {
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-90 pointer-events-none"
             }`}
-            onClick={() => setIsPlaying(!isPlaying)}
           />
         </div>
 
