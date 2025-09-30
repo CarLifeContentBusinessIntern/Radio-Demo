@@ -8,16 +8,18 @@ interface LayoutProps {
   type: HeaderType;
   title?: string;
   scrollbar: boolean;
+  paddingX: boolean;
+  paddingB: boolean;
 }
 
-function Layout({ type, title, scrollbar }: LayoutProps) {
+function Layout({ type, title, scrollbar, paddingX, paddingB }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
 
   const mainContent = (
     <main
       ref={contentRef}
-      className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
+      className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${paddingB ? 'pb-[126px]' : ''} ${paddingX ? 'px-[33px]' : ''} `}
     >
       <Outlet />
     </main>
