@@ -5,7 +5,7 @@ interface ScrollbarProps {
   scrollableRef: React.RefObject<HTMLDivElement | null>;
 }
 
-const Scrollbar = ({ scrollableRef }: ScrollbarProps) => {
+function Scrollbar({ scrollableRef }: ScrollbarProps) {
   const [thumbHeight, setThumbHeight] = useState(20);
   const [thumbTop, setThumbTop] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -102,6 +102,6 @@ const Scrollbar = ({ scrollableRef }: ScrollbarProps) => {
       </button>
     </div>
   );
-};
+}
 
 export default Scrollbar;

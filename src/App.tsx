@@ -1,29 +1,41 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop.tsx";
 import Layout from "./layouts/Layout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import GridViewPage from "./pages/GridViewPage.tsx";
 import Home from "./pages/Home.tsx";
 import ListViewPage from "./pages/ListViewPage.tsx";
+import Search from "./pages/Search.tsx";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route element={<Layout type="home" />}>
+      <Route element={<Layout type="home" scrollbar={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="/" element={<Home />} />
         </Route>
       </Route>
 
-      <Route element={<Layout type="curation" title="채널 명" />}>
+      <Route
+        element={<Layout type="curation" title="채널 명" scrollbar={true} />}
+      >
         <Route element={<PlayerLayout />}>
-          <Route path="/channels/detail" element={<ListViewPage />} />
+          <Route path="channels/detail" element={<ListViewPage />} />
         </Route>
       </Route>
 
-      <Route element={<Layout type="curation" title="큐레이션 명" />}>
+      <Route
+        element={
+          <Layout type="curation" title="큐레이션 명" scrollbar={true} />
+        }
+      >
         <Route element={<PlayerLayout />}>
           <Route path="curation" element={<GridViewPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<Layout type="curation" title="검색" scrollbar={true} />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="search" element={<Search />} />
         </Route>
       </Route>
     </Routes>
@@ -33,7 +45,6 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <ScrollToTop />
       <AppRoutes />
     </BrowserRouter>
   );

@@ -1,4 +1,4 @@
-import GridViewItem from "../components/GridViewItem"
+import GridViewItem from "../components/GridViewItem";
 
 function GridViewPage() {
     return (
@@ -17,4 +17,4 @@ function GridViewPage() {
     )
 }
 
-export default GridViewPage
+export default GridViewPage;
