@@ -4,7 +4,7 @@ import GridViewItem from "../components/GridViewItem";
 function Home() {
   return (
     <>
-      <div className="pt-3">
+      <div className="pr-28 pt-3">
         <div className="text-2xl mb-7 ">추천 기획전</div>
         <div className="grid gap-4 mb-7 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <GridViewItem title="TED 큐레이션" subTitle="P!CKLE P!CK" />
