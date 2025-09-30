@@ -9,7 +9,7 @@ function Header({ type }: { type: string }) {
             {/* 중간부분 */}
             {type === "home" ?
                 <>
-                    <div className="flex flex-row gap-20">
+                    <div className="flex flex-row gap- sm:gap-7 md:gap-11 lg:gap-20">
                         <img src={PickleLogo} />
                         <div className="flex flex-col items-center gap-1 cursor-pointer">
                             <div className="bg-gray-600 w-10 h-10" />
@@ -31,7 +31,7 @@ function Header({ type }: { type: string }) {
                 </> : null}
             {/* 오른쪽 부분 */}
             {type === "home" ?
-                <div className="flex flex-row items-center gap-10">
+                <div className="flex flex-row items-center gap-10 ">
                     <img src={SearchIcon} className="w-8 h-8 cursor-pointer" />
                     <img src={GearIcon} className="w-9 h-9 cursor-pointer" />
                     <img src={GridIcon} className="w-7 h-7 cursor-pointer" />
