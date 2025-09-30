@@ -23,7 +23,7 @@ function Home() {
         <CircleViewItem title="월간 3월 호" subTitle="P!CKLE  PD YENA P!CK" />
       </div>
       <div className="text-2xl mb-7">
-        추천 기획전
+        드라이브 MOOD
       </div>
       <div className="grid gap-4 mb-7 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         <GridViewItem title="막히는 길 위에서" subTitle="#출근길 #정보교양 " />
