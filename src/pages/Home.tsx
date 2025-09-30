@@ -3,7 +3,7 @@ import GridViewItem from "../components/GridViewItem";
 
 function Home() {
   return <>
-    <div className="px-14 pt-3">
+    <div className="px-28 pt-3">
       <div className="text-2xl mb-7 ">
         추천 기획전
       </div>
