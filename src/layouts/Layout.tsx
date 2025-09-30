@@ -1,18 +1,20 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
-import Scrollbar from "../components/ScrollBar";
+import Scrollbar from "../components/Scrollbar";
 import { useRef } from "react";
+import type { HeaderType } from "../types";
 
 interface LayoutProps {
-  type: string;
+  type: HeaderType;
+  title?: string;
 }
 
-function Layout({ type }: LayoutProps) {
+function Layout({ type, title }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <div className="flex flex-col h-screen bg-black text-white">
-      <Header type={type} />
+      <Header type={type} title={title} />
 
       <div className="flex flex-1 overflow-y-hidden">
         <Scrollbar scrollableRef={contentRef} />
