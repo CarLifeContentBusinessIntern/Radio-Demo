@@ -9,7 +9,7 @@ function Header({ type }: { type: string }) {
             {/* 중간부분 */}
             {type === "home" ?
                 <>
-                    <div className="flex flex-row gap- sm:gap-7 md:gap-11 lg:gap-20">
+                    <div className="flex flex-row sm:gap-7 md:gap-11 lg:gap-20">
                         <img src={PickleLogo} />
                         <div className="flex flex-col items-center gap-1 cursor-pointer">
                             <div className="bg-gray-600 w-10 h-10" />
