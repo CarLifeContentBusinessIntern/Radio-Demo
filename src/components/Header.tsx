@@ -14,7 +14,7 @@ interface HeaderProps {
 function Header({ type, title }: HeaderProps) {
     const navigate = useNavigate();
     return (
-        <div className="flex flex-row justify-between py-4 px-10 bg-black">
+        <div className="flex flex-row justify-between py-4 px-10 bg-black h-[100px] items-center">
             {/* 왼쪽부분 */}
             {type === "home" ?
                 <div className="flex flex-row sm:gap-7 md:gap-11 lg:gap-20">
@@ -44,19 +44,15 @@ function Header({ type, title }: HeaderProps) {
                     <p className="text-[32px]">{title}</p>
                 </div>}
             {/* 오른쪽 부분 */}
-            {["home", "curation"].includes(type) ?
+            {["home", "curation", "setting"].includes(type) ?
                 <div className="flex flex-row items-center gap-10">
                     <img src={SearchIcon} className="w-8 h-8 cursor-pointer" onClick={() => navigate("/search")}
                     />
-                    <img src={GearIcon} className="w-9 h-9 cursor-pointer" />
+                    <img src={GearIcon} className="w-9 h-9 cursor-pointer" onClick={() => navigate("/setting")} />
                     <img src={GridIcon} className="w-7 h-7 cursor-pointer" />
                 </div> : null}
-
-        </div>
-    ) : null
-}
-    </div >
-  );
+        </div >
+    );
 }
 
 export default Header;
