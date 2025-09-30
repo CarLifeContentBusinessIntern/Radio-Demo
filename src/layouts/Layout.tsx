@@ -10,16 +10,26 @@ interface LayoutProps {
   scrollbar: boolean;
   paddingX: boolean;
   paddingB: boolean;
+  isPlayer?: boolean;
 }
 
-function Layout({ type, title, scrollbar, paddingX, paddingB }: LayoutProps) {
+function Layout({
+  type,
+  title,
+  scrollbar,
+  paddingX,
+  paddingB,
+  isPlayer,
+}: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
 
   const mainContent = (
     <main
       ref={contentRef}
-      className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${paddingB ? 'pb-[126px]' : ''} ${paddingX ? 'px-[33px]' : ''} `}
+      className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${
+        paddingB ? "pb-[126px]" : ""
+      } ${paddingX ? "px-[33px]" : ""} `}
     >
       <Outlet />
     </main>
@@ -31,7 +41,7 @@ function Layout({ type, title, scrollbar, paddingX, paddingB }: LayoutProps) {
 
   return (
     <div className="flex flex-col h-screen bg-black text-white">
-      <Header type={type} title={title} />
+      <Header type={type} title={title} isPlayer={isPlayer} />
 
       {scrollbar ? (
         <div className="flex flex-1 overflow-y-hidden">

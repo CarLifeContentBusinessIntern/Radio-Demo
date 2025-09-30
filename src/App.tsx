@@ -82,6 +82,7 @@ function AppRoutes() {
             scrollbar={false}
             paddingX={false}
             paddingB={false}
+            isPlayer={true}
           />
         }
       >
