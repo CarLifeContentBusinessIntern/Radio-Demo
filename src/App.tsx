@@ -1,14 +1,31 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop.tsx";
-import Home from "./pages/Home.tsx";
-import Layout from "./components/Layout.tsx";
+import Layout from "./layouts/Layout.tsx";
+import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import GridViewPage from "./pages/GridViewPage.tsx";
+import Home from "./pages/Home.tsx";
+import ListViewPage from "./pages/ListViewPage.tsx";
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Layout type="home"><Home /></Layout>} />
-      <Route path="/curation" element={<Layout type="curation" title="큐레이션 명"><GridViewPage /></Layout>} />
+      <Route element={<Layout type="home" />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+      </Route>
+
+      <Route element={<Layout type="curation" title="채널 명" />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="/channels/detail" element={<ListViewPage />} />
+        </Route>
+      </Route>
+
+      <Route element={<Layout type="curation" title="큐레이션 명" />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="curation" element={<GridViewPage />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }
