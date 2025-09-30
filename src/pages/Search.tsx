@@ -3,12 +3,14 @@ import { mockChannelData } from "../mock/mockChannelData";
 import { mockEpisodeData } from "../mock/mockEpisodeData";
 
 function Search() {
+  const MAX_SEARCH_RESULTS = 4;
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-5">
         <p className="text-[26px]">채널</p>
         <div className="flex flex-col gap-y-1">
-          {mockChannelData.slice(0, 4).map((item) => (
+          {mockChannelData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
               key={item.id}
               imgUrl={item.imgUrl}
@@ -22,7 +24,7 @@ function Search() {
       <div className="flex flex-col gap-5">
         <p className="text-[26px]">에피소드</p>
         <div className="flex flex-col gap-y-1">
-          {mockEpisodeData.slice(0, 4).map((item) => (
+          {mockEpisodeData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
               key={item.id}
               imgUrl={item.imgUrl}

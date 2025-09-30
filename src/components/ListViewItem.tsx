@@ -34,7 +34,8 @@ function ListViewItem({
 
       <div>
         <p className="text-[28px] text-[#A6A6A9] w-[180px] text-right">
-          {playTime ? playTime : ""} {totalTime ? ` / ${totalTime}` : ""}
+          {playTime}
+          {totalTime ? ` / ${totalTime}` : ""}
         </p>
       </div>
     </div>

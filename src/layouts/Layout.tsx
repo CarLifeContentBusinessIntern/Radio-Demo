@@ -14,6 +14,15 @@ function Layout({ type, title, scrollbar }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
 
+  const mainContent = (
+    <main
+      ref={contentRef}
+      className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
+    >
+      <Outlet />
+    </main>
+  );
+
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
   }, [pathname]);
@@ -22,26 +31,13 @@ function Layout({ type, title, scrollbar }: LayoutProps) {
     <div className="flex flex-col h-screen bg-black text-white">
       <Header type={type} title={title} />
 
-      {scrollbar && (
+      {scrollbar ? (
         <div className="flex flex-1 overflow-y-hidden">
           <Scrollbar scrollableRef={contentRef} />
-
-          <main
-            ref={contentRef}
-            className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
-          >
-            <Outlet />
-          </main>
+          {mainContent}
         </div>
-      )}
-
-      {!scrollbar && (
-        <main
-          ref={contentRef}
-          className="flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide pb-[126px] px-[33px]"
-        >
-          <Outlet />
-        </main>
+      ) : (
+        mainContent
       )}
     </div>
   );
