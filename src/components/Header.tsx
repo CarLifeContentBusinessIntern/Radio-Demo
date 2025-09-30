@@ -59,7 +59,11 @@ function Header({ type, title }: HeaderProps) {
       {/* 오른쪽 부분 */}
       {["home", "curation"].includes(type) ? (
         <div className="flex flex-row items-center gap-10">
-          <img src={SearchIcon} className="w-8 h-8 cursor-pointer" />
+          <img
+            src={SearchIcon}
+            className="w-8 h-8 cursor-pointer"
+            onClick={() => navigate("/search")}
+          />
           <img src={GearIcon} className="w-9 h-9 cursor-pointer" />
           <img src={GridIcon} className="w-7 h-7 cursor-pointer" />
         </div>

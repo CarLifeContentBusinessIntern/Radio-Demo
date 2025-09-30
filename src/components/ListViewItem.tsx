@@ -6,13 +6,13 @@ type ListViewItemProps = {
   totalTime: string;
 };
 
-const ListViewItem = ({
+function ListViewItem({
   imgUrl,
   title,
   channel,
   playTime,
   totalTime,
-}: ListViewItemProps) => {
+}: ListViewItemProps) {
   return (
     <div className="flex items-center justify-between gap-14 cursor-pointer">
       <div className="flex-shrink-0">
@@ -39,6 +39,6 @@ const ListViewItem = ({
       </div>
     </div>
   );
-};
+}
 
 export default ListViewItem;

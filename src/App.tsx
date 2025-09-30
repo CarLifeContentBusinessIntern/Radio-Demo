@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ScrollToTop from "./components/ScrollToTop.tsx";
 import Layout from "./layouts/Layout.tsx";
 import PlayerLayout from "./layouts/PlayerLayout.tsx";
 import GridViewPage from "./pages/GridViewPage.tsx";
@@ -33,7 +32,6 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      {/* <ScrollToTop /> */}
       <AppRoutes />
     </BrowserRouter>
   );
