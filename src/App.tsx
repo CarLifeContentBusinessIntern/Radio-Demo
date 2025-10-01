@@ -77,13 +77,7 @@ function AppRoutes() {
 
       <Route
         element={
-          <Layout
-            type="setting"
-            title="설정"
-            scrollbar={false}
-            paddingX={false}
-            paddingB={false}
-          />
+          <Layout type="setting" title="설정" scrollbar={false} paddingX={false} paddingB={false} />
         }
       >
         <Route path="setting" element={<SettingPage />} />
