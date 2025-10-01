@@ -30,7 +30,7 @@ function AppRoutes() {
         }
       >
         <Route element={<PlayerLayout />}>
-          <Route path="channels/detail" element={<ListViewPage />} />
+          <Route path="channels/detail/:id" element={<ListViewPage />} />
         </Route>
       </Route>
 
@@ -46,7 +46,7 @@ function AppRoutes() {
         }
       >
         <Route element={<PlayerLayout />}>
-          <Route path="curation" element={<GridViewPage />} />
+          <Route path="curation/:id" element={<GridViewPage />} />
         </Route>
       </Route>
 

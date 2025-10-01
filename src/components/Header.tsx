@@ -13,8 +13,8 @@ import { useVersion } from '../contexts/VersionContext';
 const navLinks = [
   { name: '홈', path: '/' },
   { name: '라디오', path: '/radio' },
-  { name: '인기채널', path: '/curation' },
-  { name: '최근청취', path: '/channels/detail' },
+  { name: '인기채널', path: '/curation/1' },
+  { name: '최근청취', path: '/channels/detail/1' },
 ];
 
 // 홈 헤더
