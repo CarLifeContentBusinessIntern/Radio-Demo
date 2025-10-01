@@ -66,29 +66,33 @@ function Player() {
 
   return (
     <div className="flex flex-col justify-center items-center h-full gap-[103px]">
-      <div className="flex items-center justify-center gap-[52px] max-w-[1025px] max-h-56">
+      <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
         <div className="flex-shrink-0">
           {episodeData.imgUrl ? (
             <img
               src={episodeData.imgUrl}
               alt={episodeData.title}
-              className="w-56 h-56 object-cover"
+              className="w-40 h-40 md:w-56 md:h-56 object-cover"
             />
           ) : (
-            <div className="w-56 h-56 bg-gray-400"></div>
+            <div className="w-40 h-40 md:w-56 md:h-56 bg-gray-400"></div>
           )}
         </div>
 
-        <div className="flex flex-col justify-between h-full">
-          <p className="text-[45px] line-clamp-2">{episodeData.title}</p>
-          <p className="text-[32px] text-[#A6A6A9]">{episodeData.channel}</p>
-          <p className="text-[32px] text-[#A6A6A9]">
+        <div className="flex flex-col justify-between h-full text-center md:text-left">
+          <p className="text-2xl md:text-5xl line-clamp-2">
+            {episodeData.title}
+          </p>
+          <p className="text-xl md:text-4xl text-[#A6A6A9]">
+            {episodeData.channel}
+          </p>
+          <p className="text-lg md:text-3xl text-[#A6A6A9]">
             {formatTime(currentTime)} / {formatTime(duration)}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-20 w-full max-w-[1025px]">
+      <div className="flex flex-col gap-20 w-full w-[80%] max-w-[1025px]">
         <div className="flex flex-col items-center gap-5">
           <input
             type="range"
@@ -99,7 +103,7 @@ function Player() {
             className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
           />
 
-          <div className="flex justify-between w-full max-w-[507px]">
+          <div className="flex justify-between w-full w-[60%] max-w-[507px]">
             <button onClick={() => handleSkip(-15)}>
               <RiReplay15Fill size={30} />
             </button>
