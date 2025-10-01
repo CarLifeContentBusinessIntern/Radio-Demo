@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import GridViewItem from "../components/GridViewItem";
+import { useNavigate } from 'react-router-dom';
+import GridViewItem from '../components/GridViewItem';
 
 function GridViewPage() {
     const navigate=useNavigate();

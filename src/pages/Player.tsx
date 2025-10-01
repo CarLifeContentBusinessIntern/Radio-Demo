@@ -1,21 +1,21 @@
-import { useParams } from "react-router-dom";
-import { mockEpisodeData } from "../mock/mockEpisodeData";
-import { RiForward15Fill, RiReplay15Fill } from "react-icons/ri";
-import { useEffect, useState } from "react";
-import speedIcon from "../assets/speedIcon.svg";
+import { useParams } from 'react-router-dom';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
+import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
+import { useEffect, useState } from 'react';
+import speedIcon from '../assets/speedIcon.svg';
 import {
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
-} from "react-icons/tb";
-import { IoEllipsisVertical } from "react-icons/io5";
+} from 'react-icons/tb';
+import { IoEllipsisVertical } from 'react-icons/io5';
 
 function Player() {
   const { id } = useParams();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(2712);
+  const [duration] = useState(2712);
 
   useEffect(() => {
     if (!isPlaying) {
@@ -36,9 +36,7 @@ function Player() {
   }, [isPlaying, duration]);
 
   if (!id) return;
-  const episodeData = mockEpisodeData.find(
-    (item) => item.id === parseInt(id, 10)
-  );
+  const episodeData = mockEpisodeData.find((item) => item.id === parseInt(id, 10));
   if (!episodeData) return;
 
   const togglePlayPause = () => {
@@ -50,18 +48,14 @@ function Player() {
   };
 
   const handleSkip = (seconds: number) => {
-    setCurrentTime((prevTime) =>
-      Math.max(0, Math.min(duration, prevTime + seconds))
-    );
+    setCurrentTime((prevTime) => Math.max(0, Math.min(duration, prevTime + seconds)));
   };
 
   const formatTime = (seconds: number) => {
-    if (isNaN(seconds)) return "00:00";
+    if (isNaN(seconds)) return '00:00';
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -79,20 +73,16 @@ function Player() {
           )}
         </div>
 
-        <div className="flex flex-col justify-between h-full text-center md:text-left">
-          <p className="text-2xl md:text-5xl line-clamp-2">
-            {episodeData.title}
-          </p>
-          <p className="text-xl md:text-4xl text-[#A6A6A9]">
-            {episodeData.channel}
-          </p>
+        <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
+          <p className="text-2xl md:text-5xl line-clamp-2">{episodeData.title}</p>
+          <p className="text-xl md:text-4xl text-[#A6A6A9]">{episodeData.channel}</p>
           <p className="text-lg md:text-3xl text-[#A6A6A9]">
             {formatTime(currentTime)} / {formatTime(duration)}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-20 w-full w-[80%] max-w-[1025px]">
+      <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
         <div className="flex flex-col items-center gap-5">
           <input
             type="range"
@@ -103,7 +93,7 @@ function Player() {
             className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
           />
 
-          <div className="flex justify-between w-full w-[60%] max-w-[507px]">
+          <div className="flex justify-between w-[60%] max-w-[507px]">
             <button onClick={() => handleSkip(-15)}>
               <RiReplay15Fill size={30} />
             </button>
@@ -122,11 +112,7 @@ function Player() {
             <TbPlayerSkipBackFilled size={30} />
           </button>
           <button onClick={togglePlayPause}>
-            {isPlaying ? (
-              <TbPlayerPauseFilled size={30} />
-            ) : (
-              <TbPlayerPlayFilled size={30} />
-            )}
+            {isPlaying ? <TbPlayerPauseFilled size={30} /> : <TbPlayerPlayFilled size={30} />}
           </button>
           <button>
             <TbPlayerSkipForwardFilled size={30} />
