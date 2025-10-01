@@ -1,18 +1,18 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 
 type VersionContext = {
-  isLive: boolean;
+  isLiveVersion: boolean;
   toggleVersion: () => void;
 };
 
 const VersionContext = createContext<VersionContext | undefined>(undefined);
 
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
-  const [isLive, setIsLive] = useState(true);
+  const [isLiveVersion, setIsLiveVersion] = useState(true);
 
-  const toggleVersion = () => setIsLive((prev) => !prev);
+  const toggleVersion = () => setIsLiveVersion((prev) => !prev);
 
-  const value = { isLive, toggleVersion };
+  const value = { isLiveVersion, toggleVersion };
 
   return <VersionContext.Provider value={value}>{children}</VersionContext.Provider>;
 };

@@ -1,9 +1,8 @@
+import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../components/Header';
 import Scrollbar from '../components/Scrollbar';
-import { useEffect, useRef } from 'react';
 import type { HeaderType } from '../types';
-import { VersionProvider } from '../contexts/VersionContext';
 
 interface LayoutProps {
   type: HeaderType;
@@ -34,20 +33,18 @@ function Layout({ type, title, scrollbar, paddingX, paddingB, isPlayer }: Layout
   }, [pathname]);
 
   return (
-    <VersionProvider>
-      <div className="flex flex-col h-screen bg-black text-white">
-        <Header type={type} title={title} isPlayer={isPlayer} />
+    <div className="flex flex-col h-screen bg-black text-white">
+      <Header type={type} title={title} isPlayer={isPlayer} />
 
-        {scrollbar ? (
-          <div className="flex flex-1 overflow-y-hidden">
-            <Scrollbar scrollableRef={contentRef} />
-            {mainContent}
-          </div>
-        ) : (
-          mainContent
-        )}
-      </div>
-    </VersionProvider>
+      {scrollbar ? (
+        <div className="flex flex-1 overflow-y-hidden">
+          <Scrollbar scrollableRef={contentRef} />
+          {mainContent}
+        </div>
+      ) : (
+        mainContent
+      )}
+    </div>
   );
 }
 

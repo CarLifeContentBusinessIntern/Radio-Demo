@@ -25,7 +25,9 @@ const HomeHeader = () => {
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row items-center sm:gap-7 md:gap-11 lg:gap-20">
-        <img src={PickleLogo} alt="Pickle Logo" onClick={toggleVersion} />
+        <button onClick={toggleVersion}>
+          <img src={PickleLogo} alt="Pickle Logo" />
+        </button>
         {navLinks.map((link) => (
           <button
             key={link.name}
@@ -94,7 +96,9 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <p className="text-[32px]">{title}</p>
       </div>
       {isPlayer ? (
-        <RiPlayListFill size={30} color="white" className="cursor-pointer" />
+        <button className="cursor-pointer">
+          <RiPlayListFill size={30} color="white" />
+        </button>
       ) : (
         <RightActions />
       )}

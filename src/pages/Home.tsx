@@ -1,13 +1,15 @@
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { useVersion } from '../contexts/VersionContext';
+import HomeLiveVersion from './HomeLiveVersion';
+import HomeNoLiveVersion from './HomeNoLiveVersion';
 
 function Home() {
-  const { isLive } = useVersion();
+  const { isLiveVersion } = useVersion();
 
   return (
     <>
-      {isLive ? <>live</> : <>nolive</>}
+      {isLiveVersion ? <HomeLiveVersion /> : <HomeNoLiveVersion />}
       {/* 
       <div className="pr-28 pt-3">
         <div className="text-2xl mb-7 ">추천 기획전</div>
