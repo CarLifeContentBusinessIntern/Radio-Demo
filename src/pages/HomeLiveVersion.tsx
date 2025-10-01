@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
-import { mockChannelData, mockChannelWithEpisodes } from '../mock/mockChannelData';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
 import { mockCategoryData } from '../mock/mockCategoryData';
+import { mockChannelWithEpisodes } from '../mock/mockChannelData';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function HomeLiveVersion() {
   const navigate = useNavigate();
@@ -24,9 +24,9 @@ function HomeLiveVersion() {
     <div className="pr-28 pt-3">
       <div className="text-2xl mb-7 ">지금은?</div>
       <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayEpData.map((item) => (
+        {displayEpData.map((item, index) => (
           <GridViewItem
-            key={item.id}
+            key={`${item.id}-${index}`}
             title={item.title}
             subTitle={item.channel}
             onClick={() => navigate(`/player/${item.id}`)}
@@ -37,11 +37,11 @@ function HomeLiveVersion() {
 
       <div className="text-2xl mb-7">방송사별 라디오</div>
       <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayChannelData.map((item) => {
+        {displayChannelData.map((item, index) => {
           const liveEpisode = item.episodes.find((episode) => episode.isLive);
           return (
             <CircleViewItem
-              key={item.id}
+              key={`${item.id}-${index}`}
               title={item.channel}
               subTitle={item.frequency}
               onClick={() => {
@@ -56,9 +56,9 @@ function HomeLiveVersion() {
 
       <div className="text-2xl mb-7">카테고리</div>
       <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayCategoryData.map((item) => (
+        {displayCategoryData.map((item, index) => (
           <CircleViewItem
-            key={item.id}
+            key={`${item.id}-${index}`}
             title={item.title}
             subTitle={item.category}
             onClick={() => navigate(`/curation`)}

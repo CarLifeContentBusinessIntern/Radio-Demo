@@ -16,7 +16,7 @@ function Search() {
               id={item.id}
               imgUrl={item.imgUrl}
               title={item.channel}
-              subTitle={item.channel}
+              subTitle={item.frequency}
             />
           ))}
         </div>
