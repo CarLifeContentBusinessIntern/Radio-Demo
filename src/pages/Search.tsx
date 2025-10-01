@@ -1,6 +1,6 @@
-import ListViewItem from "../components/ListViewItem";
-import { mockChannelData } from "../mock/mockChannelData";
-import { mockEpisodeData } from "../mock/mockEpisodeData";
+import ListViewItem from '../components/ListViewItem';
+import { mockChannelData } from '../mock/mockChannelData';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function Search() {
   const MAX_SEARCH_RESULTS = 4;
@@ -13,9 +13,10 @@ function Search() {
           {mockChannelData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
               key={item.id}
+              id={item.id}
               imgUrl={item.imgUrl}
               title={item.channel}
-              subTitle={item.producer}
+              subTitle={item.channel}
             />
           ))}
         </div>
@@ -27,6 +28,7 @@ function Search() {
           {mockEpisodeData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
               key={item.id}
+              id={item.id}
               imgUrl={item.imgUrl}
               title={item.title}
               subTitle={item.channel}

@@ -1,6 +1,6 @@
-import { Outlet } from "react-router-dom";
-import BottomPlayer from "../components/BottomPlayer";
-import { mockEpisodeData } from "../mock/mockEpisodeData";
+import { Outlet } from 'react-router-dom';
+import BottomPlayer from '../components/BottomPlayer';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 const PlayerLayout = () => {
   return (
@@ -10,10 +10,7 @@ const PlayerLayout = () => {
       </main>
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
-        <BottomPlayer
-          title={mockEpisodeData[4].title}
-          channel={mockEpisodeData[4].channel}
-        />
+        <BottomPlayer title={mockEpisodeData[4].title} channel={mockEpisodeData[4].channel} />
       </div>
     </div>
   );
