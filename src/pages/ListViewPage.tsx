@@ -1,5 +1,5 @@
-import ListViewItem from "../components/ListViewItem";
-import { mockEpisodeData } from "../mock/mockEpisodeData";
+import ListViewItem from '../components/ListViewItem';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function ListViewPage() {
   return (
@@ -7,6 +7,7 @@ function ListViewPage() {
       {mockEpisodeData.map((item) => (
         <ListViewItem
           key={item.id}
+          id={item.id}
           imgUrl={item.imgUrl}
           title={item.title}
           subTitle={item.channel}
