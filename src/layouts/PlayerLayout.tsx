@@ -9,7 +9,7 @@ const PlayerLayout = () => {
         <Outlet />
       </main>
 
-      <div className="fixed bottom-0 left-0 right-0 flex justify-center items-center">
+      <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
         <BottomPlayer
           title={mockEpisodeData[4].title}
           channel={mockEpisodeData[4].channel}

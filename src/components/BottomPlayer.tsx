@@ -5,6 +5,7 @@ import {
   TbPlayerSkipForwardFilled,
   TbPlayerPauseFilled,
 } from "react-icons/tb";
+import { useNavigate } from "react-router-dom";
 
 type BottomPlayerProps = {
   imgUrl?: string;
@@ -13,10 +14,18 @@ type BottomPlayerProps = {
 };
 
 function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
+  const navigate = useNavigate();
   const [isPlaying, setIsPlaying] = useState(false);
 
+  const handleControlsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-black">
+    <div
+      className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
+      onClick={() => navigate("/player/1")}
+    >
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img
@@ -34,7 +43,10 @@ function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
         <p className="text-[28px] truncate">{channel}</p>
       </div>
 
-      <div className="flex gap-x-16 lg:gap-x-[105px] mr-10">
+      <div
+        className="flex gap-x-16 lg:gap-x-[105px] mr-10"
+        onClick={handleControlsClick}
+      >
         <TbPlayerSkipBackFilled size={30} />
 
         <div
