@@ -24,7 +24,7 @@ function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
   return (
     <div
       className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
-      onClick={() => navigate('/player/1')}
+      onClick={() => navigate('/player/101')}
     >
       <div className="flex-shrink-0">
         {imgUrl ? (

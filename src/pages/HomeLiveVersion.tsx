@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { mockCategoryData } from '../mock/mockCategoryData';
-import { mockChannelData, mockChannelWithEpisodes } from '../mock/mockChannelData';
+import { mockChannelData } from '../mock/mockChannelData';
 import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function HomeLiveVersion() {
