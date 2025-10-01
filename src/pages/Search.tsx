@@ -13,9 +13,9 @@ function Search() {
           {mockChannelData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
               key={item.id}
-              id={item.id}
+              id={item.liveEpisodeId}
               imgUrl={item.imgUrl}
-              title={item.channel}
+              title={item.channelName}
               subTitle={item.frequency}
             />
           ))}

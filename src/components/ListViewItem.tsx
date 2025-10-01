@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 type ListViewItemProps = {
-  id: number;
+  id?: number;
   imgUrl?: string;
   title: string;
   subTitle: string;
