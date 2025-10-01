@@ -1,26 +1,18 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Layout from "./layouts/Layout.tsx";
-import PlayerLayout from "./layouts/PlayerLayout.tsx";
-import GridViewPage from "./pages/GridViewPage.tsx";
-import Home from "./pages/Home.tsx";
-import ListViewPage from "./pages/ListViewPage.tsx";
-import Search from "./pages/Search.tsx";
-import Player from "./pages/Player.tsx";
-import SettingPage from "./pages/SettingPage.tsx";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Layout from './layouts/Layout.tsx';
+import PlayerLayout from './layouts/PlayerLayout.tsx';
+import GridViewPage from './pages/GridViewPage.tsx';
+import Home from './pages/Home.tsx';
+import ListViewPage from './pages/ListViewPage.tsx';
+import Search from './pages/Search.tsx';
+import Player from './pages/Player.tsx';
+import SettingPage from './pages/SettingPage.tsx';
+import { VersionProvider } from './contexts/VersionContext.tsx';
 
 function AppRoutes() {
   return (
     <Routes>
-      <Route
-        element={
-          <Layout
-            type="home"
-            scrollbar={true}
-            paddingX={false}
-            paddingB={true}
-          />
-        }
-      >
+      <Route element={<Layout type="home" scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="/" element={<Home />} />
         </Route>
@@ -60,13 +52,7 @@ function AppRoutes() {
 
       <Route
         element={
-          <Layout
-            type="search"
-            title="검색"
-            scrollbar={true}
-            paddingX={true}
-            paddingB={true}
-          />
+          <Layout type="search" title="검색" scrollbar={true} paddingX={true} paddingB={true} />
         }
       >
         <Route element={<PlayerLayout />}>
@@ -82,6 +68,7 @@ function AppRoutes() {
             scrollbar={false}
             paddingX={false}
             paddingB={false}
+            isPlayer={true}
           />
         }
       >
@@ -108,7 +95,9 @@ function AppRoutes() {
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <VersionProvider>
+        <AppRoutes />
+      </VersionProvider>
     </BrowserRouter>
   );
 }
