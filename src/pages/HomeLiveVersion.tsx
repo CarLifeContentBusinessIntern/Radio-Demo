@@ -21,9 +21,9 @@ function HomeLiveVersion() {
   });
 
   return (
-    <div className="pr-28 pt-3">
+    <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 ">지금은?</div>
-      <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayEpData.map((item, index) => (
           <GridViewItem
             key={`${item.id}-${index}`}
@@ -36,7 +36,7 @@ function HomeLiveVersion() {
       </div>
 
       <div className="text-2xl mb-7">방송사별 라디오</div>
-      <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayChannelData.map((item, index) => {
           const liveEpisode = item.episodes.find((episode) => episode.isLive);
           return (
@@ -55,13 +55,13 @@ function HomeLiveVersion() {
       </div>
 
       <div className="text-2xl mb-7">카테고리</div>
-      <div className="grid gap-4 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayCategoryData.map((item, index) => (
           <CircleViewItem
             key={`${item.id}-${index}`}
             title={item.title}
             subTitle={item.category}
-            onClick={() => navigate(`/curation`)}
+            onClick={() => navigate(`/curation/${item.id}`)}
           />
         ))}
       </div>

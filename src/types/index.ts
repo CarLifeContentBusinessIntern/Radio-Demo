@@ -1,1 +1,1 @@
-export type HeaderType = 'home' | 'curation' | 'search';
+export type HeaderType = 'home' | 'curation' | 'search' | 'setting';
