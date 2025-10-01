@@ -1,8 +1,9 @@
-import { Outlet, useLocation } from "react-router-dom";
-import Header from "../components/Header";
-import Scrollbar from "../components/Scrollbar";
-import { useEffect, useRef } from "react";
-import type { HeaderType } from "../types";
+import { Outlet, useLocation } from 'react-router-dom';
+import Header from '../components/Header';
+import Scrollbar from '../components/Scrollbar';
+import { useEffect, useRef } from 'react';
+import type { HeaderType } from '../types';
+import { VersionProvider } from '../contexts/VersionContext';
 
 interface LayoutProps {
   type: HeaderType;
@@ -13,14 +14,7 @@ interface LayoutProps {
   isPlayer?: boolean;
 }
 
-function Layout({
-  type,
-  title,
-  scrollbar,
-  paddingX,
-  paddingB,
-  isPlayer,
-}: LayoutProps) {
+function Layout({ type, title, scrollbar, paddingX, paddingB, isPlayer }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
 
@@ -28,8 +22,8 @@ function Layout({
     <main
       ref={contentRef}
       className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${
-        paddingB ? "pb-[126px]" : ""
-      } ${paddingX ? "px-[33px]" : ""} `}
+        paddingB ? 'pb-[126px]' : ''
+      } ${paddingX ? 'px-[33px]' : ''} `}
     >
       <Outlet />
     </main>
@@ -40,18 +34,20 @@ function Layout({
   }, [pathname]);
 
   return (
-    <div className="flex flex-col h-screen bg-black text-white">
-      <Header type={type} title={title} isPlayer={isPlayer} />
+    <VersionProvider>
+      <div className="flex flex-col h-screen bg-black text-white">
+        <Header type={type} title={title} isPlayer={isPlayer} />
 
-      {scrollbar ? (
-        <div className="flex flex-1 overflow-y-hidden">
-          <Scrollbar scrollableRef={contentRef} />
-          {mainContent}
-        </div>
-      ) : (
-        mainContent
-      )}
-    </div>
+        {scrollbar ? (
+          <div className="flex flex-1 overflow-y-hidden">
+            <Scrollbar scrollableRef={contentRef} />
+            {mainContent}
+          </div>
+        ) : (
+          mainContent
+        )}
+      </div>
+    </VersionProvider>
   );
 }
 

@@ -1,28 +1,31 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import type { HeaderType } from "../types";
-import { IoClose, IoSearch } from "react-icons/io5";
-import { RiPlayListFill } from "react-icons/ri";
-import PickleLogo from "../assets/pickleLogo.svg";
-import SearchIcon from "../assets/searchIcon.svg";
-import GearIcon from "../assets/gearIcon.svg";
-import GridIcon from "../assets/gridIcon.svg";
-import BackArrowIcon from "../assets/backArrowIcon.svg";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import type { HeaderType } from '../types';
+import { IoClose, IoSearch } from 'react-icons/io5';
+import { RiPlayListFill } from 'react-icons/ri';
+import PickleLogo from '../assets/pickleLogo.svg';
+import SearchIcon from '../assets/searchIcon.svg';
+import GearIcon from '../assets/gearIcon.svg';
+import GridIcon from '../assets/gridIcon.svg';
+import BackArrowIcon from '../assets/backArrowIcon.svg';
+import { useVersion } from '../contexts/VersionContext';
 
 const navLinks = [
-  { name: "홈", path: "/" },
-  { name: "라디오", path: "/radio" },
-  { name: "인기채널", path: "/curation" },
-  { name: "최근청취", path: "/channels/detail" },
+  { name: '홈', path: '/' },
+  { name: '라디오', path: '/radio' },
+  { name: '인기채널', path: '/curation' },
+  { name: '최근청취', path: '/channels/detail' },
 ];
 
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
+  const { toggleVersion } = useVersion();
+
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row items-center sm:gap-7 md:gap-11 lg:gap-20">
-        <img src={PickleLogo} alt="Pickle Logo" />
+        <img src={PickleLogo} alt="Pickle Logo" onClick={toggleVersion} />
         {navLinks.map((link) => (
           <button
             key={link.name}
@@ -42,7 +45,7 @@ const HomeHeader = () => {
 // 검색 헤더
 const SearchHeader = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -68,7 +71,7 @@ const SearchHeader = () => {
         />
         {searchQuery && (
           <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-            <button onClick={() => setSearchQuery("")}>
+            <button onClick={() => setSearchQuery('')}>
               <IoClose size={30} />
             </button>
           </div>
@@ -79,13 +82,7 @@ const SearchHeader = () => {
 };
 
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
-const SubPageHeader = ({
-  title,
-  isPlayer,
-}: {
-  title?: string;
-  isPlayer?: boolean;
-}) => {
+const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-row justify-between items-center w-full">
@@ -110,10 +107,10 @@ const RightActions = () => {
   const navigate = useNavigate();
   return (
     <div className="flex flex-row items-center gap-10">
-      <button onClick={() => navigate("/search")}>
+      <button onClick={() => navigate('/search')}>
         <img src={SearchIcon} alt="Search" className="w-8 h-8" />
       </button>
-      <button onClick={() => navigate("/setting")}>
+      <button onClick={() => navigate('/setting')}>
         <img src={GearIcon} alt="Settings" className="w-9 h-9" />
       </button>
       <button>
@@ -132,20 +129,16 @@ interface HeaderProps {
 function Header({ type, title, isPlayer }: HeaderProps) {
   const renderHeader = () => {
     switch (type) {
-      case "home":
+      case 'home':
         return <HomeHeader />;
-      case "search":
+      case 'search':
         return <SearchHeader />;
       default:
         return <SubPageHeader title={title} isPlayer={isPlayer} />;
     }
   };
 
-  return (
-    <div className="flex py-4 px-10 bg-black h-[100px] items-center">
-      {renderHeader()}
-    </div>
-  );
+  return <div className="flex py-4 px-10 bg-black h-[100px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;
