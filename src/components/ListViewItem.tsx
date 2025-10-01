@@ -14,7 +14,7 @@ function ListViewItem({
   totalTime,
 }: ListViewItemProps) {
   return (
-    <div className="flex items-center justify-between gap-14 cursor-pointer">
+    <div className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer">
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img
@@ -32,7 +32,7 @@ function ListViewItem({
         <div className="text-[#A6A6A9] truncate">{subTitle}</div>
       </div>
 
-      <div>
+      <div className="hidden md:block">
         <p className="text-[28px] text-[#A6A6A9] w-[180px] text-right">
           {playTime}
           {totalTime ? ` / ${totalTime}` : ""}
