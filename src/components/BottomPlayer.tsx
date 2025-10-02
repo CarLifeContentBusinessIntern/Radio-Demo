@@ -1,21 +1,36 @@
-import { useState } from 'react';
 import {
+  TbPlayerPauseFilled,
   TbPlayerPlayFilled,
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
-  TbPlayerPauseFilled,
 } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+import { usePlayer } from '../contexts/PlayerContext';
 
 type BottomPlayerProps = {
+  id: number;
   imgUrl?: string;
   title: string;
   channel: string;
 };
 
-function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
+function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
   const navigate = useNavigate();
-  const [isPlaying, setIsPlaying] = useState(false);
+  const {
+    isPlaying,
+    togglePlayPause,
+    currentEpisodeId,
+    currentEpisodeData,
+    currentTime,
+    duration,
+  } = usePlayer();
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  const handlePlayerClick = () => {
+    const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
+    navigate(`/player/${targetId}`);
+  };
 
   const handleControlsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -23,9 +38,14 @@ function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
 
   return (
     <div
-      className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
-      onClick={() => navigate('/player/1')}
+      className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
+      onClick={handlePlayerClick}
     >
+      <div
+        className="absolute top-0 left-0 h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
+        style={{ width: `${progress}%` }}
+      />
+
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img src={imgUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
@@ -35,14 +55,14 @@ function BottomPlayer({ imgUrl, title, channel }: BottomPlayerProps) {
       </div>
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        <p className="font-semibold truncate text-[32px]">{title}</p>
-        <p className="text-[28px] truncate">{channel}</p>
+        <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
+        <p className="text-[28px] truncate">{currentEpisodeData?.channel}</p>
       </div>
 
       <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
         <TbPlayerSkipBackFilled size={30} />
 
-        <div className="relative w-6 h-6" onClick={() => setIsPlaying(!isPlaying)}>
+        <div className="relative w-6 h-6" onClick={togglePlayPause}>
           <TbPlayerPlayFilled
             size={30}
             className={`absolute left-0 top-0 transition-all duration-300 ease-in-out ${

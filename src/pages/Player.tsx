@@ -1,61 +1,45 @@
-import { useParams } from 'react-router-dom';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
+import React, { useEffect } from 'react';
+import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
-import { useEffect, useState } from 'react';
-import speedIcon from '../assets/speedIcon.svg';
 import {
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
-import { IoEllipsisVertical } from 'react-icons/io5';
+import { useParams } from 'react-router-dom';
+import speedIcon from '../assets/speedIcon.svg';
+import { usePlayer } from '../contexts/PlayerContext';
+import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function Player() {
   const { id } = useParams();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration] = useState(2712);
+  const {
+    currentEpisodeId,
+    isPlaying,
+    currentTime,
+    duration,
+    togglePlayPause,
+    handleSeek,
+    handleSkip,
+    formatTime,
+    playEpisode,
+  } = usePlayer();
+
+  const episodeId = id ? parseInt(id, 10) : null;
+  const episodeData =
+    episodeId !== null ? mockEpisodeData.find((item) => item.id === episodeId) : undefined;
 
   useEffect(() => {
-    if (!isPlaying) {
-      return;
+    if (episodeId !== null && episodeId !== currentEpisodeId) {
+      playEpisode(episodeId);
     }
+  }, [episodeId, currentEpisodeId, playEpisode]);
 
-    const intervalId = setInterval(() => {
-      setCurrentTime((prevTime) => {
-        if (prevTime >= duration) {
-          setIsPlaying(false);
-          return duration;
-        }
-        return prevTime + 1;
-      });
-    }, 1000);
+  if (!episodeData) return null;
 
-    return () => clearInterval(intervalId);
-  }, [isPlaying, duration]);
-
-  if (!id) return;
-  const episodeData = mockEpisodeData.find((item) => item.id === parseInt(id, 10));
-  if (!episodeData) return;
-
-  const togglePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentTime(Number(e.target.value));
-  };
-
-  const handleSkip = (seconds: number) => {
-    setCurrentTime((prevTime) => Math.max(0, Math.min(duration, prevTime + seconds)));
-  };
-
-  const formatTime = (seconds: number) => {
-    if (isNaN(seconds)) return '00:00';
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  const onHandleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleSeek(Number(e.target.value));
   };
 
   return (
@@ -89,7 +73,7 @@ function Player() {
             min="0"
             max={duration}
             value={currentTime}
-            onChange={handleSeek}
+            onChange={onHandleSeek}
             className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
           />
 

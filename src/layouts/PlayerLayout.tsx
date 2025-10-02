@@ -10,7 +10,11 @@ const PlayerLayout = () => {
       </main>
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
-        <BottomPlayer title={mockEpisodeData[4].title} channel={mockEpisodeData[4].channel} />
+        <BottomPlayer
+          id={mockEpisodeData[0].id}
+          title={mockEpisodeData[0].title}
+          channel={mockEpisodeData[0].channel}
+        />
       </div>
     </div>
   );

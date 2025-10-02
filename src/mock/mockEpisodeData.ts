@@ -1,3 +1,5 @@
+import { mockChannelWithEpisodes } from './mockChannelData';
+
 export const mockEpisodeData = [
   {
     id: 101,
@@ -80,3 +82,14 @@ export const mockEpisodeData = [
     totalTime: '01:55:00',
   },
 ];
+
+export const mockLiveEpisodesData = mockChannelWithEpisodes.flatMap((channel) =>
+  channel.episodes
+    .filter((episode) => episode.isLive)
+    .map((episode) => ({
+      id: episode.id,
+      imgUrl: episode.imgUrl,
+      title: episode.title,
+      channelName: channel.channel,
+    }))
+);

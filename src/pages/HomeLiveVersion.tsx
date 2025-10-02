@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { mockCategoryData } from '../mock/mockCategoryData';
-import { mockChannelWithEpisodes } from '../mock/mockChannelData';
+import { mockChannelData } from '../mock/mockChannelData';
 import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function HomeLiveVersion() {
@@ -13,7 +13,7 @@ function HomeLiveVersion() {
   });
 
   const displayChannelData = Array.from({ length: 8 }).map((_, index) => {
-    return mockChannelWithEpisodes[index % mockChannelWithEpisodes.length];
+    return mockChannelData[index % mockChannelData.length];
   });
 
   const displayCategoryData = Array.from({ length: 8 }).map((_, index) => {
@@ -38,15 +38,14 @@ function HomeLiveVersion() {
       <div className="text-2xl mb-7">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayChannelData.map((item, index) => {
-          const liveEpisode = item.episodes.find((episode) => episode.isLive);
           return (
             <CircleViewItem
               key={`${item.id}-${index}`}
-              title={item.channel}
+              title={item.channelName}
               subTitle={item.frequency}
               onClick={() => {
-                if (liveEpisode) {
-                  navigate(`/player/${liveEpisode.id}`);
+                if (item.liveEpisodeId) {
+                  navigate(`/player/${item.liveEpisodeId}`);
                 }
               }}
             />

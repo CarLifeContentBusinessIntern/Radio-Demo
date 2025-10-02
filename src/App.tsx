@@ -8,6 +8,7 @@ import Search from './pages/Search.tsx';
 import Player from './pages/Player.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import { VersionProvider } from './contexts/VersionContext.tsx';
+import { PlayerProvider } from './contexts/PlayerContext.tsx';
 
 function AppRoutes() {
   return (
@@ -90,7 +91,9 @@ function App() {
   return (
     <BrowserRouter>
       <VersionProvider>
-        <AppRoutes />
+        <PlayerProvider>
+          <AppRoutes />
+        </PlayerProvider>
       </VersionProvider>
     </BrowserRouter>
   );
