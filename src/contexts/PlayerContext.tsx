@@ -45,6 +45,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       ? mockEpisodeData.find((item) => item.id === state.currentEpisodeId)
       : mockEpisodeData.find((item) => item.id === DEFAULT_EPISODE_ID);
 
+  useEffect(() => {
+    if (state.currentEpisodeId === null && currentEpisodeData) {
+      const episode = currentEpisodeData as EpisodeType;
+
+      let newDuration: number;
+      if (typeof episode.totalTime === 'string') {
+        newDuration = timeStringToSeconds(episode.totalTime);
+      } else if (typeof episode.totalTime === 'number') {
+        newDuration = episode.totalTime;
+      } else {
+        newDuration = 2712;
+      }
+
+      setState((prevState) => ({
+        ...prevState,
+        currentEpisodeId: DEFAULT_EPISODE_ID,
+        duration: newDuration,
+      }));
+    }
+  }, [state.currentEpisodeId, currentEpisodeData]);
+
   const playEpisode = useCallback((id: number) => {
     const episode = mockEpisodeData.find((item) => item.id === id);
 

@@ -16,7 +16,16 @@ type BottomPlayerProps = {
 
 function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
   const navigate = useNavigate();
-  const { isPlaying, togglePlayPause, currentEpisodeId, currentEpisodeData } = usePlayer();
+  const {
+    isPlaying,
+    togglePlayPause,
+    currentEpisodeId,
+    currentEpisodeData,
+    currentTime,
+    duration,
+  } = usePlayer();
+
+  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
@@ -29,9 +38,14 @@ function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
 
   return (
     <div
-      className="w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
+      className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
+      <div
+        className="absolute top-0 left-0 h-[4px] bg-[#B76EEF] trnsition-width duration-100 ease-linear"
+        style={{ width: `${progress}%` }}
+      />
+
       <div className="flex-shrink-0">
         {imgUrl ? (
           <img src={imgUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
