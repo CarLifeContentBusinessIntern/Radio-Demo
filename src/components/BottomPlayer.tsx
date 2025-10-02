@@ -42,7 +42,7 @@ function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
       onClick={handlePlayerClick}
     >
       <div
-        className="absolute top-0 left-0 h-[4px] bg-[#B76EEF] trnsition-width duration-100 ease-linear"
+        className="absolute top-0 left-0 h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
         style={{ width: `${progress}%` }}
       />
 

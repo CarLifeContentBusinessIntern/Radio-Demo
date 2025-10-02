@@ -45,18 +45,20 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       ? mockEpisodeData.find((item) => item.id === state.currentEpisodeId)
       : mockEpisodeData.find((item) => item.id === DEFAULT_EPISODE_ID);
 
+  const getEpisodeDuration = (episode: EpisodeType): number => {
+    if (typeof episode.totalTime === 'string') {
+      return timeStringToSeconds(episode.totalTime);
+    } else if (typeof episode.totalTime === 'number') {
+      return episode.totalTime;
+    }
+    return 2712;
+  };
+
   useEffect(() => {
     if (state.currentEpisodeId === null && currentEpisodeData) {
       const episode = currentEpisodeData as EpisodeType;
 
-      let newDuration: number;
-      if (typeof episode.totalTime === 'string') {
-        newDuration = timeStringToSeconds(episode.totalTime);
-      } else if (typeof episode.totalTime === 'number') {
-        newDuration = episode.totalTime;
-      } else {
-        newDuration = 2712;
-      }
+      const newDuration = getEpisodeDuration(episode);
 
       setState((prevState) => ({
         ...prevState,
@@ -70,15 +72,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     const episode = mockEpisodeData.find((item) => item.id === id);
 
     if (episode) {
-      let newDuration: number;
-
-      if (typeof episode.totalTime === 'string') {
-        newDuration = timeStringToSeconds(episode.totalTime);
-      } else if (typeof episode.totalTime === 'number') {
-        newDuration = episode.totalTime;
-      } else {
-        newDuration = 2712;
-      }
+      const newDuration = getEpisodeDuration(episode);
 
       setState((prevState) => ({
         ...prevState,

@@ -44,7 +44,9 @@ function HomeLiveVersion() {
               title={item.channelName}
               subTitle={item.frequency}
               onClick={() => {
-                navigate(`/player/${item.liveEpisodeId}`);
+                if (item.liveEpisodeId) {
+                  navigate(`/player/${item.liveEpisodeId}`);
+                }
               }}
             />
           );

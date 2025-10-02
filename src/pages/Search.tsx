@@ -12,7 +12,7 @@ function Search() {
         <div className="flex flex-col gap-y-1">
           {mockChannelData.slice(0, MAX_SEARCH_RESULTS).map((item) => (
             <ListViewItem
-              key={item.id}
+              key={item.liveEpisodeId}
               id={item.liveEpisodeId}
               imgUrl={item.imgUrl}
               title={item.channelName}
