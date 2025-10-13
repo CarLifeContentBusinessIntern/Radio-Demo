@@ -26,8 +26,6 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
     hasBeenActivated,
   } = usePlayer();
 
-  if (!hasBeenActivated || currentEpisodeId === null || !currentEpisodeData) return null;
-
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handlePlayerClick = () => {
@@ -38,6 +36,8 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
   const handleControlsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  if (!hasBeenActivated) return;
 
   return (
     <div

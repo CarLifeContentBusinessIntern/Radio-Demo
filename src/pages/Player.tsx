@@ -24,6 +24,7 @@ function Player() {
     handleSkip,
     formatTime,
     playEpisode,
+    hasBeenActivated,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -31,10 +32,12 @@ function Player() {
     episodeId !== null ? mockEpisodeData.find((item) => item.id === episodeId) : undefined;
 
   useEffect(() => {
-    if (episodeId !== null && episodeId !== currentEpisodeId) {
+    if (episodeId !== null && episodeId === currentEpisodeId && !hasBeenActivated) {
+      playEpisode(episodeId);
+    } else if (episodeId !== null && episodeId !== currentEpisodeId) {
       playEpisode(episodeId);
     }
-  }, [episodeId, currentEpisodeId, playEpisode]);
+  }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
   if (!episodeData) return null;
 
