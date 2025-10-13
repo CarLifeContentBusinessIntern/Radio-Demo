@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import type { HeaderType } from '../types';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
-import PickleLogo from '../assets/pickleLogo.svg';
-import SearchIcon from '../assets/searchIcon.svg';
+import { useNavigate } from 'react-router-dom';
+import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
-import BackArrowIcon from '../assets/backArrowIcon.svg';
-import { useVersion } from '../contexts/VersionContext';
+import PickleLogo from '../assets/pickleLogo.svg';
+import SearchIcon from '../assets/searchIcon.svg';
+import type { HeaderType } from '../types';
 
 const navLinks = [
   { name: '홈', path: '/' },
@@ -20,12 +19,11 @@ const navLinks = [
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
-  const { toggleVersion } = useVersion();
 
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row items-center sm:gap-7 md:gap-11 lg:gap-20">
-        <button onClick={toggleVersion}>
+        <button>
           <img src={PickleLogo} alt="Pickle Logo" />
         </button>
         {navLinks.map((link) => (

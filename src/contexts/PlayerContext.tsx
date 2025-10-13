@@ -48,14 +48,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       ? mockEpisodeData.find((item) => item.id === state.currentEpisodeId)
       : mockEpisodeData.find((item) => item.id === DEFAULT_EPISODE_ID);
 
-  const getEpisodeDuration = (episode: EpisodeType): number => {
+  const getEpisodeDuration = useCallback((episode: EpisodeType): number => {
     if (typeof episode.totalTime === 'string') {
       return timeStringToSeconds(episode.totalTime);
     } else if (typeof episode.totalTime === 'number') {
       return episode.totalTime;
     }
     return 2712;
-  };
+  }, []);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && currentEpisodeData) {
@@ -68,7 +68,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         duration: newDuration,
       }));
     }
-  }, [state.currentEpisodeId, currentEpisodeData]);
+  }, [state.currentEpisodeId, currentEpisodeData, getEpisodeDuration]);
 
   const playEpisode = useCallback(
     (id: number) => {

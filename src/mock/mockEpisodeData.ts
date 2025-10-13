@@ -3,7 +3,7 @@ import { mockChannelWithEpisodes } from './mockChannelData';
 export const mockEpisodeData = [
   {
     id: 101,
-    imgUrl: '',
+    imgUrl: 'https://picsum.photos/id/10/200/200',
     title: '완벽한 하루 이상순입니다',
     channel: 'MBC FM4U',
     playTime: '15:30',
