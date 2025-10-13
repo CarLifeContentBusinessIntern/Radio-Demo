@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 
-function HomeNoLiveVersion() {
+function RadioNoLiveVersion() {
   const radios = [
     { id: 1, title: 'MBC FM4U', subTitle: '91.9 MHz' },
     { id: 2, title: 'KBS Happy FM', subTitle: '106.1 MHz' },
@@ -84,4 +84,4 @@ function HomeNoLiveVersion() {
   );
 }
 
-export default HomeNoLiveVersion;
+export default RadioNoLiveVersion;

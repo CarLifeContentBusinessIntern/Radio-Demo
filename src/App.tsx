@@ -2,20 +2,21 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
-import Home from './pages/Home.tsx';
 import ListViewPage from './pages/ListViewPage.tsx';
 import Search from './pages/Search.tsx';
 import Player from './pages/Player.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import { VersionProvider } from './contexts/VersionContext.tsx';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
+import HomePage from './pages/HomePage.tsx';
+import Radio from './pages/Radio.tsx';
 
 function AppRoutes() {
   return (
     <Routes>
       <Route element={<Layout type="home" scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
         </Route>
       </Route>
 
@@ -82,6 +83,10 @@ function AppRoutes() {
         }
       >
         <Route path="setting" element={<SettingPage />} />
+      </Route>
+
+      <Route element={<Layout type="radio" scrollbar={true} paddingX={false} paddingB={true} />}>
+        <Route path="radio" element={<Radio />} />
       </Route>
     </Routes>
   );

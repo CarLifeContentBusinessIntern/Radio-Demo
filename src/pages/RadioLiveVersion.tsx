@@ -5,7 +5,7 @@ import { mockCategoryData } from '../mock/mockCategoryData';
 import { mockChannelData } from '../mock/mockChannelData';
 import { mockEpisodeData } from '../mock/mockEpisodeData';
 
-function HomeLiveVersion() {
+function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const displayEpData = Array.from({ length: 11 }).map((_, index) => {
@@ -68,4 +68,4 @@ function HomeLiveVersion() {
   );
 }
 
-export default HomeLiveVersion;
+export default RadioLiveVersion;
