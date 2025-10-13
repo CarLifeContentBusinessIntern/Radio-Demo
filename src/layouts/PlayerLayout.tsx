@@ -1,8 +1,14 @@
 import { Outlet } from 'react-router-dom';
 import BottomPlayer from '../components/BottomPlayer';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
+import { usePlayer } from '../contexts/PlayerContext';
 
 const PlayerLayout = () => {
+  const { currentEpisodeData } = usePlayer();
+
+  if (!currentEpisodeData) return null;
+
+  const { id, title, imgUrl } = currentEpisodeData;
+
   return (
     <div className="app-container">
       <main className="content">
@@ -10,11 +16,7 @@ const PlayerLayout = () => {
       </main>
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
-        <BottomPlayer
-          id={mockEpisodeData[0].id}
-          title={mockEpisodeData[0].title}
-          channel={mockEpisodeData[0].channel}
-        />
+        <BottomPlayer id={id} title={title} imgUrl={imgUrl} />
       </div>
     </div>
   );

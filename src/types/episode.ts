@@ -1,4 +1,5 @@
 export type EpisodeType = {
+  id: number;
   imgUrl?: string;
   title: string;
   channel: string;

@@ -33,7 +33,7 @@ function Layout({ type, title, scrollbar, paddingX, paddingB, isPlayer }: Layout
   }, [pathname]);
 
   return (
-    <div className="flex flex-col h-screen bg-black text-white">
+    <div className="flex flex-col h-screen text-white">
       <Header type={type} title={title} isPlayer={isPlayer} />
 
       {scrollbar ? (

@@ -11,10 +11,9 @@ type BottomPlayerProps = {
   id: number;
   imgUrl?: string;
   title: string;
-  channel: string;
 };
 
-function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
+function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
   const navigate = useNavigate();
   const {
     isPlaying,
@@ -23,6 +22,7 @@ function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
     currentEpisodeData,
     currentTime,
     duration,
+    hasBeenActivated,
   } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -35,6 +35,8 @@ function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
   const handleControlsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  if (!hasBeenActivated) return null;
 
   return (
     <div

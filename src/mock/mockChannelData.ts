@@ -7,7 +7,8 @@ export const mockChannelWithEpisodes = [
     episodes: [
       {
         id: 101,
-        imgUrl: '',
+        imgUrl:
+          'https://img.imbc.com/broad/radio/fm4u/perfect/v2/setting/homepage/__icsFiles/afieldfile/2024/10/30/640X360.jpg',
         title: '완벽한 하루 이상순입니다',
         playTime: '15:30',
         totalTime: '45:12',

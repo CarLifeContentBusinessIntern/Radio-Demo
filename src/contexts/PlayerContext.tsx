@@ -8,6 +8,7 @@ interface PlayerState {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
+  hasBeenActivated: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -24,6 +25,7 @@ const initialPlayerStae: PlayerState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
+  hasBeenActivated: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -80,6 +82,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         isPlaying: true,
         currentTime: 0,
         duration: newDuration,
+        hasBeenActivated: true,
       }));
     }
   }, []);
