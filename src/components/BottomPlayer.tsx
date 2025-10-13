@@ -14,7 +14,7 @@ type BottomPlayerProps = {
   channel: string;
 };
 
-function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
+function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
   const navigate = useNavigate();
   const {
     isPlaying,
@@ -23,7 +23,10 @@ function BottomPlayer({ id, imgUrl, title, channel }: BottomPlayerProps) {
     currentEpisodeData,
     currentTime,
     duration,
+    hasBeenActivated,
   } = usePlayer();
+
+  if (!hasBeenActivated || currentEpisodeId === null || !currentEpisodeData) return null;
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 

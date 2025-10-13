@@ -8,6 +8,7 @@ interface PlayerState {
   isPlaying: boolean;
   currentTime: number;
   duration: number;
+  hasBeenActivated: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -17,6 +18,7 @@ interface PlayerContextType extends PlayerState {
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
+  hasBeenActivated: boolean;
 }
 
 const initialPlayerStae: PlayerState = {
@@ -24,6 +26,7 @@ const initialPlayerStae: PlayerState = {
   isPlaying: false,
   currentTime: 0,
   duration: 0,
+  hasBeenActivated: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -57,7 +60,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (state.currentEpisodeId === null && currentEpisodeData) {
       const episode = currentEpisodeData as EpisodeType;
-
       const newDuration = getEpisodeDuration(episode);
 
       setState((prevState) => ({
@@ -68,21 +70,25 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.currentEpisodeId, currentEpisodeData]);
 
-  const playEpisode = useCallback((id: number) => {
-    const episode = mockEpisodeData.find((item) => item.id === id);
+  const playEpisode = useCallback(
+    (id: number) => {
+      const episode = mockEpisodeData.find((item) => item.id === id);
 
-    if (episode) {
-      const newDuration = getEpisodeDuration(episode);
+      if (episode) {
+        const newDuration = getEpisodeDuration(episode);
 
-      setState((prevState) => ({
-        ...prevState,
-        currentEpisodeId: id,
-        isPlaying: true,
-        currentTime: 0,
-        duration: newDuration,
-      }));
-    }
-  }, []);
+        setState((prevState) => ({
+          ...prevState,
+          currentEpisodeId: id,
+          isPlaying: true,
+          currentTime: 0,
+          duration: newDuration,
+          hasBeenActivated: true,
+        }));
+      }
+    },
+    [getEpisodeDuration]
+  );
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
