@@ -86,7 +86,9 @@ function AppRoutes() {
       </Route>
 
       <Route element={<Layout type="radio" scrollbar={true} paddingX={false} paddingB={true} />}>
-        <Route path="radio" element={<Radio />} />
+        <Route element={<PlayerLayout />}>
+          <Route path="radio" element={<Radio />} />
+        </Route>
       </Route>
     </Routes>
   );
