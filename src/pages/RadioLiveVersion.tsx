@@ -5,7 +5,7 @@ import { mockCategoryData } from '../mock/mockCategoryData';
 import { mockChannelData } from '../mock/mockChannelData';
 import { mockEpisodeData } from '../mock/mockEpisodeData';
 
-function HomeLiveVersion() {
+function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const displayEpData = Array.from({ length: 11 }).map((_, index) => {
@@ -22,7 +22,7 @@ function HomeLiveVersion() {
 
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 ">지금은?</div>
+      <div className="text-2xl mb-7 font-semibold">지금은?</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayEpData.map((item, index) => (
           <GridViewItem
@@ -35,7 +35,7 @@ function HomeLiveVersion() {
         <GridViewItem title="더보기" subTitle="더보기" />
       </div>
 
-      <div className="text-2xl mb-7">방송사별 라디오</div>
+      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayChannelData.map((item, index) => {
           return (
@@ -53,7 +53,7 @@ function HomeLiveVersion() {
         })}
       </div>
 
-      <div className="text-2xl mb-7">카테고리</div>
+      <div className="text-2xl mb-7 font-semibold">카테고리</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {displayCategoryData.map((item, index) => (
           <CircleViewItem
@@ -68,4 +68,4 @@ function HomeLiveVersion() {
   );
 }
 
-export default HomeLiveVersion;
+export default RadioLiveVersion;

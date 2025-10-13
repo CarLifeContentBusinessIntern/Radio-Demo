@@ -132,6 +132,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
   const renderHeader = () => {
     switch (type) {
       case 'home':
+      case 'radio':
         return <HomeHeader />;
       case 'search':
         return <SearchHeader />;

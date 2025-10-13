@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 
-function HomeNoLiveVersion() {
+function RadioNoLiveVersion() {
   const radios = [
     { id: 1, title: 'MBC FM4U', subTitle: '91.9 MHz' },
     { id: 2, title: 'KBS Happy FM', subTitle: '106.1 MHz' },
@@ -47,7 +47,7 @@ function HomeNoLiveVersion() {
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 ">방송사별 라디오</div>
+      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {radios.map((item) => (
           <CircleViewItem
@@ -58,7 +58,7 @@ function HomeNoLiveVersion() {
           />
         ))}
       </div>
-      <div className="text-2xl mb-7">인기 채널</div>
+      <div className="text-2xl mb-7 font-semibold">인기 채널</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {channels.map((item) => (
           <GridViewItem
@@ -69,7 +69,7 @@ function HomeNoLiveVersion() {
           />
         ))}
       </div>
-      <div className="text-2xl mb-7">카테고리</div>
+      <div className="text-2xl mb-7 font-semibold">카테고리</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {categories.map((item) => (
           <CircleViewItem
@@ -84,4 +84,4 @@ function HomeNoLiveVersion() {
   );
 }
 
-export default HomeNoLiveVersion;
+export default RadioNoLiveVersion;
