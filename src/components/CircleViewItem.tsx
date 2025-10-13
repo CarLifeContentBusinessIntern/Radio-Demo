@@ -13,7 +13,7 @@ function CircleViewItem({ title, subTitle, onClick }: CircleViewItemProps) {
         <div className="bg-gray-600 w-full aspect-square rounded-full mb-4" />
         <img src={PickleLogo} className="absolute top-6 inset-x-0 mx-auto" />
       </div>
-      <p className="text-[28px] mb-2 px-1 font-semibold truncate">{title}</p>
+      <p className="text-[28px] mb-1 px-1 font-semibold truncate">{title}</p>
       <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );
