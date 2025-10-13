@@ -18,7 +18,6 @@ interface PlayerContextType extends PlayerState {
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
-  hasBeenActivated: boolean;
 }
 
 const initialPlayerStae: PlayerState = {

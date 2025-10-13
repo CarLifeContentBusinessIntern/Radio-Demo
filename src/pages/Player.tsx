@@ -32,7 +32,7 @@ function Player() {
     episodeId !== null ? mockEpisodeData.find((item) => item.id === episodeId) : undefined;
 
   useEffect(() => {
-    if (episodeId !== null && episodeId === currentEpisodeId && !hasBeenActivated) {
+    if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
       playEpisode(episodeId);
     } else if (episodeId !== null && episodeId !== currentEpisodeId) {
       playEpisode(episodeId);

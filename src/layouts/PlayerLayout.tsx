@@ -7,7 +7,7 @@ const PlayerLayout = () => {
 
   if (!currentEpisodeData) return null;
 
-  const { id, title, channel, imgUrl } = currentEpisodeData;
+  const { id, title, imgUrl } = currentEpisodeData;
 
   return (
     <div className="app-container">
@@ -16,7 +16,7 @@ const PlayerLayout = () => {
       </main>
 
       <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
-        <BottomPlayer id={id} title={title} channel={channel} imgUrl={imgUrl} />
+        <BottomPlayer id={id} title={title} imgUrl={imgUrl} />
       </div>
     </div>
   );

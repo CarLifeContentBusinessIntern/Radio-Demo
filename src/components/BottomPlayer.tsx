@@ -11,7 +11,6 @@ type BottomPlayerProps = {
   id: number;
   imgUrl?: string;
   title: string;
-  channel: string;
 };
 
 function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
@@ -37,7 +36,7 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
     e.stopPropagation();
   };
 
-  if (!hasBeenActivated) return;
+  if (!hasBeenActivated) return null;
 
   return (
     <div
