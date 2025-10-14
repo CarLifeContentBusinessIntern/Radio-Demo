@@ -34,8 +34,6 @@ function Player() {
   useEffect(() => {
     if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
       playEpisode(episodeId);
-    } else if (episodeId !== null && episodeId !== currentEpisodeId) {
-      playEpisode(episodeId);
     }
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
