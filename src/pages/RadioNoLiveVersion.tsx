@@ -84,7 +84,11 @@ function RadioNoLiveVersion() {
             title={`${item.broadcasting} ${item.channel}`}
             subTitle={item.frequency}
             img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
+            onClick={() =>
+              navigate(`/curation/${item.id}`, {
+                state: { title: `${item.broadcasting} ${item.channel}`, type: 'channel' },
+              })
+            }
           />
         ))}
       </div>

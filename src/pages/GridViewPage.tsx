@@ -1,17 +1,48 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import GridViewItem from '../components/GridViewItem';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import type { RadioType } from '../types/radio';
 
 function GridViewPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { type } = location.state || {};
+  const { id } = useParams();
+  console.log(id);
+  // const tableName = type === 'channel' ? 'channels' : 'categories';
+  const [radios, setRadios] = useState<RadioType[]>([]);
+
+  //채널별 라디오 조회
+  async function fetchRadios() {
+    const { data, error } = await supabase
+      .from('radios')
+      .select('*')
+      .order('id', { ascending: true })
+      .eq('channel_id', id);
+
+    if (error) {
+      console.error('Supabase 연결 실패:', error);
+    } else {
+      console.log('Supabase 연결 성공, 데이터 예시:', data);
+      setRadios(data);
+    }
+  }
+
+  useEffect(() => {
+    fetchRadios();
+  }, []);
+
   return (
     <div className="pr-28 pt-3">
       <div className="grid gap-4 mb-4 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, idx) => (
+        {radios.map((item) => (
           <GridViewItem
-            key={idx}
-            title="채널명"
-            subTitle="제작자명"
-            onClick={() => navigate(`/channels/detail/${idx}`)}
+            key={item.id}
+            title={item.title}
+            subTitle={item.time_slot}
+            img={item.img_url}
+            onClick={() => navigate(`/channels/detail/${item.id}`)}
           />
         ))}
       </div>

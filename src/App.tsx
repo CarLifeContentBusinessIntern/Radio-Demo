@@ -14,7 +14,9 @@ import Radio from './pages/Radio.tsx';
 function AppRoutes() {
   return (
     <Routes>
-      <Route element={<Layout type="home" scrollbar={true} paddingX={false} paddingB={true} />}>
+      <Route
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
         <Route element={<PlayerLayout />}>
           <Route path="/" element={<HomePage />} />
         </Route>
@@ -23,8 +25,8 @@ function AppRoutes() {
       <Route
         element={
           <Layout
-            type="curation"
-            title="채널 명"
+            defaultType="curation"
+            // title="채널 명"
             scrollbar={true}
             paddingX={true}
             paddingB={true}
@@ -39,8 +41,8 @@ function AppRoutes() {
       <Route
         element={
           <Layout
-            type="curation"
-            title="큐레이션 명"
+            // defaultType="curation"
+            // title="큐레이션 명"
             scrollbar={true}
             paddingX={false}
             paddingB={true}
@@ -54,7 +56,13 @@ function AppRoutes() {
 
       <Route
         element={
-          <Layout type="search" title="검색" scrollbar={true} paddingX={true} paddingB={true} />
+          <Layout
+            defaultType="search"
+            //  title="검색"
+            scrollbar={true}
+            paddingX={true}
+            paddingB={true}
+          />
         }
       >
         <Route element={<PlayerLayout />}>
@@ -65,8 +73,8 @@ function AppRoutes() {
       <Route
         element={
           <Layout
-            type="curation"
-            title="지금 재생 중"
+            defaultType="curation"
+            // title="지금 재생 중"
             scrollbar={false}
             paddingX={false}
             paddingB={false}
@@ -79,13 +87,21 @@ function AppRoutes() {
 
       <Route
         element={
-          <Layout type="setting" title="설정" scrollbar={false} paddingX={false} paddingB={false} />
+          <Layout
+            defaultType="setting"
+            //  title="설정"
+            scrollbar={false}
+            paddingX={false}
+            paddingB={false}
+          />
         }
       >
         <Route path="setting" element={<SettingPage />} />
       </Route>
 
-      <Route element={<Layout type="radio" scrollbar={true} paddingX={false} paddingB={true} />}>
+      <Route
+        element={<Layout defaultType="radio" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
         <Route element={<PlayerLayout />}>
           <Route path="radio" element={<Radio />} />
         </Route>

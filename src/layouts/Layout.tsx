@@ -5,17 +5,18 @@ import Scrollbar from '../components/Scrollbar';
 import type { HeaderType } from '../types';
 
 interface LayoutProps {
-  type: HeaderType;
-  title?: string;
+  defaultType?: HeaderType;
   scrollbar: boolean;
   paddingX: boolean;
   paddingB: boolean;
   isPlayer?: boolean;
 }
 
-function Layout({ type, title, scrollbar, paddingX, paddingB, isPlayer }: LayoutProps) {
+function Layout({ defaultType, scrollbar, paddingX, paddingB, isPlayer }: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const { pathname } = useLocation();
+  const { pathname, state } = useLocation();
+  const type = state?.type || defaultType;
+  const title = state?.title || '';
 
   const mainContent = (
     <main

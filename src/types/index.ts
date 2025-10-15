@@ -1,1 +1,8 @@
-export type HeaderType = 'home' | 'curation' | 'search' | 'setting' | 'radio';
+export type HeaderType =
+  | 'home'
+  | 'category'
+  | 'curation'
+  | 'channel'
+  | 'search'
+  | 'setting'
+  | 'radio';

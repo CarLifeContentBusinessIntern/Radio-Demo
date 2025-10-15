@@ -18,7 +18,11 @@ function Category({ categories }: CategoryProps) {
             title={item.title}
             subTitle={item.category}
             img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
+            onClick={() =>
+              navigate(`/curation/${item.id}`, {
+                state: { title: item.title.replace('/', '・'), type: 'category' },
+              })
+            }
           />
         ))}
       </div>
