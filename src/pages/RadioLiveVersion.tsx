@@ -17,48 +17,37 @@ function RadioLiveVersion() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
-    async function fetchLiveData() {
-      const { data: liveRadioData, error: liveError } = await supabase
-        .from('radios')
-        .select('*, channels(*)')
-        .eq('is_live', true)
-        .order('live_no', { ascending: true });
+    const fetchAllData = async () => {
+      try {
+        const promises = [
+          supabase.from('radios').select('*, channels(*)').eq('is_live', true).order('live_no'),
+          supabase.from('channels').select('*').order('id'),
+          supabase.from('categories').select('*').order('order'),
+        ];
 
-      if (liveError) {
-        console.log('❌ Error fetching live data:', liveError.message);
-        return;
+        const [
+          { data: liveRadioData, error: liveError },
+          { data: broadcastingData, error: broadcastingError },
+          { data: categoryData, error: categoryError },
+        ] = await Promise.all(promises);
+
+        if (liveError) throw liveError;
+        if (broadcastingError) throw broadcastingError;
+        if (categoryError) throw categoryError;
+
+        setLiveData(liveRadioData);
+        setBroadcastingData(broadcastingData);
+        setCategories(categoryData);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log('❌ Error fetching data:', error.message);
+        } else {
+          console.log('❌ An unexpected error occurred:', error);
+        }
       }
-      setLiveData(liveRadioData);
-    }
-    fetchLiveData();
+    };
 
-    async function fetchBroadcastingData() {
-      const { data: broadcastingData, error: broadcastingError } = await supabase
-        .from('channels')
-        .select('*')
-        .order('id', { ascending: true });
-
-      if (broadcastingError) {
-        console.log('❌ Error fetching live data:', broadcastingError.message);
-        return;
-      }
-      setBroadcastingData(broadcastingData);
-    }
-    fetchBroadcastingData();
-
-    async function fetchCategoryTypeData() {
-      const { data: categoryData, error: categoryError } = await supabase
-        .from('categories')
-        .select(`*`)
-        .order('id', { ascending: true });
-
-      if (categoryError) {
-        console.log('❌ Error fetching category data:', categoryError.message);
-        return;
-      }
-      setCategories(categoryData);
-    }
-    fetchCategoryTypeData();
+    fetchAllData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {

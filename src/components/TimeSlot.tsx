@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import CircleViewItem from './CircleViewItem';
 import { useNavigate } from 'react-router-dom';
-import type { TimeSlot } from '../types/timeSlot';
+import type { TimeSlotType } from '../types/timeSlot';
 
 function TimeSlot() {
   const navigate = useNavigate();
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
 
   useEffect(() => {
     async function fetchTimeSlotData() {
