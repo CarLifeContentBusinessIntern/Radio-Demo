@@ -3,19 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { supabase } from '../lib/supabaseClient';
-import { mockCategoryData } from '../mock/mockCategoryData';
+import type { Category } from '../types/category';
 import type { Channel } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
+import { mockTimeSlotData } from '../mock/mockTimeSlotData';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
-  const displayCategoryData = Array.from({ length: 8 }).map((_, index) => {
-    return mockCategoryData[index % mockCategoryData.length];
-  });
-
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
   const [broadcastingData, setBroadcastingData] = useState<Channel[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -46,6 +44,20 @@ function RadioLiveVersion() {
       setBroadcastingData(broadcastingData);
     }
     fetchBroadcastingData();
+
+    async function fetchCategoryData() {
+      const { data: categoryData, error: categoryError } = await supabase
+        .from('categories')
+        .select(`*`)
+        .order('id', { ascending: true });
+
+      if (categoryError) {
+        console.log('❌ Error fetching category data:', categoryError.message);
+        return;
+      }
+      setCategories(categoryData);
+    }
+    fetchCategoryData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -96,11 +108,25 @@ function RadioLiveVersion() {
 
       <div className="text-2xl mb-7 font-semibold">카테고리</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayCategoryData.map((item, index) => (
+        {categories.map((item, index) => (
           <CircleViewItem
             key={`${item.id}-${index}`}
             title={item.title}
             subTitle={item.category}
+            img={item.img_url}
+            onClick={() => navigate(`/curation/${item.id}`)}
+          />
+        ))}
+      </div>
+
+      <div className="text-2xl mb-7 font-semibold">시간별 몰아보기</div>
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {mockTimeSlotData.map((item, index) => (
+          <CircleViewItem
+            key={`${item.id}-${index}`}
+            title={item.title}
+            subTitle={item.sub_title}
+            img={item.img_url}
             onClick={() => navigate(`/curation/${item.id}`)}
           />
         ))}
