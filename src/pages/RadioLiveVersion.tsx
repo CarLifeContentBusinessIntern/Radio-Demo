@@ -4,16 +4,16 @@ import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
-import type { Category } from '../types/category';
-import type { Channel } from '../types/channel';
+import type { CategoryType } from '../types/category';
+import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
-  const [broadcastingData, setBroadcastingData] = useState<Channel[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -45,7 +45,7 @@ function RadioLiveVersion() {
     }
     fetchBroadcastingData();
 
-    async function fetchCategoryData() {
+    async function fetchCategoryTypeData() {
       const { data: categoryData, error: categoryError } = await supabase
         .from('categories')
         .select(`*`)
@@ -57,7 +57,7 @@ function RadioLiveVersion() {
       }
       setCategories(categoryData);
     }
-    fetchCategoryData();
+    fetchCategoryTypeData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {

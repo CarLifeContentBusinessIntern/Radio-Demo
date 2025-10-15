@@ -10,11 +10,10 @@ function GridViewPage() {
   const { type } = location.state || {};
   const { id } = useParams();
   console.log(id);
-  // const tableName = type === 'channel' ? 'channels' : 'categories';
   const [radios, setRadios] = useState<RadioType[]>([]);
 
   //채널별 라디오 조회
-  async function fetchRadios() {
+  async function fetchChannelRadios() {
     const { data, error } = await supabase
       .from('radios')
       .select('*')
@@ -24,13 +23,28 @@ function GridViewPage() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      console.log('Supabase 연결 성공, 데이터 예시:', data);
+      setRadios(data);
+    }
+  }
+
+  //카테고리별 라디오 조회
+  async function fetchCategoryRadios() {
+    const { data, error } = await supabase
+      .from('radios')
+      .select('*')
+      .order('id', { ascending: true })
+      .eq('category_id', id);
+
+    if (error) {
+      console.error('Supabase 연결 실패:', error);
+    } else {
       setRadios(data);
     }
   }
 
   useEffect(() => {
-    fetchRadios();
+    if (type === 'channel') fetchChannelRadios();
+    else if (type === 'category') fetchCategoryRadios();
   }, []);
 
   return (

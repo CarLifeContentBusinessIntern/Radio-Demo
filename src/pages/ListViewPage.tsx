@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { data, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
 import type { Episode } from '../types/episode';
