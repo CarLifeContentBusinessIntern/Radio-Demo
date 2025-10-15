@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { CategoryType } from '../types/category';
-import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
 import Category from '../components/Category';
+import AllChannels from '../components/AllChannels';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
-  const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
@@ -32,19 +31,19 @@ function RadioLiveVersion() {
     }
     fetchLiveData();
 
-    async function fetchBroadcastingData() {
-      const { data: broadcastingData, error: broadcastingError } = await supabase
-        .from('channels')
-        .select('*')
-        .order('id', { ascending: true });
+    // async function fetchBroadcastingData() {
+    //   const { data: broadcastingData, error: broadcastingError } = await supabase
+    //     .from('channels')
+    //     .select('*')
+    //     .order('id', { ascending: true });
 
-      if (broadcastingError) {
-        console.log('❌ Error fetching live data:', broadcastingError.message);
-        return;
-      }
-      setBroadcastingData(broadcastingData);
-    }
-    fetchBroadcastingData();
+    //   if (broadcastingError) {
+    //     console.log('❌ Error fetching live data:', broadcastingError.message);
+    //     return;
+    //   }
+    //   setBroadcastingData(broadcastingData);
+    // }
+    // fetchBroadcastingData();
 
     async function fetchCategoryTypeData() {
       const { data: categoryData, error: categoryError } = await supabase
@@ -83,7 +82,10 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
+      <AllChannels />
+
+      {/* 방송별 생방송 */}
+      {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {broadcastingData.map((item, index) => {
           return (
@@ -105,7 +107,7 @@ function RadioLiveVersion() {
             />
           );
         })}
-      </div>
+      </div> */}
 
       <Category categories={categories} />
       <TimeSlot />
