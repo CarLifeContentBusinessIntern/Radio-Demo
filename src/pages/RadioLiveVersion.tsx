@@ -3,51 +3,62 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { Category } from '../types/category';
-import type { Channel } from '../types/channel';
+import type { CategoryType } from '../types/category';
+import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
 import TimeSlot from '../components/TimeSlot';
+import Category from '../components/Category';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
-  const [broadcastingData, setBroadcastingData] = useState<Channel[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [liveRes, broadcastingRes, categoriesRes] = await Promise.all([
-          supabase
-            .from('radios')
-            .select('*, channels(*)')
-            .eq('is_live', true)
-            .order('live_no', { ascending: true }),
-          supabase.from('channels').select('*').order('id', { ascending: true }),
-          supabase.from('categories').select('*').order('order', { ascending: true }),
-        ]);
+    async function fetchLiveData() {
+      const { data: liveRadioData, error: liveError } = await supabase
+        .from('radios')
+        .select('*, channels(*)')
+        .eq('is_live', true)
+        .order('live_no', { ascending: true });
 
-        if (liveRes.error) console.log('❌ Error fetching live data:', liveRes.error.message);
-        else setLiveData(liveRes.data || []);
-
-        if (broadcastingRes.error)
-          console.log('❌ Error fetching broadcasting data:', broadcastingRes.error.message);
-        else setBroadcastingData(broadcastingRes.data || []);
-
-        if (categoriesRes.error)
-          console.log('❌ Error fetching category data:', categoriesRes.error.message);
-        else setCategories(categoriesRes.data || []);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log('❌ Error fetching data:', error.message);
-        } else {
-          console.log('❌ An unexpected error occurred:', error);
-        }
+      if (liveError) {
+        console.log('❌ Error fetching live data:', liveError.message);
+        return;
       }
-    };
+      setLiveData(liveRadioData);
+    }
+    fetchLiveData();
 
-    fetchData();
+    async function fetchBroadcastingData() {
+      const { data: broadcastingData, error: broadcastingError } = await supabase
+        .from('channels')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (broadcastingError) {
+        console.log('❌ Error fetching live data:', broadcastingError.message);
+        return;
+      }
+      setBroadcastingData(broadcastingData);
+    }
+    fetchBroadcastingData();
+
+    async function fetchCategoryTypeData() {
+      const { data: categoryData, error: categoryError } = await supabase
+        .from('categories')
+        .select(`*`)
+        .order('id', { ascending: true });
+
+      if (categoryError) {
+        console.log('❌ Error fetching category data:', categoryError.message);
+        return;
+      }
+      setCategories(categoryData);
+    }
+    fetchCategoryTypeData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -64,7 +75,7 @@ function RadioLiveVersion() {
             <GridViewItem
               key={`${item.live_episode_id}-${index}`}
               title={item.title}
-              subTitle={item.channels.broadcasting + item.channels.channel}
+              subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
               img={item.img_url}
               onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
             />
@@ -93,18 +104,7 @@ function RadioLiveVersion() {
         })}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">카테고리</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {categories.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
-          />
-        ))}
-      </div>
-
+      <Category categories={categories} />
       <TimeSlot />
     </div>
   );

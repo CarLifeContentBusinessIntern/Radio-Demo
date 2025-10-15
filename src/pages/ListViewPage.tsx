@@ -12,29 +12,24 @@ function ListViewPage({ type }: ListViewPageProps) {
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
+  const eqId = type === 'channel' ? 'radio_id' : 'time_slot_id';
+
   useEffect(() => {
     async function fetchEpisodesData() {
-      if (!id) return;
-
-      let query = supabase.from('episodes').select('*, radios!inner(*, channels!inner(*))');
-
-      if (type === 'timeslot') {
-        query = query.eq('time_slot_id', id);
-      } else if (type === 'channel') {
-        //
-      }
-
-      const { data, error } = await query;
-
+      const { data, error } = await supabase
+        .from('episodes')
+        .select('*, radios(*, channels(*))')
+        .eq(eqId, id);
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
         return;
       }
-      setEpisodes(data || []);
+      console.log(data);
+      setEpisodes(data);
     }
 
     fetchEpisodesData();
-  }, [id, type]);
+  }, [eqId, id]);
 
   return (
     <div className="flex flex-col gap-y-1">

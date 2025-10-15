@@ -1,4 +1,4 @@
-import type { Radio } from './radio';
+import type { RadioType } from './radio';
 
 export interface Episode {
   id: number;
@@ -6,5 +6,5 @@ export interface Episode {
   title: string;
   play_time?: string;
   total_time: string;
-  radios: Radio;
+  radios: RadioType;
 }
