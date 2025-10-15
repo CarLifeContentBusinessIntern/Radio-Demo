@@ -44,7 +44,7 @@ function ListViewItem({
 
       <div className="hidden md:block">
         <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
-          {playTime ? playTime : ''}
+          {playTime ?? playTime}
           {totalTime ? ` / ${totalTime}` : ''}
         </p>
       </div>

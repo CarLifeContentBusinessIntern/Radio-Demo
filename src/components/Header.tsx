@@ -39,7 +39,7 @@ const HomeHeader = () => {
             onClick={() => navigate(link.path, { state: link.state })}
           >
             {link.icon ? (
-              <img src={RadioIcon} className="h-10" />
+              <img src={link.icon} className="h-10" />
             ) : (
               <div className="bg-gray-600 w-10 h-10" />
             )}

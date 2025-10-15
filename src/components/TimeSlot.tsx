@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import CircleViewItem from './CircleViewItem';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
 import type { TimeSlotType } from '../types/timeSlot';
+import CircleViewItem from './CircleViewItem';
 
 function TimeSlot() {
   const navigate = useNavigate();
