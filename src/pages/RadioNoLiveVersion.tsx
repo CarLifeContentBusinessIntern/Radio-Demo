@@ -10,14 +10,14 @@ import type { CategoryType } from '../types/category';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
 
-interface PouplarRadioInterface {
+interface PopularRadioInterface {
   radios: RadioType;
   themes: ThemeType;
 }
 
 function RadioNoLiveVersion() {
   const [channels, setChannels] = useState<ChannelType[]>([]);
-  const [popularRadios, setPopularRadios] = useState<PouplarRadioInterface[]>([]);
+  const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
   //채널 조회

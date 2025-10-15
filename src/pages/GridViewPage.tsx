@@ -11,40 +11,28 @@ function GridViewPage() {
   const { id } = useParams();
   const [radios, setRadios] = useState<RadioType[]>([]);
 
-  //채널별 라디오 조회
-  async function fetchChannelRadios() {
+  // 라디오 조회
+  const fetchRadios = async () => {
+    if (!id || !type) return;
+
+    const filterColumn = type === 'channel' ? 'channel_id' : 'category_id';
+
     const { data, error } = await supabase
       .from('radios')
       .select('*')
       .order('id', { ascending: true })
-      .eq('channel_id', id);
+      .eq(filterColumn, id);
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
       setRadios(data);
     }
-  }
-
-  //카테고리별 라디오 조회
-  async function fetchCategoryRadios() {
-    const { data, error } = await supabase
-      .from('radios')
-      .select('*')
-      .order('id', { ascending: true })
-      .eq('category_id', id);
-
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setRadios(data);
-    }
-  }
+  };
 
   useEffect(() => {
-    if (type === 'channel') fetchChannelRadios();
-    else if (type === 'category') fetchCategoryRadios();
-  }, []);
+    fetchRadios();
+  }, [id, type]);
 
   return (
     <div className="pr-28 pt-3">
