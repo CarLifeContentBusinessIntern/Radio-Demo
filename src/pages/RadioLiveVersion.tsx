@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { CategoryType } from '../types/category';
 import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
+import Category from '../components/Category';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -106,19 +107,7 @@ function RadioLiveVersion() {
         })}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">카테고리</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {categories.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.category}
-            img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
-          />
-        ))}
-      </div>
-
+      <Category categories={categories} />
       <TimeSlot />
     </div>
   );

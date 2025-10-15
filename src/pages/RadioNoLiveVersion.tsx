@@ -8,6 +8,7 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import type { CategoryType } from '../types/category';
 import Category from '../components/Category';
+import TimeSlot from '../components/TimeSlot';
 
 interface PouplarRadioInterface {
   radios: RadioType;
@@ -29,7 +30,6 @@ function RadioNoLiveVersion() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      console.log('Supabase 연결 성공, 데이터 예시:', data);
       setChannels(data);
     }
   }
@@ -49,7 +49,6 @@ function RadioNoLiveVersion() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      console.log('Supabase 연결 성공, 데이터 예시:', data);
       setPopularRadios(data);
     }
   }
@@ -62,7 +61,6 @@ function RadioNoLiveVersion() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      console.log('Supabase 연결 성공, 데이터 예시:', data);
       setCategories(data);
     }
   }
@@ -100,7 +98,11 @@ function RadioNoLiveVersion() {
             title={item.radios.title}
             subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
             img={item.radios.img_url}
-            onClick={() => navigate(`/channels/detail/${item.radios.id}`)}
+            onClick={() =>
+              navigate(`/episodes/channel/${item.radios.id}`, {
+                state: { title: item.radios.title },
+              })
+            }
           />
         ))}
       </div>
@@ -109,6 +111,7 @@ function RadioNoLiveVersion() {
       <Category categories={categories} />
 
       {/* 시간별 몰아보기 */}
+      <TimeSlot />
     </div>
   );
 }

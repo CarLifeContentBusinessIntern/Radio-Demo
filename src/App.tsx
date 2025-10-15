@@ -23,15 +23,7 @@ function AppRoutes() {
       </Route>
 
       <Route
-        element={
-          <Layout
-            defaultType="curation"
-            // title="채널 명"
-            scrollbar={true}
-            paddingX={true}
-            paddingB={true}
-          />
-        }
+        element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
           <Route path="episodes/channel/:id" element={<ListViewPage type="channel" />} />
@@ -39,17 +31,7 @@ function AppRoutes() {
         </Route>
       </Route>
 
-      <Route
-        element={
-          <Layout
-            // defaultType="curation"
-            // title="큐레이션 명"
-            scrollbar={true}
-            paddingX={false}
-            paddingB={true}
-          />
-        }
-      >
+      <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="curation/:id" element={<GridViewPage />} />
         </Route>
@@ -59,7 +41,7 @@ function AppRoutes() {
         element={
           <Layout
             defaultType="search"
-            //  title="검색"
+            defaultTitle="검색"
             scrollbar={true}
             paddingX={true}
             paddingB={true}
@@ -75,7 +57,7 @@ function AppRoutes() {
         element={
           <Layout
             defaultType="curation"
-            // title="지금 재생 중"
+            defaultTitle="지금 재생 중"
             scrollbar={false}
             paddingX={false}
             paddingB={false}
@@ -90,7 +72,7 @@ function AppRoutes() {
         element={
           <Layout
             defaultType="setting"
-            //  title="설정"
+            defaultTitle="설정"
             scrollbar={false}
             paddingX={false}
             paddingB={false}

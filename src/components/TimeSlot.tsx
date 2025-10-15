@@ -34,7 +34,9 @@ function TimeSlot() {
             title={item.title}
             subTitle={item.time_slot}
             img={item.img_url}
-            onClick={() => navigate(`/episodes/timeslot/${item.id}`)}
+            onClick={() =>
+              navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } })
+            }
           />
         ))}
       </div>

@@ -6,17 +6,25 @@ import type { HeaderType } from '../types';
 
 interface LayoutProps {
   defaultType?: HeaderType;
+  defaultTitle?: string;
   scrollbar: boolean;
   paddingX: boolean;
   paddingB: boolean;
   isPlayer?: boolean;
 }
 
-function Layout({ defaultType, scrollbar, paddingX, paddingB, isPlayer }: LayoutProps) {
+function Layout({
+  defaultTitle,
+  defaultType,
+  scrollbar,
+  paddingX,
+  paddingB,
+  isPlayer,
+}: LayoutProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { pathname, state } = useLocation();
   const type = state?.type || defaultType;
-  const title = state?.title || '';
+  const title = state?.title || defaultTitle;
 
   const mainContent = (
     <main

@@ -12,21 +12,24 @@ function ListViewPage({ type }: ListViewPageProps) {
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
+  const eqId = type === 'channel' ? 'radio_id' : 'time_slot_id';
+
   useEffect(() => {
     async function fetchEpisodesData() {
       const { data, error } = await supabase
         .from('episodes')
         .select('*, radios(*, channels(*))')
-        .eq('time_slot_id', id);
+        .eq(eqId, id);
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
         return;
       }
+      console.log(data);
       setEpisodes(data);
     }
 
-    if (type === 'timeslot') fetchEpisodesData();
-  });
+    fetchEpisodesData();
+  }, []);
 
   return (
     <div className="flex flex-col gap-y-1">

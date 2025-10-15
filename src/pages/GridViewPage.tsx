@@ -9,7 +9,6 @@ function GridViewPage() {
   const location = useLocation();
   const { type } = location.state || {};
   const { id } = useParams();
-  console.log(id);
   const [radios, setRadios] = useState<RadioType[]>([]);
 
   //채널별 라디오 조회
@@ -56,7 +55,9 @@ function GridViewPage() {
             title={item.title}
             subTitle={item.time_slot}
             img={item.img_url}
-            onClick={() => navigate(`/channels/detail/${item.id}`)}
+            onClick={() =>
+              navigate(`/episodes/channel/${item.id}`, { state: { title: item.title } })
+            }
           />
         ))}
       </div>
