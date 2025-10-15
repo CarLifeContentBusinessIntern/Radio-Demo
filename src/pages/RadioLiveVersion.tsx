@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
-import type { CategoryType } from '../types/category';
 import type { LiveRadio } from '../types/radio';
 import Category from '../components/Category';
 import AllChannels from '../components/AllChannels';
@@ -13,7 +12,6 @@ function RadioLiveVersion() {
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
   // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -44,20 +42,6 @@ function RadioLiveVersion() {
     //   setBroadcastingData(broadcastingData);
     // }
     // fetchBroadcastingData();
-
-    async function fetchCategoryTypeData() {
-      const { data: categoryData, error: categoryError } = await supabase
-        .from('categories')
-        .select(`*`)
-        .order('id', { ascending: true });
-
-      if (categoryError) {
-        console.log('❌ Error fetching category data:', categoryError.message);
-        return;
-      }
-      setCategories(categoryData);
-    }
-    fetchCategoryTypeData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -67,7 +51,7 @@ function RadioLiveVersion() {
 
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">지금은?</div>
+      <div className="text-2xl mb-7 font-semibold">ON AIR</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {liveData &&
           liveData.map((item, index) => (
@@ -109,7 +93,7 @@ function RadioLiveVersion() {
         })}
       </div> */}
 
-      <Category categories={categories} />
+      <Category />
       <TimeSlot />
     </div>
   );

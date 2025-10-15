@@ -1,13 +1,28 @@
 import { useNavigate } from 'react-router-dom';
 import type { CategoryType } from '../types/category';
 import CircleViewItem from './CircleViewItem';
+import { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
-interface CategoryProps {
-  categories: CategoryType[];
-}
-
-function Category({ categories }: CategoryProps) {
+function Category() {
   const navigate = useNavigate();
+  const [categories, setCategories] = useState<CategoryType[]>([]);
+  async function fetchCategories() {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('order', { ascending: true });
+    if (error) {
+      console.error('Supabase 연결 실패:', error);
+    } else {
+      setCategories(data);
+    }
+  }
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
   return (
     <>
       <div className="text-2xl mb-7 font-semibold">카테고리</div>

@@ -16,7 +16,6 @@ interface PopularRadioInterface {
 
 function RadioNoLiveVersion() {
   const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   //인기 라디오 조회
   async function fetchPopularRadios() {
@@ -37,21 +36,8 @@ function RadioNoLiveVersion() {
     }
   }
 
-  async function fetchCategories() {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .order('id', { ascending: true });
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setCategories(data);
-    }
-  }
-
   useEffect(() => {
     fetchPopularRadios();
-    fetchCategories();
   }, []);
 
   const navigate = useNavigate();
@@ -76,7 +62,7 @@ function RadioNoLiveVersion() {
       </div>
 
       {/* 카테고리 */}
-      <Category categories={categories} />
+      <Category />
 
       {/* 시간별 몰아보기 */}
       <TimeSlot />
