@@ -13,7 +13,7 @@ type BottomPlayerProps = {
   title: string;
 };
 
-function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
+function BottomPlayer({ id, title }: BottomPlayerProps) {
   const navigate = useNavigate();
   const {
     isPlaying,
@@ -49,8 +49,12 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
       />
 
       <div className="flex-shrink-0">
-        {imgUrl ? (
-          <img src={imgUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
+        {currentEpisodeData?.radios.img_url ? (
+          <img
+            src={currentEpisodeData?.radios.img_url}
+            alt={title}
+            className="w-24 h-24 rounded-[11px] object-cover"
+          />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>
         )}
