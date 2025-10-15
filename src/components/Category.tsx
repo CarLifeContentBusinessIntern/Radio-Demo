@@ -31,7 +31,6 @@ function Category() {
           <CircleViewItem
             key={item.id}
             title={item.title}
-            subTitle={item.category}
             img={item.img_url}
             onClick={() =>
               navigate(`/curation/${item.id}`, {
