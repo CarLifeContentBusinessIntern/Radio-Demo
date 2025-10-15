@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
-import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { CategoryType } from '../types/category';
 import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
+import TimeSlot from '../components/TimeSlot';
 import Category from '../components/Category';
 
 function RadioLiveVersion() {
@@ -17,53 +17,42 @@ function RadioLiveVersion() {
   const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
-    async function fetchLiveData() {
-      const { data: liveRadioData, error: liveError } = await supabase
-        .from('radios')
-        .select('*, channels(*)')
-        .eq('is_live', true)
-        .order('live_no', { ascending: true });
+    const fetchAllData = async () => {
+      try {
+        const promises = [
+          supabase.from('radios').select('*, channels(*)').eq('is_live', true).order('live_no'),
+          supabase.from('channels').select('*').order('id'),
+          supabase.from('categories').select('*').order('order'),
+        ];
 
-      if (liveError) {
-        console.log('❌ Error fetching live data:', liveError.message);
-        return;
+        const [
+          { data: liveRadioData, error: liveError },
+          { data: broadcastingData, error: broadcastingError },
+          { data: categoryData, error: categoryError },
+        ] = await Promise.all(promises);
+
+        if (liveError) throw liveError;
+        if (broadcastingError) throw broadcastingError;
+        if (categoryError) throw categoryError;
+
+        setLiveData(liveRadioData);
+        setBroadcastingData(broadcastingData);
+        setCategories(categoryData);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log('❌ Error fetching data:', error.message);
+        } else {
+          console.log('❌ An unexpected error occurred:', error);
+        }
       }
-      setLiveData(liveRadioData);
-    }
-    fetchLiveData();
+    };
 
-    async function fetchBroadcastingData() {
-      const { data: broadcastingData, error: broadcastingError } = await supabase
-        .from('channels')
-        .select('*')
-        .order('id', { ascending: true });
-
-      if (broadcastingError) {
-        console.log('❌ Error fetching live data:', broadcastingError.message);
-        return;
-      }
-      setBroadcastingData(broadcastingData);
-    }
-    fetchBroadcastingData();
-
-    async function fetchCategoryTypeData() {
-      const { data: categoryData, error: categoryError } = await supabase
-        .from('categories')
-        .select(`*`)
-        .order('id', { ascending: true });
-
-      if (categoryError) {
-        console.log('❌ Error fetching category data:', categoryError.message);
-        return;
-      }
-      setCategories(categoryData);
-    }
-    fetchCategoryTypeData();
+    fetchAllData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
     if (isLive && !id) return;
-    navigate(`/player/${id}`);
+    navigate(`/player/${id}`, { state: { isLive: true } });
   };
 
   return (
@@ -75,7 +64,7 @@ function RadioLiveVersion() {
             <GridViewItem
               key={`${item.live_episode_id}-${index}`}
               title={item.title}
-              subTitle={item.channels.broadcasting + item.channels.channel}
+              subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
               img={item.img_url}
               onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
             />
@@ -98,9 +87,6 @@ function RadioLiveVersion() {
                 if (liveEpisode && liveEpisode.live_episode_id) {
                   navigate(`/player/${liveEpisode.live_episode_id}`);
                 }
-                // if (item.liveEpisodeId) {
-                //   navigate(`/player/${item.liveEpisodeId}`);
-                // }
               }}
             />
           );

@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react';
-import type { timeSlot } from '../types/timeSlot';
-import { supabase } from '../lib/supabaseClient';
-import CircleViewItem from './CircleViewItem';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '../lib/supabaseClient';
+import type { TimeSlotType } from '../types/timeSlot';
+import CircleViewItem from './CircleViewItem';
 
 function TimeSlot() {
   const navigate = useNavigate();
-  const [timeSlot, setTimeSlot] = useState<timeSlot[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
 
   useEffect(() => {
     async function fetchTimeSlotData() {
       const { data: timeSlotData, error: timeSlotError } = await supabase
         .from('time_slots')
         .select(`*`)
-        .order('id', { ascending: true });
+        .order('order', { ascending: true });
 
       if (timeSlotError) {
         console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
         return;
       }
-      setTimeSlot(timeSlotData);
+      setTimeSlots(timeSlotData);
     }
     fetchTimeSlotData();
   }, []);
@@ -28,7 +28,7 @@ function TimeSlot() {
     <div>
       <div className="text-2xl mb-7 font-semibold">시간별 몰아보기</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {timeSlot.map((item, index) => (
+        {timeSlots.map((item, index) => (
           <CircleViewItem
             key={`${item.id}-${index}`}
             title={item.title}

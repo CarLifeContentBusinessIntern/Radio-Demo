@@ -1,4 +1,4 @@
-export interface timeSlot {
+export interface TimeSlotType {
   id: number;
   title: string;
   time_slot: string;

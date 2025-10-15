@@ -44,11 +44,12 @@ function ListViewPage({ type }: ListViewPageProps) {
             <ListViewItem
               key={item.id}
               id={item.id}
-              imgUrl={item.radios.img_url}
+              imgUrl={item.radios?.img_url}
               title={item.title}
               subTitle={subTitleText}
-              playTime={item.playTime}
-              totalTime={item.totalTime}
+              playTime={item.play_time}
+              totalTime={item.total_time}
+              date={item.date}
             />
           );
         })}

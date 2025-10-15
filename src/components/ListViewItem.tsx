@@ -7,9 +7,18 @@ type ListViewItemProps = {
   subTitle: string;
   playTime?: string;
   totalTime?: string;
+  date: string;
 };
 
-function ListViewItem({ id, imgUrl, title, subTitle, playTime, totalTime }: ListViewItemProps) {
+function ListViewItem({
+  id,
+  imgUrl,
+  title,
+  subTitle,
+  playTime,
+  totalTime,
+  date,
+}: ListViewItemProps) {
   const navigate = useNavigate();
 
   return (
@@ -27,12 +36,15 @@ function ListViewItem({ id, imgUrl, title, subTitle, playTime, totalTime }: List
 
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
         <div className="font-semibold truncate">{title}</div>
-        <div className="text-[#A6A6A9] truncate">{subTitle}</div>
+        <div className="flex gap-5">
+          <div className="text-[#A6A6A9] truncate">{subTitle}</div>
+          <div className="text-[#A6A6A9] truncate">{date}</div>
+        </div>
       </div>
 
       <div className="hidden md:block">
-        <p className="text-[28px] text-[#A6A6A9] w-[180px] text-right">
-          {playTime}
+        <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
+          {playTime ?? playTime}
           {totalTime ? ` / ${totalTime}` : ''}
         </p>
       </div>
