@@ -7,4 +7,5 @@ export interface Episode {
   play_time?: string;
   total_time: string;
   radios: RadioType;
+  date: string;
 }
