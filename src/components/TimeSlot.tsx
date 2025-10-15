@@ -13,7 +13,7 @@ function TimeSlot() {
       const { data: timeSlotData, error: timeSlotError } = await supabase
         .from('time_slots')
         .select(`*`)
-        .order('id', { ascending: true });
+        .order('order', { ascending: true });
 
       if (timeSlotError) {
         console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
