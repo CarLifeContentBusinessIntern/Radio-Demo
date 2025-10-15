@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
+import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { Category } from '../types/category';
 import type { Channel } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
-import { mockTimeSlotData } from '../mock/mockTimeSlotData';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -119,18 +119,7 @@ function RadioLiveVersion() {
         ))}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">시간별 몰아보기</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {mockTimeSlotData.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.sub_title}
-            img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
-          />
-        ))}
-      </div>
+      <TimeSlot />
     </div>
   );
 }
