@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { data, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
 import type { Episode } from '../types/episode';
@@ -14,19 +14,27 @@ function ListViewPage({ type }: ListViewPageProps) {
 
   useEffect(() => {
     async function fetchEpisodesData() {
-      const { data, error } = await supabase
-        .from('episodes')
-        .select('*, radios(*, channels(*))')
-        .eq('time_slot_id', id);
+      if (!id) return;
+
+      let query = supabase.from('episodes').select('*, radios!inner(*, channels!inner(*))');
+
+      if (type === 'timeslot') {
+        query = query.eq('time_slot_id', id);
+      } else if (type === 'channel') {
+        //
+      }
+
+      const { data, error } = await query;
+
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
         return;
       }
-      setEpisodes(data);
+      setEpisodes(data || []);
     }
 
-    if (type === 'timeslot') fetchEpisodesData();
-  });
+    fetchEpisodesData();
+  }, [id, type]);
 
   return (
     <div className="flex flex-col gap-y-1">
@@ -41,7 +49,7 @@ function ListViewPage({ type }: ListViewPageProps) {
             <ListViewItem
               key={item.id}
               id={item.id}
-              imgUrl={item.radios.img_url}
+              imgUrl={item.radios?.img_url}
               title={item.title}
               subTitle={subTitleText}
               playTime={item.playTime}

@@ -16,48 +16,38 @@ function RadioLiveVersion() {
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    async function fetchLiveData() {
-      const { data: liveRadioData, error: liveError } = await supabase
-        .from('radios')
-        .select('*, channels(*)')
-        .eq('is_live', true)
-        .order('live_no', { ascending: true });
+    const fetchData = async () => {
+      try {
+        const [liveRes, broadcastingRes, categoriesRes] = await Promise.all([
+          supabase
+            .from('radios')
+            .select('*, channels(*)')
+            .eq('is_live', true)
+            .order('live_no', { ascending: true }),
+          supabase.from('channels').select('*').order('id', { ascending: true }),
+          supabase.from('categories').select('*').order('id', { ascending: true }),
+        ]);
 
-      if (liveError) {
-        console.log('❌ Error fetching live data:', liveError.message);
-        return;
+        if (liveRes.error) console.log('❌ Error fetching live data:', liveRes.error.message);
+        else setLiveData(liveRes.data || []);
+
+        if (broadcastingRes.error)
+          console.log('❌ Error fetching broadcasting data:', broadcastingRes.error.message);
+        else setBroadcastingData(broadcastingRes.data || []);
+
+        if (categoriesRes.error)
+          console.log('❌ Error fetching category data:', categoriesRes.error.message);
+        else setCategories(categoriesRes.data || []);
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log('❌ Error fetching data:', error.message);
+        } else {
+          console.log('❌ An unexpected error occurred:', error);
+        }
       }
-      setLiveData(liveRadioData);
-    }
-    fetchLiveData();
+    };
 
-    async function fetchBroadcastingData() {
-      const { data: broadcastingData, error: broadcastingError } = await supabase
-        .from('channels')
-        .select('*')
-        .order('id', { ascending: true });
-
-      if (broadcastingError) {
-        console.log('❌ Error fetching live data:', broadcastingError.message);
-        return;
-      }
-      setBroadcastingData(broadcastingData);
-    }
-    fetchBroadcastingData();
-
-    async function fetchCategoryData() {
-      const { data: categoryData, error: categoryError } = await supabase
-        .from('categories')
-        .select(`*`)
-        .order('id', { ascending: true });
-
-      if (categoryError) {
-        console.log('❌ Error fetching category data:', categoryError.message);
-        return;
-      }
-      setCategories(categoryData);
-    }
-    fetchCategoryData();
+    fetchData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -97,9 +87,6 @@ function RadioLiveVersion() {
                 if (liveEpisode && liveEpisode.live_episode_id) {
                   navigate(`/player/${liveEpisode.live_episode_id}`);
                 }
-                // if (item.liveEpisodeId) {
-                //   navigate(`/player/${item.liveEpisodeId}`);
-                // }
               }}
             />
           );

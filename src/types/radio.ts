@@ -15,7 +15,6 @@ export interface LiveRadio {
   id: number;
   title: string;
   is_live: boolean;
-  // radios: Radio;
   channel_id: number;
   channels: Channel;
   img_url: string;
