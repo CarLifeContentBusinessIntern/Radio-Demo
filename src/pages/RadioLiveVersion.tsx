@@ -1,29 +1,21 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
-import { mockCategoryData } from '../mock/mockCategoryData';
-import { mockChannelData } from '../mock/mockChannelData';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
-import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { mockCategoryData } from '../mock/mockCategoryData';
+import type { Channel } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
-
-  const displayEpData = Array.from({ length: 11 }).map((_, index) => {
-    return mockEpisodeData[index % mockEpisodeData.length];
-  });
-
-  const displayChannelData = Array.from({ length: 8 }).map((_, index) => {
-    return mockChannelData[index % mockChannelData.length];
-  });
 
   const displayCategoryData = Array.from({ length: 8 }).map((_, index) => {
     return mockCategoryData[index % mockCategoryData.length];
   });
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
+  const [broadcastingData, setBroadcastingData] = useState<Channel[]>([]);
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -39,9 +31,27 @@ function RadioLiveVersion() {
       }
       setLiveData(liveRadioData);
     }
-
     fetchLiveData();
+
+    async function fetchBroadcastingData() {
+      const { data: broadcastingData, error: broadcastingError } = await supabase
+        .from('channels')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (broadcastingError) {
+        console.log('❌ Error fetching live data:', broadcastingError.message);
+        return;
+      }
+      setBroadcastingData(broadcastingData);
+    }
+    fetchBroadcastingData();
   }, []);
+
+  const handleLiveClick = (id: number, isLive: boolean) => {
+    if (isLive && !id) return;
+    navigate(`/player/${id}`);
+  };
 
   return (
     <div className="pr-28 pt-7">
@@ -50,11 +60,11 @@ function RadioLiveVersion() {
         {liveData &&
           liveData.map((item, index) => (
             <GridViewItem
-              key={`${item.id}-${index}`}
+              key={`${item.live_episode_id}-${index}`}
               title={item.title}
               subTitle={item.channels.broadcasting + item.channels.channel}
               img={item.img_url}
-              onClick={() => navigate(`/player/${item.id}`)}
+              onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
             />
           ))}
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
@@ -62,16 +72,22 @@ function RadioLiveVersion() {
 
       <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayChannelData.map((item, index) => {
+        {broadcastingData.map((item, index) => {
           return (
             <CircleViewItem
               key={`${item.id}-${index}`}
-              title={item.channelName}
+              title={item.broadcasting + item.channel}
               subTitle={item.frequency}
+              img={item.img_url}
               onClick={() => {
-                if (item.liveEpisodeId) {
-                  navigate(`/player/${item.liveEpisodeId}`);
+                const liveEpisode = liveData.find((liveItem) => liveItem.channel_id === item.id);
+
+                if (liveEpisode && liveEpisode.live_episode_id) {
+                  navigate(`/player/${liveEpisode.live_episode_id}`);
                 }
+                // if (item.liveEpisodeId) {
+                //   navigate(`/player/${item.liveEpisodeId}`);
+                // }
               }}
             />
           );

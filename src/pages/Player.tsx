@@ -10,12 +10,12 @@ import {
 import { useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
 
 function Player() {
   const { id } = useParams();
   const {
     currentEpisodeId,
+    currentEpisodeData,
     isPlaying,
     currentTime,
     duration,
@@ -28,16 +28,15 @@ function Player() {
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
-  const episodeData =
-    episodeId !== null ? mockEpisodeData.find((item) => item.id === episodeId) : undefined;
 
   useEffect(() => {
     if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
       playEpisode(episodeId);
     }
+    console.log(currentEpisodeData);
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
-  if (!episodeData) return null;
+  if (!currentEpisodeData) return null;
 
   const onHandleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSeek(Number(e.target.value));
@@ -45,10 +44,10 @@ function Player() {
 
   return (
     <div className="relative h-full overflow-hidden">
-      {episodeData.imgUrl && (
+      {currentEpisodeData.radios.img_url && (
         <div
           className="fixed inset-0 -z-10 bg-cover bg-center"
-          style={{ backgroundImage: `url('${episodeData.imgUrl}')` }}
+          style={{ backgroundImage: `url('${currentEpisodeData.radios.img_url}')` }}
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
         </div>
@@ -57,10 +56,10 @@ function Player() {
       <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
           <div className="flex-shrink-0">
-            {episodeData.imgUrl ? (
+            {currentEpisodeData.radios.img_url ? (
               <img
-                src={episodeData.imgUrl}
-                alt={episodeData.title}
+                src={currentEpisodeData.radios.img_url}
+                alt={currentEpisodeData.title}
                 className="w-40 h-40 md:w-56 md:h-56 object-cover"
               />
             ) : (
@@ -69,8 +68,11 @@ function Player() {
           </div>
 
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
-            <p className="text-2xl md:text-5xl line-clamp-2">{episodeData.title}</p>
-            <p className="text-xl md:text-4xl text-[#A6A6A9]">{episodeData.channel}</p>
+            <p className="text-2xl md:text-5xl line-clamp-2">{currentEpisodeData.title}</p>
+            <p className="text-xl md:text-4xl text-[#A6A6A9]">
+              {currentEpisodeData.radios.channels.broadcasting +
+                currentEpisodeData.radios.channels.channel}
+            </p>
             <p className="text-lg md:text-3xl text-[#A6A6A9]">
               {formatTime(currentTime)} / {formatTime(duration)}
             </p>
