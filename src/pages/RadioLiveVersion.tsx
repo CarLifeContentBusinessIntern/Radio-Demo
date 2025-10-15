@@ -63,7 +63,7 @@ function RadioLiveVersion() {
 
   const handleLiveClick = (id: number, isLive: boolean) => {
     if (isLive && !id) return;
-    navigate(`/player/${id}`);
+    navigate(`/player/${id}`, { state: { isLive: true } });
   };
 
   return (
