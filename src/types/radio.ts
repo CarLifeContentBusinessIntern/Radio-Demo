@@ -1,15 +1,19 @@
-import type { Category } from './category';
-import type { Channel } from './channel';
+import type { CategoryType } from './category';
+import type { ChannelType } from './channel';
 
-export interface Radio {
+export type RadioType = {
   id: number;
   title: string;
   time_slot: string;
+  category_id: number;
+  channel_id: number;
+  live_no: number;
+  live_episode_id: number;
   img_url: string;
-  categories: Category;
-  channels: Channel;
+  categories: CategoryType;
+  channels: ChannelType;
   is_live: boolean;
-}
+};
 
 export interface LiveRadio {
   id: number;
@@ -17,7 +21,7 @@ export interface LiveRadio {
   is_live: boolean;
   // radios: Radio;
   channel_id: number;
-  channels: Channel;
+  channels: ChannelType;
   img_url: string;
   live_episode_id: number;
 }

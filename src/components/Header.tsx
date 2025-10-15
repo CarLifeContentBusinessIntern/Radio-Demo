@@ -12,8 +12,8 @@ import type { HeaderType } from '../types';
 const navLinks = [
   { name: '홈', path: '/' },
   { name: '라디오', path: '/radio' },
-  { name: '인기채널', path: '/curation/1' },
-  { name: '최근청취', path: '/channels/detail/1' },
+  { name: '인기채널', path: '/curation/1', state: { type: 'channel', title: '인기 채널' } },
+  { name: '최근청취', path: '/episodes/channel/11', state: { title: '최근 청취' } },
 ];
 
 // 홈 헤더
@@ -30,7 +30,7 @@ const HomeHeader = () => {
           <button
             key={link.name}
             className="flex flex-col items-center gap-1"
-            onClick={() => navigate(link.path)}
+            onClick={() => navigate(link.path, { state: link.state })}
           >
             <div className="bg-gray-600 w-10 h-10" />
             <p className="text-2xl">{link.name}</p>

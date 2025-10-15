@@ -4,16 +4,17 @@ import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
-import type { Category } from '../types/category';
-import type { Channel } from '../types/channel';
+import type { CategoryType } from '../types/category';
+import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
+import Category from '../components/Category';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
-  const [broadcastingData, setBroadcastingData] = useState<Channel[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  const [categories, setCategories] = useState<CategoryType[]>([]);
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -45,7 +46,7 @@ function RadioLiveVersion() {
     }
     fetchBroadcastingData();
 
-    async function fetchCategoryData() {
+    async function fetchCategoryTypeData() {
       const { data: categoryData, error: categoryError } = await supabase
         .from('categories')
         .select(`*`)
@@ -57,7 +58,7 @@ function RadioLiveVersion() {
       }
       setCategories(categoryData);
     }
-    fetchCategoryData();
+    fetchCategoryTypeData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -106,19 +107,7 @@ function RadioLiveVersion() {
         })}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">카테고리</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {categories.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.category}
-            img={item.img_url}
-            onClick={() => navigate(`/curation/${item.id}`)}
-          />
-        ))}
-      </div>
-
+      <Category categories={categories} />
       <TimeSlot />
     </div>
   );
