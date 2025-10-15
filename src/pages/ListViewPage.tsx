@@ -52,8 +52,8 @@ function ListViewPage({ type }: ListViewPageProps) {
               imgUrl={item.radios?.img_url}
               title={item.title}
               subTitle={subTitleText}
-              playTime={item.playTime}
-              totalTime={item.totalTime}
+              playTime={item.play_time}
+              totalTime={item.total_time}
             />
           );
         })}

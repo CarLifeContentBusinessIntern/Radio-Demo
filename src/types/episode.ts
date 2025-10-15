@@ -4,7 +4,7 @@ export interface Episode {
   id: number;
   imgUrl?: string;
   title: string;
-  playTime?: string;
-  totalTime: string;
+  play_time?: string;
+  total_time: string;
   radios: Radio;
 }

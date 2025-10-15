@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
-import type { timeSlot } from '../types/timeSlot';
 import { supabase } from '../lib/supabaseClient';
 import CircleViewItem from './CircleViewItem';
 import { useNavigate } from 'react-router-dom';
+import type { TimeSlot } from '../types/timeSlot';
 
 function TimeSlot() {
   const navigate = useNavigate();
-  const [timeSlots, setTimeSlots] = useState<timeSlot[]>([]);
+  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
 
   useEffect(() => {
     async function fetchTimeSlotData() {
       const { data: timeSlotData, error: timeSlotError } = await supabase
         .from('time_slots')
         .select(`*`)
-        .order('id', { ascending: true });
+        .order('order', { ascending: true });
 
       if (timeSlotError) {
         console.log('❌ Error fetching timeSlot data:', timeSlotError.message);

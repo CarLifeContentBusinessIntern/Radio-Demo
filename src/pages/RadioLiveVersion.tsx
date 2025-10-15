@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
-import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { Category } from '../types/category';
 import type { Channel } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
+import TimeSlot from '../components/TimeSlot';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function RadioLiveVersion() {
             .eq('is_live', true)
             .order('live_no', { ascending: true }),
           supabase.from('channels').select('*').order('id', { ascending: true }),
-          supabase.from('categories').select('*').order('id', { ascending: true }),
+          supabase.from('categories').select('*').order('order', { ascending: true }),
         ]);
 
         if (liveRes.error) console.log('❌ Error fetching live data:', liveRes.error.message);
@@ -99,7 +99,6 @@ function RadioLiveVersion() {
           <CircleViewItem
             key={`${item.id}-${index}`}
             title={item.title}
-            subTitle={item.category}
             img={item.img_url}
             onClick={() => navigate(`/curation/${item.id}`)}
           />

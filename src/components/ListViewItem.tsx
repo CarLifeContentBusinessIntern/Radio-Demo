@@ -32,7 +32,7 @@ function ListViewItem({ id, imgUrl, title, subTitle, playTime, totalTime }: List
 
       <div className="hidden md:block">
         <p className="text-[28px] text-[#A6A6A9] w-[180px] text-right">
-          {playTime}
+          {playTime ? playTime : '00:00'}
           {totalTime ? ` / ${totalTime}` : ''}
         </p>
       </div>
