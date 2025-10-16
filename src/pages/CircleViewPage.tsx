@@ -10,24 +10,24 @@ function CircleViewPage() {
   const [channels, setChannels] = useState<ChannelType[]>([]);
 
   // 방송사의 채널 조회
-  const fetchChannels = async () => {
-    if (!broadcasting) return;
-
-    const { data, error } = await supabase
-      .from('channels')
-      .select('*')
-      .order('order', { ascending: true })
-      .eq('is_broadcasting', false)
-      .eq('broadcasting', broadcasting);
-
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setChannels(data);
-    }
-  };
-
   useEffect(() => {
+    const fetchChannels = async () => {
+      if (!broadcasting) return;
+
+      const { data, error } = await supabase
+        .from('channels')
+        .select('*')
+        .order('order', { ascending: true })
+        .eq('is_broadcasting', false)
+        .eq('broadcasting', broadcasting);
+
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+      } else {
+        setChannels(data || []);
+      }
+    };
+
     fetchChannels();
   }, [broadcasting]);
 
@@ -37,7 +37,7 @@ function CircleViewPage() {
         {channels.map((item) => (
           <CircleViewItem
             key={item.id}
-            title={item.channel}
+            title={`${item.broadcasting} ${item.channel || ''}`}
             subTitle={item.frequency}
             img={item.img_url}
             onClick={() =>

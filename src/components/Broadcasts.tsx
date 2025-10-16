@@ -7,6 +7,8 @@ import { supabase } from '../lib/supabaseClient';
 function Broadcasts() {
   const navigate = useNavigate();
   const [channels, setChannels] = useState<ChannelType[]>([]);
+  const MAJOR_BROADCASTERS = ['MBC', 'SBS', 'KBS'];
+
   //채널 조회
   async function fetchChannels() {
     const { data, error } = await supabase
@@ -27,7 +29,7 @@ function Broadcasts() {
   }, []);
 
   const handleOnClick = (item: ChannelType) => {
-    if (['MBC', 'SBS', 'KBS'].includes(item.broadcasting)) {
+    if (MAJOR_BROADCASTERS.includes(item.broadcasting)) {
       navigate(`/channel/${item.broadcasting}`, {
         state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
       });
