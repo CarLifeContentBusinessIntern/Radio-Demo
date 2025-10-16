@@ -43,7 +43,9 @@ const HomeHeader = () => {
         {navLinks.map((link) => (
           <button
             key={link.name}
-            className="flex flex-col items-center gap-1"
+            className={`flex flex-col items-center gap-1 transition-opacity ${
+              link.name !== '라디오' ? 'opacity-60' : 'opacity-100'
+            }`}
             onClick={() => navigate(link.path, { state: link.state })}
           >
             {link.icon ? (
