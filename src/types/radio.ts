@@ -4,14 +4,14 @@ import type { ChannelType } from './channel';
 export type RadioType = {
   id: number;
   title: string;
-  time_slot: string;
-  category_id: number;
+  time_slot: string | null;
+  category_id: number | null;
   channel_id: number;
-  live_no: number;
-  live_episode_id: number;
+  live_no: number | null;
+  live_episode_id: number | null;
   img_url: string;
-  categories: CategoryType;
-  channels: ChannelType;
+  categories?: CategoryType;
+  channels?: ChannelType;
   is_live: boolean;
 };
 

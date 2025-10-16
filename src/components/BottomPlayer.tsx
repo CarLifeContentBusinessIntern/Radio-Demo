@@ -63,7 +63,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
         <p className="text-[28px] truncate">
-          {`${currentEpisodeData?.radios.channels.broadcasting} ${currentEpisodeData?.radios.channels.channel}`}
+          {`${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
         </p>
       </div>
 

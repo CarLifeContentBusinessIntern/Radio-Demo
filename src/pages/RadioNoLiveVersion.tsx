@@ -31,7 +31,7 @@ function RadioNoLiveVersion() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      setPopularRadios(data);
+      setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
   }
 

@@ -72,7 +72,7 @@ function Player() {
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
             <p className="text-2xl md:text-5xl line-clamp-2">{currentEpisodeData.title}</p>
             <p className="text-xl md:text-4xl text-[#A6A6A9]">
-              {`${currentEpisodeData.radios.channels.broadcasting} ${currentEpisodeData.radios.channels.channel}`}
+              {`${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-3xl text-[#A6A6A9]">
               {formatTime(currentTime)} / {formatTime(duration)}
