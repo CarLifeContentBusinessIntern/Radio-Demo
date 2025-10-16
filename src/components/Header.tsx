@@ -9,17 +9,25 @@ import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
 import type { HeaderType } from '../types';
 import RadioIcon from '../assets/ic_radio.png';
+import HomeIcon from '../assets/ic_home.svg';
+import RecentIcon from '../assets/ic_recent.svg';
+import PopularIcon from '../assets/ic_popular.svg';
 
 const navLinks = [
-  { name: '홈', path: '/', icon: '' },
+  { name: '홈', path: '/', icon: HomeIcon },
   { name: '라디오', path: '/radio', icon: RadioIcon },
   {
     name: '인기채널',
     path: '/curation/1',
     state: { type: 'channel', title: '인기 채널' },
-    icon: '',
+    icon: PopularIcon,
   },
-  { name: '최근청취', path: '/episodes/channel/11', state: { title: '최근 청취' }, icon: '' },
+  {
+    name: '최근청취',
+    path: '/episodes/channel/11',
+    state: { title: '최근 청취' },
+    icon: RecentIcon,
+  },
 ];
 
 // 홈 헤더

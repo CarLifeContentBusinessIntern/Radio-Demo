@@ -4,4 +4,6 @@ export type ChannelType = {
   channel: string;
   frequency: string;
   img_url: string;
+  is_broadcasting: boolean;
+  order: number;
 };
