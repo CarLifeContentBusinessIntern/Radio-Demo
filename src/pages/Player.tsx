@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -14,8 +14,7 @@ import Skeleton from 'react-loading-skeleton';
 
 function Player() {
   const { id } = useParams();
-  // const location = useLocation();
-  // const isLive = location.state?.isLive;
+  const [isMoreBtn, setIsMoreBtn] = useState(false);
 
   const {
     currentEpisodeId,
@@ -126,25 +125,23 @@ function Player() {
               className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
             />
 
-            {!isLive && (
-              <div className="flex justify-between w-[60%] max-w-[507px]">
-                <button onClick={() => handleSkip(-15)}>
-                  <RiReplay15Fill size={30} />
-                </button>
-                <button onClick={() => handleSkip(15)}>
-                  <RiForward15Fill size={30} />
-                </button>
-              </div>
-            )}
+            <div
+              className={`flex justify-between w-[60%] max-w-[507px] ${isLive ? 'invisible' : ''} ${isMoreBtn ? '' : 'invisible'}`}
+            >
+              <button onClick={() => handleSkip(-15)}>
+                <RiReplay15Fill size={30} />
+              </button>
+              <button onClick={() => handleSkip(15)}>
+                <RiForward15Fill size={30} />
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center justify-between gap-16">
-            {!isLive && (
-              <button>
-                <img src={speedIcon} />
-                <p className="text-[12px]">1.0x</p>
-              </button>
-            )}
+            <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
+              <img src={speedIcon} />
+              <p className="text-[12px]">1.0x</p>
+            </button>
 
             <button>
               <TbPlayerSkipBackFilled size={30} />
@@ -156,11 +153,12 @@ function Player() {
               <TbPlayerSkipForwardFilled size={30} />
             </button>
 
-            {!isLive && (
-              <button className="text-gray-400">
-                <IoEllipsisVertical size={30} color="white" />
-              </button>
-            )}
+            <button
+              className={`text-gray-400 ${isLive ? 'invisible' : ''}`}
+              onClick={() => setIsMoreBtn(!isMoreBtn)}
+            >
+              <IoEllipsisVertical size={30} color="white" />
+            </button>
           </div>
         </div>
       </div>
