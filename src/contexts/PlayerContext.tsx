@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { Episode } from '../types/episode';
 import { timeStringToSeconds } from '../utils/timeUtils';
@@ -14,6 +22,7 @@ interface PlayerState {
 
 interface PlayerContextType extends PlayerState {
   currentEpisodeData: Episode | undefined;
+  currentAudioUrl: string | null;
   togglePlayPause: () => void;
   playEpisode: (id: number, liveStatus?: boolean) => void;
   handleSeek: (time: number) => void;
@@ -43,6 +52,7 @@ export const usePlayer = () => {
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerStae);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -74,6 +84,43 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
     return 2712;
   };
+
+  const currentAudioUrl = currentEpisodeData?.audio_file || null;
+
+  useEffect(() => {
+    audioRef.current = new Audio();
+
+    const audio = audioRef.current;
+
+    const handleTimeUpdate = () => {
+      setState((prev) => ({ ...prev, currentTime: audio.currentTime }));
+    };
+
+    const handleLoadedMetadata = () => {
+      setState((prev) => ({ ...prev, duration: audio.duration }));
+    };
+
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (audioRef.current && currentAudioUrl) {
+      if (audioRef.current.src !== currentAudioUrl) {
+        audioRef.current.src = currentAudioUrl;
+      }
+      if (state.isPlaying) {
+        audioRef.current.play().catch((e) => console.error('Audio play failed', e));
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [currentAudioUrl, state.isPlaying]);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
@@ -117,19 +164,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setState((prevState) => ({ ...prevState, isPlaying: !prevState.isPlaying }));
   }, [state.currentEpisodeId]);
 
-  const handleSeek = useCallback((time: number) => {
-    setState((prevState) => ({
-      ...prevState,
-      currentTime: Math.max(0, Math.min(prevState.duration, time)),
-    }));
-  }, []);
+  const handleSeek = useCallback(
+    (time: number) => {
+      if (audioRef.current) {
+        const newTime = Math.max(0, Math.min(state.duration, time));
+        audioRef.current.currentTime = newTime;
+        setState((prevState) => ({ ...prevState, currentTime: newTime }));
+      }
+    },
+    [state.duration]
+  );
 
-  const handleSkip = useCallback((seconds: number) => {
-    setState((prevState) => ({
-      ...prevState,
-      currentTime: Math.max(0, Math.min(prevState.duration, prevState.currentTime + seconds)),
-    }));
-  }, []);
+  const handleSkip = useCallback(
+    (seconds: number) => {
+      if (audioRef.current) {
+        const newTime = Math.max(0, Math.min(state.duration, state.currentTime + seconds));
+        audioRef.current.currentTime = newTime;
+        setState((prevState) => ({ ...prevState, currentTime: newTime }));
+      }
+    },
+    [state.currentTime, state.duration]
+  );
 
   const formatTime = useCallback((seconds: number) => {
     if (isNaN(seconds)) return '00:00';
@@ -138,31 +193,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }, []);
 
-  useEffect(() => {
-    if (!state.isPlaying || state.currentEpisodeId === null || state.isLive) return;
-
-    const intervalId = setInterval(() => {
-      setState((prevState) => {
-        if (prevState.currentTime >= prevState.duration) {
-          return {
-            ...prevState,
-            isPlaying: false,
-            currentTime: prevState.duration,
-          };
-        }
-        return {
-          ...prevState,
-          currentTime: prevState.currentTime + 1,
-        };
-      });
-    }, 1000);
-
-    return () => clearInterval(intervalId);
-  }, [state.isPlaying, state.duration, state.currentEpisodeId, state.isLive]);
-
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
+    currentAudioUrl,
     togglePlayPause,
     playEpisode,
     handleSeek,
