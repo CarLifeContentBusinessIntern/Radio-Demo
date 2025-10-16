@@ -42,7 +42,6 @@ function RadioNoLiveVersion() {
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <Broadcasts />
       <div className="text-2xl mb-7 font-semibold">인기 채널</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {popularRadios.map((item) => (
@@ -59,6 +58,7 @@ function RadioNoLiveVersion() {
           />
         ))}
       </div>
+      <Broadcasts />
 
       {/* 카테고리 */}
       <Category />
