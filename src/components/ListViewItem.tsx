@@ -1,16 +1,59 @@
+import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 
 type ListViewItemProps = {
+  isLoading?: boolean;
   id?: number;
   imgUrl?: string;
-  title: string;
-  subTitle: string;
+  title?: string;
+  subTitle?: string;
   playTime?: string;
   totalTime?: string;
+  date?: string;
 };
 
-function ListViewItem({ id, imgUrl, title, subTitle, playTime, totalTime }: ListViewItemProps) {
+function ListViewItem({
+  isLoading,
+  id,
+  imgUrl,
+  title,
+  subTitle,
+  playTime,
+  totalTime,
+  date,
+}: ListViewItemProps) {
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-between gap-8 md:gap-14">
+        <div className="flex-shrink-0">
+          <Skeleton
+            width={112}
+            height={112}
+            borderRadius="11px"
+            baseColor="#444"
+            highlightColor="gray"
+          />
+        </div>
+
+        <div className="flex flex-col flex-grow min-w-0">
+          <Skeleton
+            height={28}
+            width="80%"
+            className="mb-2"
+            baseColor="#444"
+            highlightColor="gray"
+          />
+          <Skeleton height={24} width="50%" baseColor="#444" highlightColor="gray" />
+        </div>
+
+        <div className="hidden md:block">
+          <Skeleton height={28} width={120} baseColor="#444" highlightColor="gray" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -27,12 +70,15 @@ function ListViewItem({ id, imgUrl, title, subTitle, playTime, totalTime }: List
 
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
         <div className="font-semibold truncate">{title}</div>
-        <div className="text-[#A6A6A9] truncate">{subTitle}</div>
+        <div className="flex gap-5">
+          <div className="text-[#A6A6A9] truncate">{subTitle}</div>
+          <div className="text-[#A6A6A9] truncate">{date}</div>
+        </div>
       </div>
 
       <div className="hidden md:block">
-        <p className="text-[28px] text-[#A6A6A9] w-[180px] text-right">
-          {playTime}
+        <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
+          {playTime ?? playTime}
           {totalTime ? ` / ${totalTime}` : ''}
         </p>
       </div>

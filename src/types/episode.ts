@@ -1,8 +1,11 @@
-export type EpisodeType = {
+import type { RadioType } from './radio';
+
+export interface Episode {
   id: number;
   imgUrl?: string;
   title: string;
-  channel: string;
-  playTime?: string;
-  totalTime: string;
-};
+  play_time?: string;
+  total_time: string;
+  radios: RadioType;
+  date: string;
+}

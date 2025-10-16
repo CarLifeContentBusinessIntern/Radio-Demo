@@ -1,13 +1,40 @@
+import Skeleton from 'react-loading-skeleton';
+
 interface GridViewItemProps {
+  isLoading?: boolean;
   title?: string;
   subTitle?: string;
+  img?: string;
   onClick?: () => void;
 }
 
-function GridViewItem({ title, subTitle, onClick }: GridViewItemProps) {
+function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItemProps) {
+  if (isLoading) {
+    return (
+      <div>
+        <Skeleton
+          className="w-full aspect-square mb-4"
+          borderRadius="45px"
+          baseColor="#444"
+          highlightColor="gray"
+        />
+        <Skeleton height={28} width="75%" className="mb-1" baseColor="#444" highlightColor="gray" />
+        <Skeleton height={25} width="50%" baseColor="#444" highlightColor="gray" />
+      </div>
+    );
+  }
+
   return (
     <div className="cursor-pointer" onClick={onClick}>
-      <div className="bg-gray-600 w-full aspect-square rounded-[45px] mb-4" />
+      {img ? (
+        <img
+          src={img}
+          alt="썸네일"
+          className="w-full aspect-square rounded-[45px] mb-4 object-cover"
+        />
+      ) : (
+        <div className="bg-gray-600 w-full aspect-square rounded-[45px] mb-4" />
+      )}
       <p className="text-[28px] mb-1 px-1 font-semibold truncate">{title}</p>
       <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
     </div>

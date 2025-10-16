@@ -1,69 +1,106 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CircleViewItem from '../components/CircleViewItem';
+import Broadcasts from '../components/Broadcasts';
+import Category from '../components/Category';
 import GridViewItem from '../components/GridViewItem';
-import { mockCategoryData } from '../mock/mockCategoryData';
-import { mockChannelData } from '../mock/mockChannelData';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
+import TimeSlot from '../components/TimeSlot';
+import { supabase } from '../lib/supabaseClient';
+import type { LiveRadio } from '../types/radio';
+import { usePlayer } from '../contexts/PlayerContext';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
+  const { playEpisode } = usePlayer();
 
-  const displayEpData = Array.from({ length: 11 }).map((_, index) => {
-    return mockEpisodeData[index % mockEpisodeData.length];
-  });
+  const [liveData, setLiveData] = useState<LiveRadio[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
 
-  const displayChannelData = Array.from({ length: 8 }).map((_, index) => {
-    return mockChannelData[index % mockChannelData.length];
-  });
+  useEffect(() => {
+    async function fetchLiveData() {
+      const { data: liveRadioData, error: liveError } = await supabase
+        .from('radios')
+        .select('*, channels(*)')
+        .eq('is_live', true)
+        .order('live_no', { ascending: true });
 
-  const displayCategoryData = Array.from({ length: 8 }).map((_, index) => {
-    return mockCategoryData[index % mockCategoryData.length];
-  });
+      if (liveError) {
+        console.log('❌ Error fetching live data:', liveError.message);
+        setIsLoading(false);
+        return;
+      }
+      setLiveData(liveRadioData);
+      setIsLoading(false);
+    }
+    fetchLiveData();
+
+    // async function fetchBroadcastingData() {
+    //   const { data: broadcastingData, error: broadcastingError } = await supabase
+    //     .from('channels')
+    //     .select('*')
+    //     .order('id', { ascending: true });
+
+    //   if (broadcastingError) {
+    //     console.log('❌ Error fetching live data:', broadcastingError.message);
+    //     return;
+    //   }
+    //   setBroadcastingData(broadcastingData);
+    // }
+    // fetchBroadcastingData();
+  }, []);
+
+  const handleLiveClick = (id: number) => {
+    if (!id) return;
+    playEpisode(id, true);
+    navigate(`/player/${id}`);
+  };
 
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">지금은?</div>
+      <div className="text-2xl mb-7 font-semibold">ON AIR 🔴</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayEpData.map((item, index) => (
-          <GridViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.channel}
-            onClick={() => navigate(`/player/${item.id}`)}
-          />
-        ))}
-        <GridViewItem title="더보기" subTitle="더보기" />
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <GridViewItem isLoading={true} key={index} />
+            ))
+          : liveData.map((item, index) => (
+              <GridViewItem
+                key={`${item.live_episode_id}-${index}`}
+                title={item.title}
+                subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
+                img={item.img_url}
+                onClick={() => handleLiveClick(item.live_episode_id)}
+              />
+            ))}
+        {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
+      <Broadcasts />
+
+      {/* 방송별 생방송 */}
+      {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayChannelData.map((item, index) => {
+        {broadcastingData.map((item, index) => {
           return (
             <CircleViewItem
               key={`${item.id}-${index}`}
-              title={item.channelName}
+              title={item.broadcasting + item.channel}
               subTitle={item.frequency}
+              img={item.img_url}
               onClick={() => {
-                if (item.liveEpisodeId) {
-                  navigate(`/player/${item.liveEpisodeId}`);
+                const liveEpisode = liveData.find((liveItem) => liveItem.channel_id === item.id);
+
+                if (liveEpisode && liveEpisode.live_episode_id) {
+                  navigate(`/player/${liveEpisode.live_episode_id}`);
                 }
               }}
             />
           );
         })}
-      </div>
+      </div> */}
 
-      <div className="text-2xl mb-7 font-semibold">카테고리</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {displayCategoryData.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.category}
-            onClick={() => navigate(`/curation/${item.id}`)}
-          />
-        ))}
-      </div>
+      <Category />
+      <TimeSlot />
     </div>
   );
 }

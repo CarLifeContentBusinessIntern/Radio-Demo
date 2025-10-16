@@ -13,7 +13,7 @@ type BottomPlayerProps = {
   title: string;
 };
 
-function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
+function BottomPlayer({ id, title }: BottomPlayerProps) {
   const navigate = useNavigate();
   const {
     isPlaying,
@@ -23,9 +23,10 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
     currentTime,
     duration,
     hasBeenActivated,
+    isLive,
   } = usePlayer();
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
@@ -49,8 +50,12 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
       />
 
       <div className="flex-shrink-0">
-        {imgUrl ? (
-          <img src={imgUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
+        {currentEpisodeData?.radios.img_url ? (
+          <img
+            src={currentEpisodeData?.radios.img_url}
+            alt={title}
+            className="w-24 h-24 rounded-[11px] object-cover"
+          />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>
         )}
@@ -58,7 +63,9 @@ function BottomPlayer({ id, imgUrl, title }: BottomPlayerProps) {
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
-        <p className="text-[28px] truncate">{currentEpisodeData?.channel}</p>
+        <p className="text-[28px] truncate">
+          {`${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
+        </p>
       </div>
 
       <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>

@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
-import { mockEpisodeData } from '../mock/mockEpisodeData';
+import { supabase } from '../lib/supabaseClient';
+import type { Episode } from '../types/episode';
 import { timeStringToSeconds } from '../utils/timeUtils';
-import type { EpisodeType } from '../types/episode';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -9,12 +9,13 @@ interface PlayerState {
   currentTime: number;
   duration: number;
   hasBeenActivated: boolean;
+  isLive: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
-  currentEpisodeData: EpisodeType | undefined;
+  currentEpisodeData: Episode | undefined;
   togglePlayPause: () => void;
-  playEpisode: (id: number) => void;
+  playEpisode: (id: number, liveStatus?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
@@ -26,6 +27,7 @@ const initialPlayerStae: PlayerState = {
   currentTime: 0,
   duration: 0,
   hasBeenActivated: false,
+  isLive: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -40,52 +42,75 @@ export const usePlayer = () => {
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerStae);
+  const [episodes, setEpisodes] = useState<Episode[]>([]);
 
-  const DEFAULT_EPISODE_ID = 101;
+  useEffect(() => {
+    async function fetchEpisodes() {
+      const { data, error } = await supabase
+        .from('episodes')
+        .select('*, radios!episodes_radio_id_fkey(*, channels(*))');
+
+      if (error) {
+        console.log('❌ Error fetching episodes data:', error.message);
+      } else if (data) {
+        setEpisodes(data);
+      }
+    }
+
+    fetchEpisodes();
+  }, []);
+
+  const DEFAULT_EPISODE_ID = 1;
   const currentEpisodeData =
     state.currentEpisodeId !== null
-      ? mockEpisodeData.find((item) => item.id === state.currentEpisodeId)
-      : mockEpisodeData.find((item) => item.id === DEFAULT_EPISODE_ID);
+      ? episodes.find((item) => item.id === state.currentEpisodeId)
+      : episodes.find((item) => item.id === DEFAULT_EPISODE_ID);
 
-  const getEpisodeDuration = (episode: EpisodeType): number => {
-    if (typeof episode.totalTime === 'string') {
-      return timeStringToSeconds(episode.totalTime);
-    } else if (typeof episode.totalTime === 'number') {
-      return episode.totalTime;
+  const getEpisodeDuration = (episode: Episode): number => {
+    if (typeof episode.total_time === 'string') {
+      return timeStringToSeconds(episode.total_time);
+    } else if (typeof episode.total_time === 'number') {
+      return episode.total_time;
     }
     return 2712;
   };
 
   useEffect(() => {
-    if (state.currentEpisodeId === null && currentEpisodeData) {
-      const episode = currentEpisodeData as EpisodeType;
+    if (state.currentEpisodeId === null && episodes.length > 0) {
+      const episode = currentEpisodeData as Episode;
 
-      const newDuration = getEpisodeDuration(episode);
+      if (episode) {
+        const newDuration = getEpisodeDuration(episode);
 
-      setState((prevState) => ({
-        ...prevState,
-        currentEpisodeId: DEFAULT_EPISODE_ID,
-        duration: newDuration,
-      }));
+        setState((prevState) => ({
+          ...prevState,
+          currentEpisodeId: DEFAULT_EPISODE_ID,
+          duration: newDuration,
+        }));
+      }
     }
-  }, [state.currentEpisodeId, currentEpisodeData]);
+  }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
-  const playEpisode = useCallback((id: number) => {
-    const episode = mockEpisodeData.find((item) => item.id === id);
+  const playEpisode = useCallback(
+    (id: number, liveStatus = false) => {
+      const episode = episodes.find((item) => item.id === id);
 
-    if (episode) {
-      const newDuration = getEpisodeDuration(episode);
+      if (episode) {
+        const newDuration = getEpisodeDuration(episode);
 
-      setState((prevState) => ({
-        ...prevState,
-        currentEpisodeId: id,
-        isPlaying: true,
-        currentTime: 0,
-        duration: newDuration,
-        hasBeenActivated: true,
-      }));
-    }
-  }, []);
+        setState((prevState) => ({
+          ...prevState,
+          currentEpisodeId: id,
+          isPlaying: true,
+          currentTime: 0,
+          duration: newDuration,
+          hasBeenActivated: true,
+          isLive: liveStatus,
+        }));
+      }
+    },
+    [episodes]
+  );
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
@@ -114,7 +139,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (!state.isPlaying || state.currentEpisodeId === null) return;
+    if (!state.isPlaying || state.currentEpisodeId === null || state.isLive) return;
 
     const intervalId = setInterval(() => {
       setState((prevState) => {
@@ -133,7 +158,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [state.isPlaying, state.duration, state.currentEpisodeId]);
+  }, [state.isPlaying, state.duration, state.currentEpisodeId, state.isLive]);
 
   const contextValue: PlayerContextType = {
     ...state,

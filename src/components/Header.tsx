@@ -8,12 +8,26 @@ import GridIcon from '../assets/gridIcon.svg';
 import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
 import type { HeaderType } from '../types';
+import RadioIcon from '../assets/ic_radio.png';
+import HomeIcon from '../assets/ic_home.svg';
+import RecentIcon from '../assets/ic_recent.svg';
+import PopularIcon from '../assets/ic_popular.svg';
 
 const navLinks = [
-  { name: '홈', path: '/' },
-  { name: '라디오', path: '/radio' },
-  { name: '인기채널', path: '/curation/1' },
-  { name: '최근청취', path: '/channels/detail/1' },
+  { name: '홈', path: '/', icon: HomeIcon },
+  { name: '라디오', path: '/radio', icon: RadioIcon },
+  {
+    name: '인기채널',
+    path: '/curation/1',
+    state: { type: 'channel', title: '인기 채널' },
+    icon: PopularIcon,
+  },
+  {
+    name: '최근청취',
+    path: '/episodes/channel/11',
+    state: { title: '최근 청취' },
+    icon: RecentIcon,
+  },
 ];
 
 // 홈 헤더
@@ -30,9 +44,13 @@ const HomeHeader = () => {
           <button
             key={link.name}
             className="flex flex-col items-center gap-1"
-            onClick={() => navigate(link.path)}
+            onClick={() => navigate(link.path, { state: link.state })}
           >
-            <div className="bg-gray-600 w-10 h-10" />
+            {link.icon ? (
+              <img src={link.icon} className="h-10" />
+            ) : (
+              <div className="bg-gray-600 w-10 h-10" />
+            )}
             <p className="text-2xl">{link.name}</p>
           </button>
         ))}
