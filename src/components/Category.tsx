@@ -16,11 +16,10 @@ function Category() {
       .order('order', { ascending: true });
     if (error) {
       console.error('Supabase 연결 실패:', error);
-      setIsLoading(false);
     } else {
       setCategories(data);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {

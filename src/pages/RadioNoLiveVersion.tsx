@@ -34,8 +34,8 @@ function RadioNoLiveVersion() {
       setIsLoading(false);
     } else {
       setPopularRadios(data as unknown as PopularRadioInterface[]);
-      setIsLoading(false as unknown as PopularRadioInterface[]);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {

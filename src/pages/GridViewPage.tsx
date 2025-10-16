@@ -27,11 +27,10 @@ function GridViewPage() {
 
       if (error) {
         console.error('Supabase 연결 실패:', error);
-        setIsLoading(false);
       } else {
         setRadios(data);
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     fetchRadios();
@@ -47,7 +46,7 @@ function GridViewPage() {
           : radios.map((item) => (
               <GridViewItem
                 key={item.id}
-                isLoading={isLoading}
+                isLoading={false}
                 title={item.title}
                 subTitle={item.time_slot}
                 img={item.img_url}

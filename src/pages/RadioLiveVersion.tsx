@@ -6,9 +6,11 @@ import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
+import { usePlayer } from '../contexts/PlayerContext';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
+  const { playEpisode } = usePlayer();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,7 +31,6 @@ function RadioLiveVersion() {
       }
       setLiveData(liveRadioData);
       setIsLoading(false);
-      console.log('isloading? ', isLoading);
     }
     fetchLiveData();
 
@@ -46,11 +47,12 @@ function RadioLiveVersion() {
     //   setBroadcastingData(broadcastingData);
     // }
     // fetchBroadcastingData();
-  }, [isLoading]);
+  }, []);
 
-  const handleLiveClick = (id: number, isLive: boolean) => {
-    if (isLive && !id) return;
-    navigate(`/player/${id}`, { state: { isLive: true } });
+  const handleLiveClick = (id: number) => {
+    if (!id) return;
+    playEpisode(id, true);
+    navigate(`/player/${id}`);
   };
 
   return (
@@ -67,7 +69,7 @@ function RadioLiveVersion() {
                 title={item.title}
                 subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
                 img={item.img_url}
-                onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
+                onClick={() => handleLiveClick(item.live_episode_id)}
               />
             ))}
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}

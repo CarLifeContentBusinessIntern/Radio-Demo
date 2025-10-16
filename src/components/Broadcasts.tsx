@@ -20,11 +20,10 @@ function Broadcasts() {
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
-      setIsLoading(false);
     } else {
       setChannels(data);
-      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -57,14 +56,7 @@ function Broadcasts() {
                 title={`${item.broadcasting} ${item.channel ? item.channel : ''}`}
                 subTitle={item.frequency}
                 img={item.img_url}
-                onClick={() =>
-                  navigate(`/curation/${item.id}`, {
-                    state: {
-                      title: `${item.broadcasting} ${item.channel ? item.channel : ''}`,
-                      type: 'channel',
-                    },
-                  })
-                }
+                onClick={() => handleOnClick(item)}
               />
             ))}
       </div>

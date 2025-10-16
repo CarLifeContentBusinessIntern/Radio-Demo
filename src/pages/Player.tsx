@@ -14,8 +14,8 @@ import Skeleton from 'react-loading-skeleton';
 
 function Player() {
   const { id } = useParams();
-  const location = useLocation();
-  const isLive = location.state?.isLive;
+  // const location = useLocation();
+  // const isLive = location.state?.isLive;
 
   const {
     currentEpisodeId,
@@ -29,6 +29,7 @@ function Player() {
     formatTime,
     playEpisode,
     hasBeenActivated,
+    isLive,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -121,6 +122,7 @@ function Player() {
               max={duration}
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
+              disabled={isLive}
               className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
             />
 
