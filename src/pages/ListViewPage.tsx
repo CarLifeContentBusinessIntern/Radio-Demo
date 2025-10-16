@@ -49,7 +49,6 @@ function ListViewPage({ type }: ListViewPageProps) {
               subTitle={subTitleText}
               playTime={item.playTime}
               totalTime={item.totalTime}
-              date={item.date}
             />
           );
         })}

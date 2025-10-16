@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
-import type { CategoryType } from '../types/category';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
 import AllChannels from '../components/AllChannels';
