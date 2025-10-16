@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
@@ -8,7 +8,7 @@ import Player from './pages/Player.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import { VersionProvider } from './contexts/VersionContext.tsx';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
-import HomePage from './pages/HomePage.tsx';
+// import HomePage from './pages/HomePage.tsx';
 import Radio from './pages/Radio.tsx';
 import CircleViewPage from './pages/CircleViewPage.tsx';
 
@@ -19,7 +19,8 @@ function AppRoutes() {
         element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="/" element={<HomePage />} />
+          {/* <Route path="/" element={<HomePage />} /> */}
+          <Route path="/" element={<Navigate to="/radio" replace />} />
         </Route>
       </Route>
 
