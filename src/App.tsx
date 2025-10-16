@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
