@@ -16,11 +16,12 @@ function GridViewPage() {
     if (!id || !type) return;
 
     const filterColumn = type === 'channel' ? 'channel_id' : 'category_id';
+    const filterRadiosOrder = type === 'channel' ? 'order_broadcasting' : 'order_category';
 
     const { data, error } = await supabase
       .from('radios')
       .select('*')
-      .order('id', { ascending: true })
+      .order(filterRadiosOrder, { ascending: true })
       .eq(filterColumn, id);
 
     if (error) {
