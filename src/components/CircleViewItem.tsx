@@ -1,4 +1,4 @@
-import Skeleton from 'react-loading-skeleton';
+import { useVersion } from '../contexts/VersionContext';
 
 interface CircleViewItemProps {
   isLoading?: boolean;
@@ -8,29 +8,37 @@ interface CircleViewItemProps {
   onClick?: () => void;
 }
 
-function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleViewItemProps) {
-  if (isLoading) {
-    return (
-      <div>
-        <Skeleton
-          className="w-full aspect-square mb-4"
-          circle
-          baseColor="#444"
-          highlightColor="gray"
-        />
-        <Skeleton height={28} width="75%" className="mb-1" baseColor="#444" highlightColor="gray" />
-        <Skeleton height={25} width="50%" baseColor="#444" highlightColor="gray" />
-      </div>
-    );
-  }
+function CircleViewItem({ title, subTitle, img, onClick }: CircleViewItemProps) {
+  const { isLiveVersion } = useVersion();
+  const trimedTitle = title?.trimEnd();
+  let finalImg = img;
+  console.log(title);
 
+  //방송사 조건 추가
+  if (isLiveVersion) {
+    if (trimedTitle === 'MBC') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/MBC1.png';
+    } else if (trimedTitle === 'SBS') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/SBS1.png';
+    } else if (trimedTitle === 'KBS') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/KBS1.png';
+    }
+  } else {
+    if (trimedTitle === 'MBC') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/MBC2.png';
+    } else if (trimedTitle === 'SBS') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/SBS2.png';
+    } else if (trimedTitle === 'KBS') {
+      finalImg = 'https://radio-web-demo.netlify.app/img/logo/KBS2.png';
+    }
+  }
   return (
     <div className="cursor-pointer" onClick={onClick}>
       <img
-        src={img}
+        src={finalImg}
         className="w-full aspect-square rounded-full mb-4 flex items-center justify-center overflow-hidden"
       />
-      <p className="text-[28px] mb-1 px-1 font-semibold truncate">{title}</p>
+      <p className="text-[28px] mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
       <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );
