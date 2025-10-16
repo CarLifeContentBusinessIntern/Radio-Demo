@@ -9,12 +9,13 @@ interface PlayerState {
   currentTime: number;
   duration: number;
   hasBeenActivated: boolean;
+  isLive: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
   currentEpisodeData: Episode | undefined;
   togglePlayPause: () => void;
-  playEpisode: (id: number) => void;
+  playEpisode: (id: number, liveStatus?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
@@ -26,6 +27,7 @@ const initialPlayerStae: PlayerState = {
   currentTime: 0,
   duration: 0,
   hasBeenActivated: false,
+  isLive: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -65,10 +67,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       : episodes.find((item) => item.id === DEFAULT_EPISODE_ID);
 
   const getEpisodeDuration = (episode: Episode): number => {
-    if (typeof episode.totalTime === 'string') {
-      return timeStringToSeconds(episode.totalTime);
-    } else if (typeof episode.totalTime === 'number') {
-      return episode.totalTime;
+    if (typeof episode.total_time === 'string') {
+      return timeStringToSeconds(episode.total_time);
+    } else if (typeof episode.total_time === 'number') {
+      return episode.total_time;
     }
     return 2712;
   };
@@ -90,7 +92,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (id: number) => {
+    (id: number, liveStatus = false) => {
       const episode = episodes.find((item) => item.id === id);
 
       if (episode) {
@@ -103,6 +105,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           currentTime: 0,
           duration: newDuration,
           hasBeenActivated: true,
+          isLive: liveStatus,
         }));
       }
     },
@@ -136,7 +139,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (!state.isPlaying || state.currentEpisodeId === null) return;
+    if (!state.isPlaying || state.currentEpisodeId === null || state.isLive) return;
 
     const intervalId = setInterval(() => {
       setState((prevState) => {
@@ -155,7 +158,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, [state.isPlaying, state.duration, state.currentEpisodeId]);
+  }, [state.isPlaying, state.duration, state.currentEpisodeId, state.isLive]);
 
   const contextValue: PlayerContextType = {
     ...state,

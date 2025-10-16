@@ -7,6 +7,7 @@ import { supabase } from '../lib/supabaseClient';
 function Broadcasts() {
   const navigate = useNavigate();
   const [channels, setChannels] = useState<ChannelType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const MAJOR_BROADCASTERS = ['MBC', 'SBS', 'KBS'];
 
   //채널 조회
@@ -22,6 +23,7 @@ function Broadcasts() {
     } else {
       setChannels(data);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -44,15 +46,19 @@ function Broadcasts() {
     <>
       <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {channels.map((item) => (
-          <CircleViewItem
-            key={item.id}
-            title={`${item.broadcasting} ${item.channel || ''}`}
-            subTitle={item.frequency}
-            img={item.img_url}
-            onClick={() => handleOnClick(item)}
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <CircleViewItem isLoading={true} key={index} />
+            ))
+          : channels.map((item) => (
+              <CircleViewItem
+                key={item.id}
+                title={`${item.broadcasting} ${item.channel ? item.channel : ''}`}
+                subTitle={item.frequency}
+                img={item.img_url}
+                onClick={() => handleOnClick(item)}
+              />
+            ))}
       </div>
     </>
   );
