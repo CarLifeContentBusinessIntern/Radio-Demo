@@ -10,11 +10,12 @@ import {
 import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
+import Skeleton from 'react-loading-skeleton';
 
 function Player() {
   const { id } = useParams();
-  const location = useLocation();
-  const isLive = location.state?.isLive;
+  // const location = useLocation();
+  // const isLive = location.state?.isLive;
 
   const {
     currentEpisodeId,
@@ -28,6 +29,7 @@ function Player() {
     formatTime,
     playEpisode,
     hasBeenActivated,
+    isLive,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -38,7 +40,39 @@ function Player() {
     }
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
-  if (!currentEpisodeData) return null;
+  if (!currentEpisodeData) {
+    return (
+      <div className="relative h-full overflow-hidden">
+        <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+            <div className="flex-shrink-0">
+              <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
+            </div>
+
+            <div className="flex flex-col flex-grow justify-between h-full w-full md:w-auto">
+              <div>
+                <Skeleton height={'2.25rem'} width="90%" baseColor="#222" highlightColor="#444" />
+                <Skeleton
+                  height={'1.8rem'}
+                  width="60%"
+                  className="mt-4"
+                  baseColor="#222"
+                  highlightColor="#444"
+                />
+              </div>
+              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
+            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
+            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const onHandleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSeek(Number(e.target.value));
@@ -72,10 +106,10 @@ function Player() {
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
             <p className="text-2xl md:text-5xl line-clamp-2">{currentEpisodeData.title}</p>
             <p className="text-xl md:text-4xl text-[#A6A6A9]">
-              {`${currentEpisodeData.radios.channels.broadcasting} ${currentEpisodeData.radios.channels.channel}`}
+              {`${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-3xl text-[#A6A6A9]">
-              {formatTime(currentTime)} / {formatTime(duration)}
+              {isLive ? 'LIVE' : `${formatTime(currentTime)} / ${formatTime(duration)}`}
             </p>
           </div>
         </div>
@@ -86,8 +120,9 @@ function Player() {
               type="range"
               min="0"
               max={duration}
-              value={currentTime}
+              value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
+              disabled={isLive}
               className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
             />
 

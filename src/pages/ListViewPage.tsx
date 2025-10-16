@@ -11,6 +11,7 @@ type ListViewPageProps = {
 function ListViewPage({ type }: ListViewPageProps) {
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const eqId = type === 'channel' ? 'radio_id' : 'time_slot_id';
 
@@ -22,14 +23,25 @@ function ListViewPage({ type }: ListViewPageProps) {
         .eq(eqId, id);
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
+        setIsLoading(false);
         return;
       }
-      console.log(data);
       setEpisodes(data);
+      setIsLoading(false);
     }
 
     fetchEpisodesData();
   }, [eqId, id]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-y-1">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ListViewItem isLoading={isLoading} key={index} />
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-y-1">

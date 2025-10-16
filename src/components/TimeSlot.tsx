@@ -7,6 +7,7 @@ import CircleViewItem from './CircleViewItem';
 function TimeSlot() {
   const navigate = useNavigate();
   const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTimeSlotData() {
@@ -17,9 +18,11 @@ function TimeSlot() {
 
       if (timeSlotError) {
         console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
+        setIsLoading(false);
         return;
       }
       setTimeSlots(timeSlotData);
+      setIsLoading(false);
     }
     fetchTimeSlotData();
   }, []);
@@ -28,17 +31,21 @@ function TimeSlot() {
     <div>
       <div className="text-2xl mb-7 font-semibold">시간대별 몰아보기</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {timeSlots.map((item, index) => (
-          <CircleViewItem
-            key={`${item.id}-${index}`}
-            title={item.title}
-            subTitle={item.time_slot}
-            img={item.img_url}
-            onClick={() =>
-              navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } })
-            }
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <CircleViewItem isLoading={true} key={index} />
+            ))
+          : timeSlots.map((item, index) => (
+              <CircleViewItem
+                key={`${item.id}-${index}`}
+                title={item.title}
+                subTitle={item.time_slot}
+                img={item.img_url}
+                onClick={() =>
+                  navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } })
+                }
+              />
+            ))}
       </div>
     </div>
   );

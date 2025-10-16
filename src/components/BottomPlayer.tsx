@@ -23,9 +23,10 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     currentTime,
     duration,
     hasBeenActivated,
+    isLive,
   } = usePlayer();
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
@@ -63,7 +64,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
         <p className="text-[28px] truncate">
-          {`${currentEpisodeData?.radios.channels.broadcasting} ${currentEpisodeData?.radios.channels.channel}`}
+          {`${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
         </p>
       </div>
 
