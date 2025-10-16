@@ -108,7 +108,7 @@ function Player() {
               {`${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-3xl text-[#A6A6A9]">
-              {formatTime(currentTime)} / {formatTime(duration)}
+              {isLive ? 'LIVE' : `${formatTime(currentTime)} / ${formatTime(duration)}`}
             </p>
           </div>
         </div>
@@ -119,7 +119,7 @@ function Player() {
               type="range"
               min="0"
               max={duration}
-              value={currentTime}
+              value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
               className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
             />
