@@ -6,7 +6,7 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
-import AllChannels from '../components/AllChannels';
+import Broadcasts from '../components/Broadcasts';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -31,7 +31,7 @@ function RadioNoLiveVersion() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      setPopularRadios(data);
+      setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
   }
 
@@ -42,7 +42,7 @@ function RadioNoLiveVersion() {
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <AllChannels />
+      <Broadcasts />
       <div className="text-2xl mb-7 font-semibold">인기 채널</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {popularRadios.map((item) => (
