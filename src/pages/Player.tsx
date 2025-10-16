@@ -7,7 +7,7 @@ import {
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import Skeleton from 'react-loading-skeleton';
