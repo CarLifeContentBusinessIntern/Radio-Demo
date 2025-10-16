@@ -15,10 +15,19 @@ function Scrollbar({ scrollableRef }: ScrollbarProps) {
 
   const handleScroll = useCallback(() => {
     if (!scrollableRef.current || !trackRef.current) return;
+
     const { scrollTop, scrollHeight, clientHeight } = scrollableRef.current;
     const trackHeight = trackRef.current.clientHeight;
+
+    if (scrollHeight <= clientHeight) {
+      setThumbHeight(trackHeight);
+      setThumbTop(0);
+      return;
+    }
+
     const newThumbHeight = Math.max((clientHeight / scrollHeight) * trackHeight, 20);
     setThumbHeight(newThumbHeight);
+
     const scrollPercentage = scrollTop / (scrollHeight - clientHeight);
     const newThumbTop = scrollPercentage * (trackHeight - newThumbHeight);
     setThumbTop(newThumbTop);
@@ -26,14 +35,21 @@ function Scrollbar({ scrollableRef }: ScrollbarProps) {
 
   useEffect(() => {
     const scrollableElement = scrollableRef.current;
+
     if (scrollableElement) {
       handleScroll();
       scrollableElement.addEventListener('scroll', handleScroll);
+
       const resizeObserver = new ResizeObserver(handleScroll);
       resizeObserver.observe(scrollableElement);
+
+      const mutationObserver = new MutationObserver(handleScroll);
+      mutationObserver.observe(scrollableElement, { childList: true, subtree: true });
+
       return () => {
         scrollableElement.removeEventListener('scroll', handleScroll);
         resizeObserver.unobserve(scrollableElement);
+        mutationObserver.disconnect();
       };
     }
   }, [scrollableRef, handleScroll]);
@@ -58,9 +74,15 @@ function Scrollbar({ scrollableRef }: ScrollbarProps) {
     (e: MouseEvent) => {
       if (!isDragging.current || !scrollableRef.current || !trackRef.current) return;
       const deltaY = e.clientY - startY.current;
-      const { scrollHeight } = scrollableRef.current;
+      const { scrollHeight, clientHeight } = scrollableRef.current;
       const trackHeight = trackRef.current.clientHeight;
-      const scrollDelta = (deltaY / trackHeight) * scrollHeight;
+
+      const currentThumbHeight = Math.max((clientHeight / scrollHeight) * trackHeight, 20);
+
+      const scrollableDist = scrollHeight - clientHeight;
+      const trackDist = trackHeight - currentThumbHeight;
+
+      const scrollDelta = (deltaY / trackDist) * scrollableDist;
       scrollableRef.current.scrollTop = startScrollTop.current + scrollDelta;
     },
     [scrollableRef]

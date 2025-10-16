@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GridViewItem from '../components/GridViewItem';
-import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
+import TimeSlot from '../components/TimeSlot';
 import Category from '../components/Category';
 import AllChannels from '../components/AllChannels';
 
@@ -46,7 +46,7 @@ function RadioLiveVersion() {
 
   const handleLiveClick = (id: number, isLive: boolean) => {
     if (isLive && !id) return;
-    navigate(`/player/${id}`);
+    navigate(`/player/${id}`, { state: { isLive: true } });
   };
 
   return (
@@ -58,7 +58,7 @@ function RadioLiveVersion() {
             <GridViewItem
               key={`${item.live_episode_id}-${index}`}
               title={item.title}
-              subTitle={item.channels.broadcasting + item.channels.channel}
+              subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
               img={item.img_url}
               onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
             />
@@ -84,9 +84,6 @@ function RadioLiveVersion() {
                 if (liveEpisode && liveEpisode.live_episode_id) {
                   navigate(`/player/${liveEpisode.live_episode_id}`);
                 }
-                // if (item.liveEpisodeId) {
-                //   navigate(`/player/${item.liveEpisodeId}`);
-                // }
               }}
             />
           );

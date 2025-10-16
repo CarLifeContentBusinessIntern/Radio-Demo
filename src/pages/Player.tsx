@@ -7,12 +7,15 @@ import {
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 
 function Player() {
   const { id } = useParams();
+  const location = useLocation();
+  const isLive = location.state?.isLive;
+
   const {
     currentEpisodeId,
     currentEpisodeData,
@@ -33,7 +36,6 @@ function Player() {
     if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
       playEpisode(episodeId);
     }
-    console.log(currentEpisodeData);
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
   if (!currentEpisodeData) return null;
@@ -70,9 +72,7 @@ function Player() {
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
             <p className="text-2xl md:text-5xl line-clamp-2">{currentEpisodeData.title}</p>
             <p className="text-xl md:text-4xl text-[#A6A6A9]">
-              {currentEpisodeData.radios.channels.broadcasting +
-                ' ' +
-                currentEpisodeData.radios.channels.channel}
+              {`${currentEpisodeData.radios.channels.broadcasting} ${currentEpisodeData.radios.channels.channel}`}
             </p>
             <p className="text-lg md:text-3xl text-[#A6A6A9]">
               {formatTime(currentTime)} / {formatTime(duration)}
@@ -91,21 +91,26 @@ function Player() {
               className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
             />
 
-            <div className="flex justify-between w-[60%] max-w-[507px]">
-              <button onClick={() => handleSkip(-15)}>
-                <RiReplay15Fill size={30} />
-              </button>
-              <button onClick={() => handleSkip(15)}>
-                <RiForward15Fill size={30} />
-              </button>
-            </div>
+            {!isLive && (
+              <div className="flex justify-between w-[60%] max-w-[507px]">
+                <button onClick={() => handleSkip(-15)}>
+                  <RiReplay15Fill size={30} />
+                </button>
+                <button onClick={() => handleSkip(15)}>
+                  <RiForward15Fill size={30} />
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between gap-16">
-            <button>
-              <img src={speedIcon} />
-              <p className="text-[12px]">1.0x</p>
-            </button>
+            {!isLive && (
+              <button>
+                <img src={speedIcon} />
+                <p className="text-[12px]">1.0x</p>
+              </button>
+            )}
+
             <button>
               <TbPlayerSkipBackFilled size={30} />
             </button>
@@ -115,9 +120,12 @@ function Player() {
             <button>
               <TbPlayerSkipForwardFilled size={30} />
             </button>
-            <button className="text-gray-400">
-              <IoEllipsisVertical size={30} color="white" />
-            </button>
+
+            {!isLive && (
+              <button className="text-gray-400">
+                <IoEllipsisVertical size={30} color="white" />
+              </button>
+            )}
           </div>
         </div>
       </div>
