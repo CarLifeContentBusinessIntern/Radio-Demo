@@ -1,11 +1,29 @@
+import Skeleton from 'react-loading-skeleton';
+
 interface CircleViewItemProps {
+  isLoading?: boolean;
   title?: string;
   subTitle?: string;
   img?: string;
   onClick?: () => void;
 }
 
-function CircleViewItem({ title, subTitle, img, onClick }: CircleViewItemProps) {
+function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleViewItemProps) {
+  if (isLoading) {
+    return (
+      <div>
+        <Skeleton
+          className="w-full aspect-square mb-4"
+          circle
+          baseColor="#444"
+          highlightColor="gray"
+        />
+        <Skeleton height={28} width="75%" className="mb-1" baseColor="#444" highlightColor="gray" />
+        <Skeleton height={25} width="50%" baseColor="#444" highlightColor="gray" />
+      </div>
+    );
+  }
+
   return (
     <div className="cursor-pointer" onClick={onClick}>
       <img

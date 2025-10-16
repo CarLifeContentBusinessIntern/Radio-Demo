@@ -15,6 +15,7 @@ interface PopularRadioInterface {
 
 function RadioNoLiveVersion() {
   const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   //인기 라디오 조회
   async function fetchPopularRadios() {
@@ -30,9 +31,11 @@ function RadioNoLiveVersion() {
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
+      setIsLoading(false);
     } else {
       setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
+    setIsLoading(false);
   }
 
   useEffect(() => {
@@ -44,19 +47,23 @@ function RadioNoLiveVersion() {
     <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 font-semibold">인기 채널</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {popularRadios.map((item) => (
-          <GridViewItem
-            key={item.radios.id}
-            title={item.radios.title}
-            subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
-            img={item.radios.img_url}
-            onClick={() =>
-              navigate(`/episodes/channel/${item.radios.id}`, {
-                state: { title: item.radios.title },
-              })
-            }
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <GridViewItem isLoading={true} key={index} />
+            ))
+          : popularRadios.map((item) => (
+              <GridViewItem
+                key={item.radios.id}
+                title={item.radios.title}
+                subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
+                img={item.radios.img_url}
+                onClick={() =>
+                  navigate(`/episodes/channel/${item.radios.id}`, {
+                    state: { title: item.radios.title },
+                  })
+                }
+              />
+            ))}
       </div>
       <Broadcasts />
 

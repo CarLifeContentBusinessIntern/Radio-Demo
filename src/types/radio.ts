@@ -10,8 +10,8 @@ export type RadioType = {
   live_no: number;
   live_episode_id: number;
   img_url: string;
-  categories: CategoryType;
-  channels: ChannelType;
+  categories?: CategoryType;
+  channels?: ChannelType;
   is_live: boolean;
 };
 
