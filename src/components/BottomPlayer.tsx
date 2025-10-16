@@ -23,9 +23,10 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     currentTime,
     duration,
     hasBeenActivated,
+    isLive,
   } = usePlayer();
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
