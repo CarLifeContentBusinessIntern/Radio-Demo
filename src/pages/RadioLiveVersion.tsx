@@ -1,53 +1,47 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { CategoryType } from '../types/category';
-import type { ChannelType } from '../types/channel';
 import type { LiveRadio } from '../types/radio';
 import TimeSlot from '../components/TimeSlot';
 import Category from '../components/Category';
+import AllChannels from '../components/AllChannels';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
-  const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
+  // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        const promises = [
-          supabase.from('radios').select('*, channels(*)').eq('is_live', true).order('live_no'),
-          supabase.from('channels').select('*').order('id'),
-          supabase.from('categories').select('*').order('order'),
-        ];
+    async function fetchLiveData() {
+      const { data: liveRadioData, error: liveError } = await supabase
+        .from('radios')
+        .select('*, channels(*)')
+        .eq('is_live', true)
+        .order('live_no', { ascending: true });
 
-        const [
-          { data: liveRadioData, error: liveError },
-          { data: broadcastingData, error: broadcastingError },
-          { data: categoryData, error: categoryError },
-        ] = await Promise.all(promises);
-
-        if (liveError) throw liveError;
-        if (broadcastingError) throw broadcastingError;
-        if (categoryError) throw categoryError;
-
-        setLiveData(liveRadioData);
-        setBroadcastingData(broadcastingData);
-        setCategories(categoryData);
-      } catch (error) {
-        if (error instanceof Error) {
-          console.log('❌ Error fetching data:', error.message);
-        } else {
-          console.log('❌ An unexpected error occurred:', error);
-        }
+      if (liveError) {
+        console.log('❌ Error fetching live data:', liveError.message);
+        return;
       }
-    };
+      setLiveData(liveRadioData);
+    }
+    fetchLiveData();
 
-    fetchAllData();
+    // async function fetchBroadcastingData() {
+    //   const { data: broadcastingData, error: broadcastingError } = await supabase
+    //     .from('channels')
+    //     .select('*')
+    //     .order('id', { ascending: true });
+
+    //   if (broadcastingError) {
+    //     console.log('❌ Error fetching live data:', broadcastingError.message);
+    //     return;
+    //   }
+    //   setBroadcastingData(broadcastingData);
+    // }
+    // fetchBroadcastingData();
   }, []);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
@@ -57,7 +51,7 @@ function RadioLiveVersion() {
 
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">지금은?</div>
+      <div className="text-2xl mb-7 font-semibold">ON AIR 🔴</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {liveData &&
           liveData.map((item, index) => (
@@ -72,7 +66,10 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
-      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
+      <AllChannels />
+
+      {/* 방송별 생방송 */}
+      {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {broadcastingData.map((item, index) => {
           return (
@@ -91,9 +88,9 @@ function RadioLiveVersion() {
             />
           );
         })}
-      </div>
+      </div> */}
 
-      <Category categories={categories} />
+      <Category />
       <TimeSlot />
     </div>
   );

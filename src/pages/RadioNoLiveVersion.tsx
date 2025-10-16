@@ -1,14 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import CircleViewItem from '../components/CircleViewItem';
 import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import type { ChannelType } from '../types/channel';
 import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
-import type { CategoryType } from '../types/category';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
+import AllChannels from '../components/AllChannels';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -16,23 +14,7 @@ interface PopularRadioInterface {
 }
 
 function RadioNoLiveVersion() {
-  const [channels, setChannels] = useState<ChannelType[]>([]);
   const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-
-  //채널 조회
-  async function fetchChannels() {
-    const { data, error } = await supabase
-      .from('channels')
-      .select('*')
-      .order('id', { ascending: true });
-
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setChannels(data);
-    }
-  }
 
   //인기 라디오 조회
   async function fetchPopularRadios() {
@@ -53,43 +35,14 @@ function RadioNoLiveVersion() {
     }
   }
 
-  async function fetchCategories() {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .order('id', { ascending: true });
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setCategories(data);
-    }
-  }
-
   useEffect(() => {
-    fetchChannels();
     fetchPopularRadios();
-    fetchCategories();
   }, []);
 
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {channels.map((item) => (
-          <CircleViewItem
-            key={item.id}
-            title={`${item.broadcasting} ${item.channel}`}
-            subTitle={item.frequency}
-            img={item.img_url}
-            onClick={() =>
-              navigate(`/curation/${item.id}`, {
-                state: { title: `${item.broadcasting} ${item.channel}`, type: 'channel' },
-              })
-            }
-          />
-        ))}
-      </div>
+      <AllChannels />
       <div className="text-2xl mb-7 font-semibold">인기 채널</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {popularRadios.map((item) => (
@@ -108,7 +61,7 @@ function RadioNoLiveVersion() {
       </div>
 
       {/* 카테고리 */}
-      <Category categories={categories} />
+      <Category />
 
       {/* 시간별 몰아보기 */}
       <TimeSlot />
