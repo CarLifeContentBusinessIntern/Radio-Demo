@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AllChannels from '../components/AllChannels';
+import Category from '../components/Category';
 import GridViewItem from '../components/GridViewItem';
+import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
-import TimeSlot from '../components/TimeSlot';
-import Category from '../components/Category';
-import AllChannels from '../components/AllChannels';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
 
   useEffect(() => {
@@ -23,9 +24,12 @@ function RadioLiveVersion() {
 
       if (liveError) {
         console.log('❌ Error fetching live data:', liveError.message);
+        setIsLoading(false);
         return;
       }
       setLiveData(liveRadioData);
+      setIsLoading(false);
+      console.log('isloading? ', isLoading);
     }
     fetchLiveData();
 
@@ -42,7 +46,7 @@ function RadioLiveVersion() {
     //   setBroadcastingData(broadcastingData);
     // }
     // fetchBroadcastingData();
-  }, []);
+  }, [isLoading]);
 
   const handleLiveClick = (id: number, isLive: boolean) => {
     if (isLive && !id) return;
@@ -53,16 +57,19 @@ function RadioLiveVersion() {
     <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 font-semibold">ON AIR 🔴</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {liveData &&
-          liveData.map((item, index) => (
-            <GridViewItem
-              key={`${item.live_episode_id}-${index}`}
-              title={item.title}
-              subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
-              img={item.img_url}
-              onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
-            />
-          ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <GridViewItem isLoading={true} key={index} />
+            ))
+          : liveData.map((item, index) => (
+              <GridViewItem
+                key={`${item.live_episode_id}-${index}`}
+                title={item.title}
+                subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
+                img={item.img_url}
+                onClick={() => handleLiveClick(item.live_episode_id, item.is_live)}
+              />
+            ))}
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 

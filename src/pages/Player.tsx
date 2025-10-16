@@ -10,6 +10,7 @@ import {
 import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
+import Skeleton from 'react-loading-skeleton';
 
 function Player() {
   const { id } = useParams();
@@ -38,7 +39,39 @@ function Player() {
     }
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
-  if (!currentEpisodeData) return null;
+  if (!currentEpisodeData) {
+    return (
+      <div className="relative h-full overflow-hidden">
+        <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+            <div className="flex-shrink-0">
+              <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
+            </div>
+
+            <div className="flex flex-col flex-grow justify-between h-full w-full md:w-auto">
+              <div>
+                <Skeleton height={'2.25rem'} width="90%" baseColor="#222" highlightColor="#444" />
+                <Skeleton
+                  height={'1.8rem'}
+                  width="60%"
+                  className="mt-4"
+                  baseColor="#222"
+                  highlightColor="#444"
+                />
+              </div>
+              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
+            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
+            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const onHandleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     handleSeek(Number(e.target.value));

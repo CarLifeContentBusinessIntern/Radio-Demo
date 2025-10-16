@@ -7,17 +7,22 @@ import { supabase } from '../lib/supabaseClient';
 function AllChannels() {
   const navigate = useNavigate();
   const [channels, setChannels] = useState<ChannelType[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   //채널 조회
   async function fetchChannels() {
     const { data, error } = await supabase
       .from('channels')
       .select('*')
-      .order('id', { ascending: true });
+      .eq('is_broadcasting', true)
+      .order('order', { ascending: true });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
+      setIsLoading(false);
     } else {
       setChannels(data);
+      setIsLoading(false);
     }
   }
 
@@ -29,19 +34,26 @@ function AllChannels() {
     <>
       <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {channels.map((item) => (
-          <CircleViewItem
-            key={item.id}
-            title={`${item.broadcasting} ${item.channel}`}
-            subTitle={item.frequency}
-            img={item.img_url}
-            onClick={() =>
-              navigate(`/curation/${item.id}`, {
-                state: { title: `${item.broadcasting} ${item.channel}`, type: 'channel' },
-              })
-            }
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 8 }).map((_, index) => (
+              <CircleViewItem isLoading={true} key={index} />
+            ))
+          : channels.map((item) => (
+              <CircleViewItem
+                key={item.id}
+                title={`${item.broadcasting} ${item.channel ? item.channel : ''}`}
+                subTitle={item.frequency}
+                img={item.img_url}
+                onClick={() =>
+                  navigate(`/curation/${item.id}`, {
+                    state: {
+                      title: `${item.broadcasting} ${item.channel ? item.channel : ''}`,
+                      type: 'channel',
+                    },
+                  })
+                }
+              />
+            ))}
       </div>
     </>
   );

@@ -1,16 +1,19 @@
+import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 
 type ListViewItemProps = {
+  isLoading?: boolean;
   id?: number;
   imgUrl?: string;
-  title: string;
-  subTitle: string;
+  title?: string;
+  subTitle?: string;
   playTime?: string;
   totalTime?: string;
-  date: string;
+  date?: string;
 };
 
 function ListViewItem({
+  isLoading,
   id,
   imgUrl,
   title,
@@ -20,6 +23,37 @@ function ListViewItem({
   date,
 }: ListViewItemProps) {
   const navigate = useNavigate();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-between gap-8 md:gap-14">
+        <div className="flex-shrink-0">
+          <Skeleton
+            width={112}
+            height={112}
+            borderRadius="11px"
+            baseColor="#444"
+            highlightColor="gray"
+          />
+        </div>
+
+        <div className="flex flex-col flex-grow min-w-0">
+          <Skeleton
+            height={28}
+            width="80%"
+            className="mb-2"
+            baseColor="#444"
+            highlightColor="gray"
+          />
+          <Skeleton height={24} width="50%" baseColor="#444" highlightColor="gray" />
+        </div>
+
+        <div className="hidden md:block">
+          <Skeleton height={28} width={120} baseColor="#444" highlightColor="gray" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
