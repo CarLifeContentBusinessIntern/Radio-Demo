@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AllChannels from '../components/AllChannels';
+import Broadcasts from '../components/Broadcasts';
 import Category from '../components/Category';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
@@ -73,7 +73,7 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
-      <AllChannels />
+      <Broadcasts />
 
       {/* 방송별 생방송 */}
       {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
