@@ -50,9 +50,9 @@ function GridViewPage() {
                 isLoading={false}
                 title={item.title}
                 subTitle={
-                  type === 'channel'
+                  type === 'channel' || !item.channels
                     ? item.time_slot
-                    : `${item.channels?.broadcasting} ${item.channels?.channel}`
+                    : `${item.channels.broadcasting} ${item.channels.channel}`
                 }
                 img={item.img_url}
                 onClick={() =>
