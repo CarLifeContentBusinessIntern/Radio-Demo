@@ -104,18 +104,28 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
 
     return () => {
+      audio.pause();
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.src = '';
     };
   }, []);
 
   useEffect(() => {
-    if (audioRef.current && currentAudioUrl) {
-      if (audioRef.current.src !== currentAudioUrl) {
-        audioRef.current.src = currentAudioUrl;
-      }
-      if (state.isPlaying) {
-        audioRef.current.play().catch((e) => console.error('Audio play failed', e));
+    if (audioRef.current) {
+      if (currentAudioUrl) {
+        if (audioRef.current.src !== currentAudioUrl) {
+          audioRef.current.src = currentAudioUrl;
+        }
+
+        if (state.isPlaying) {
+          audioRef.current.play().catch((e) => {
+            console.error('Audio play failed', e);
+            setState((prev) => ({ ...prev, isPlaying: false }));
+          });
+        } else {
+          audioRef.current.pause();
+        }
       } else {
         audioRef.current.pause();
       }
