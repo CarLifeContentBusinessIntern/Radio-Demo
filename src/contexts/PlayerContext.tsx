@@ -152,6 +152,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     (id: number, liveStatus = false) => {
       const episode = episodes.find((item) => item.id === id);
 
+      if (episode?.audio_file === null) return;
+
       if (episode) {
         const newDuration = getEpisodeDuration(episode);
 

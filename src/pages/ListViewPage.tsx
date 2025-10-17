@@ -20,7 +20,9 @@ function ListViewPage({ type }: ListViewPageProps) {
       const { data, error } = await supabase
         .from('episodes')
         .select('*, radios(*, channels(*))')
-        .eq(eqId, id);
+        .eq(eqId, id)
+        .order('date', { ascending: false })
+        .order('title', { ascending: false });
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
         setIsLoading(false);

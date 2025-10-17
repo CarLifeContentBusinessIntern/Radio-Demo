@@ -1,15 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Broadcasts from '../components/Broadcasts';
 import Category from '../components/Category';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
+import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
-import { usePlayer } from '../contexts/PlayerContext';
 
 function RadioLiveVersion() {
-  const navigate = useNavigate();
   const { playEpisode } = usePlayer();
 
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
@@ -52,7 +50,6 @@ function RadioLiveVersion() {
   const handleLiveClick = (id: number) => {
     if (!id) return;
     playEpisode(id, true);
-    navigate(`/player/${id}`);
   };
 
   return (
