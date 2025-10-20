@@ -49,7 +49,7 @@ const HomeHeader = () => {
             onClick={() => navigate(link.path, { state: link.state })}
           >
             {link.icon ? (
-              <img src={link.icon} className="h-10" />
+              <img src={link.icon} className="h-8" />
             ) : (
               <div className="bg-gray-600 w-10 h-10" />
             )}
@@ -161,7 +161,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
     }
   };
 
-  return <div className="flex py-4 px-10 bg-black h-[100px] items-center">{renderHeader()}</div>;
+  return <div className="flex py-4 px-10 bg-black h-[92px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;
