@@ -88,7 +88,14 @@ function Player() {
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
+      <div
+        className={`bg-black/50 fixed inset-0 z-10 mt-20
+          transition-opacity duration-300 ease-in-out
+          ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
+        `}
+      ></div>
+
+      <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
           <div className="flex-shrink-0">
             {currentEpisodeData.radios.img_url ? (
@@ -113,7 +120,7 @@ function Player() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
+        <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
           <div className="flex flex-col items-center gap-5">
             <input
               type="range"
@@ -126,7 +133,7 @@ function Player() {
             />
 
             <div
-              className={`flex justify-between w-[60%] max-w-[507px] ${isLive ? 'invisible' : ''} ${isMoreBtn ? '' : 'invisible'}`}
+              className={`flex justify-between w-[60%] max-w-[520px] transition-all duration-300 ease-in-out ${isLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
             >
               <button onClick={() => handleSkip(-15)}>
                 <RiReplay15Fill size={30} />
@@ -137,7 +144,7 @@ function Player() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-16">
+          <div className="flex items-center justify-between gap-16 z-20">
             <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
               <img src={speedIcon} />
               <p className="text-[12px]">1.0x</p>
