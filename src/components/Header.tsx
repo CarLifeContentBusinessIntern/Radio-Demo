@@ -43,7 +43,7 @@ const HomeHeader = () => {
         {navLinks.map((link) => (
           <button
             key={link.name}
-            className={`flex flex-col items-center gap-1 transition-opacity ${
+            className={`flex flex-col items-center gap-1 transition-opacity pt-2 ${
               link.name !== '라디오' ? 'opacity-60' : 'opacity-100'
             }`}
             onClick={() => navigate(link.path, { state: link.state })}
@@ -53,7 +53,7 @@ const HomeHeader = () => {
             ) : (
               <div className="bg-gray-600 w-10 h-10" />
             )}
-            <p className="text-2xl whitespace-nowrap">{link.name}</p>
+            <p className="text-xl whitespace-nowrap">{link.name}</p>
           </button>
         ))}
       </div>
@@ -161,7 +161,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
     }
   };
 
-  return <div className="flex py-4 px-10 bg-black h-[92px] items-center">{renderHeader()}</div>;
+  return <div className="flex py-4 px-10 bg-black h-[80px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;
