@@ -45,7 +45,12 @@ function Broadcasts() {
   return (
     <>
       <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        className="grid gap-x-4 gap-y-7 mb-16 px-1"
+        style={{
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        }}
+      >
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />

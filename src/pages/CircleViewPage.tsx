@@ -33,7 +33,13 @@ function CircleViewPage() {
 
   return (
     <div className="pr-28 pt-3">
-      <div className="grid gap-4 mb-4 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        className="grid gap-x-4 gap-y-7 mb-16 px-1"
+        style={{
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        }}
+      >
+        {' '}
         {channels.map((item) => (
           <CircleViewItem
             key={item.id}

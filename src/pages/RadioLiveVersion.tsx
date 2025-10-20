@@ -58,7 +58,13 @@ function RadioLiveVersion() {
   return (
     <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 font-semibold">ON-AIR 🔴</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div
+        className="grid gap-x-4 gap-y-7 mb-16 px-1"
+        style={{
+          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+        }}
+      >
+        {' '}
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />

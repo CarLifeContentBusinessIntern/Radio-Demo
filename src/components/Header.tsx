@@ -51,7 +51,7 @@ const HomeHeader = () => {
             ) : (
               <div className="bg-gray-600 w-10 h-10" />
             )}
-            <p className="text-2xl">{link.name}</p>
+            <p className="text-2xl whitespace-nowrap">{link.name}</p>
           </button>
         ))}
       </div>

@@ -30,7 +30,7 @@ function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItem
         <img
           src={img}
           alt="썸네일"
-          className="w-full aspect-square rounded-[45px] mb-4 object-cover"
+          className="w-full aspect-square rounded-[11%] mb-4 object-cover"
         />
       ) : (
         <div className="bg-gray-600 w-full aspect-square rounded-[45px] mb-4" />
