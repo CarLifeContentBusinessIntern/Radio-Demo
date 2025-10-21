@@ -6,8 +6,9 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
-import Broadcasts from '../components/Broadcasts';
 import RadioMix from '../components/RadioMix';
+import ChannelList from '../components/ChannelList';
+import DocumentaryList from '../components/DocumentaryList';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -24,9 +25,9 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-    radios(*, channels(*)),
-    themes(*)
-  `
+      radios(*, channels(*)),
+      themes!inner(*)
+      `
       )
       .eq('theme_id', 1);
 
@@ -73,10 +74,13 @@ function RadioNoLiveVersion() {
       <RadioMix />
 
       {/* 방송사별 라디오 */}
-      <Broadcasts />
+      <ChannelList />
 
       {/* 시간별 몰아보기 */}
       <TimeSlot />
+
+      {/* 라디오 다큐 */}
+      <DocumentaryList />
 
       {/* 카테고리 */}
       <Category />

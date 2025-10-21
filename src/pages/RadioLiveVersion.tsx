@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Broadcasts from '../components/Broadcasts';
 import Category from '../components/Category';
+import ChannelList from '../components/ChannelList';
 import GridViewItem from '../components/GridViewItem';
+import RadioMix from '../components/RadioMix';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
-import RadioMix from '../components/RadioMix';
 // import { usePlayer } from '../contexts/PlayerContext';
+import DocumentaryList from '../components/DocumentaryList';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -58,12 +59,7 @@ function RadioLiveVersion() {
   return (
     <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 font-semibold">ON-AIR 🔴</div>
-      <div
-        className="grid gap-x-4 gap-y-7 mb-16 px-1"
-        style={{
-          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-        }}
-      >
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {' '}
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
@@ -85,7 +81,7 @@ function RadioLiveVersion() {
       <RadioMix />
 
       {/* 방송사별 라디오 */}
-      <Broadcasts />
+      <ChannelList />
 
       {/* 방송별 생방송 */}
       {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
@@ -108,7 +104,7 @@ function RadioLiveVersion() {
           );
         })}
       </div> */}
-
+      <DocumentaryList />
       <Category />
       <TimeSlot />
     </div>
