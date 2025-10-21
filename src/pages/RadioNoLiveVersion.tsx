@@ -28,7 +28,7 @@ function RadioNoLiveVersion() {
     themes(*)
   `
       )
-      .eq('themes.id', 1);
+      .eq('theme_id', 1);
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
