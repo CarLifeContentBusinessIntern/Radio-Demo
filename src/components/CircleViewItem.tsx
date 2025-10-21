@@ -1,5 +1,7 @@
 // import { useVersion } from '../contexts/VersionContext';
 
+import Skeleton from 'react-loading-skeleton';
+
 interface CircleViewItemProps {
   isLoading?: boolean;
   title?: string;
@@ -8,29 +10,23 @@ interface CircleViewItemProps {
   onClick?: () => void;
 }
 
-function CircleViewItem({ title, subTitle, img, onClick }: CircleViewItemProps) {
+function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleViewItemProps) {
   const trimedTitle = title?.trimEnd();
+  if (isLoading) {
+    return (
+      <div>
+        <Skeleton
+          className="w-full aspect-square mb-4"
+          style={{ borderRadius: '50%' }}
+          baseColor="#444"
+          highlightColor="gray"
+        />
+        <Skeleton height={28} width="75%" className="mb-1" baseColor="#444" highlightColor="gray" />
+        <Skeleton height={25} width="50%" baseColor="#444" highlightColor="gray" />
+      </div>
+    );
+  }
 
-  //방송사 조건 추가
-  // const { isLiveVersion } = useVersion();
-  // let finalImg = img;
-  // if (isLiveVersion) {
-  //   if (trimedTitle === 'MBC') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/MBC1.png';
-  //   } else if (trimedTitle === 'SBS') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/SBS1.png';
-  //   } else if (trimedTitle === 'KBS') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/KBS1.png';
-  //   }
-  // } else {
-  //   if (trimedTitle === 'MBC') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/MBC2.png';
-  //   } else if (trimedTitle === 'SBS') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/SBS2.png';
-  //   } else if (trimedTitle === 'KBS') {
-  //     finalImg = 'https://radio-web-demo.netlify.app/img/logo/KBS2.png';
-  //   }
-  // }
   return (
     <div className="cursor-pointer" onClick={onClick}>
       <img
