@@ -4,19 +4,18 @@ import { useEffect, useState } from 'react';
 import CircleViewItem from './CircleViewItem';
 import { supabase } from '../lib/supabaseClient';
 
-function Broadcasts() {
+function ChannelList() {
   const navigate = useNavigate();
   const [channels, setChannels] = useState<ChannelType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const MAJOR_BROADCASTERS = ['MBC', 'SBS', 'KBS'];
 
   //채널 조회
   async function fetchChannels() {
     const { data, error } = await supabase
       .from('channels')
       .select('*')
-      .order('order', { ascending: true })
-      .eq('is_broadcasting', true);
+      .not('"order"', 'is', null) // order가 null인 애들 제외
+      .order('order', { ascending: true });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -31,15 +30,9 @@ function Broadcasts() {
   }, []);
 
   const handleOnClick = (item: ChannelType) => {
-    if (MAJOR_BROADCASTERS.includes(item.broadcasting)) {
-      navigate(`/channel/${item.broadcasting}`, {
-        state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
-      });
-    } else {
-      navigate(`/curation/${item.id}`, {
-        state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
-      });
-    }
+    navigate(`/curation/${item.id}`, {
+      state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
+    });
   };
 
   return (
@@ -69,4 +62,4 @@ function Broadcasts() {
   );
 }
 
-export default Broadcasts;
+export default ChannelList;

@@ -6,7 +6,7 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
-import Broadcasts from '../components/Broadcasts';
+import ChannelList from '../components/ChannelList';
 import DocumentaryList from '../components/DocumentaryList';
 
 interface PopularRadioInterface {
@@ -72,7 +72,7 @@ function RadioNoLiveVersion() {
               />
             ))}
       </div>
-      <Broadcasts />
+      <ChannelList />
 
       <DocumentaryList />
 

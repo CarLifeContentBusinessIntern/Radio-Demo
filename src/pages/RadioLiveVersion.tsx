@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Broadcasts from '../components/Broadcasts';
+import ChannelList from '../components/ChannelList';
 import Category from '../components/Category';
 import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
 import { usePlayer } from '../contexts/PlayerContext';
+import DocumentaryList from '../components/DocumentaryList';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -81,7 +82,7 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
-      <Broadcasts />
+      <ChannelList />
 
       {/* 방송별 생방송 */}
       {/* <div className="text-2xl mb-7 font-semibold">방송사별 라디오</div>
@@ -104,7 +105,7 @@ function RadioLiveVersion() {
           );
         })}
       </div> */}
-
+      <DocumentaryList />
       <Category />
       <TimeSlot />
     </div>
