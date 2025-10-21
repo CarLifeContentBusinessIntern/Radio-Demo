@@ -11,6 +11,7 @@ type ListViewItemProps = {
   playTime?: string;
   totalTime?: string;
   date?: string;
+  hasAudio?: string;
 };
 
 function ListViewItem({
@@ -22,6 +23,7 @@ function ListViewItem({
   playTime,
   totalTime,
   date,
+  hasAudio,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const { playEpisode, hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
@@ -62,7 +64,7 @@ function ListViewItem({
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
-      onClick={() => (id ? navigate(`/player/${id}`) : '')}
+      onClick={() => (hasAudio ? navigate(`/player/${id}`) : '')}
     >
       <div className="flex-shrink-0">
         {imgUrl ? (

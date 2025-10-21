@@ -89,32 +89,34 @@ function Player() {
       )}
 
       <div
-        className={`bg-black/50 fixed inset-0 z-10 mt-20
+        className={`bg-black/80 fixed inset-0 z-10 mt-20
           transition-opacity duration-300 ease-in-out
           ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
         `}
       ></div>
 
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">
             {currentEpisodeData.radios.img_url ? (
               <img
                 src={currentEpisodeData.radios.img_url}
                 alt={currentEpisodeData.title}
-                className="w-40 h-40 md:w-56 md:h-56 object-cover"
+                className="w-40 h-40 md:w-60 md:h-60 object-cover"
               />
             ) : (
-              <div className="w-40 h-40 md:w-56 md:h-56 bg-gray-400"></div>
+              <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
             )}
           </div>
 
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
-            <p className="text-2xl md:text-5xl line-clamp-2">{currentEpisodeData.title}</p>
-            <p className="text-xl md:text-4xl text-[#A6A6A9]">
+            <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
+              {currentEpisodeData.title}
+            </p>
+            <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {`${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
-            <p className="text-lg md:text-3xl text-[#A6A6A9]">
+            <p className="text-lg md:text-[32px] text-[#A6A6A9]">
               {isLive ? 'LIVE' : `${formatTime(currentTime)} / ${formatTime(duration)}`}
             </p>
           </div>
@@ -133,13 +135,13 @@ function Player() {
             />
 
             <div
-              className={`flex justify-between w-[60%] max-w-[520px] transition-all duration-300 ease-in-out ${isLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+              className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${isLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
             >
               <button onClick={() => handleSkip(-15)}>
-                <RiReplay15Fill size={30} />
+                <RiReplay15Fill size={36} />
               </button>
               <button onClick={() => handleSkip(15)}>
-                <RiForward15Fill size={30} />
+                <RiForward15Fill size={36} />
               </button>
             </div>
           </div>

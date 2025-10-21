@@ -6,6 +6,7 @@ import GridViewItem from '../components/GridViewItem';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
+import RadioMix from '../components/RadioMix';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
@@ -77,6 +78,10 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
+      {/* 라디오 믹스 */}
+      <RadioMix />
+
+      {/* 방송사별 라디오 */}
       <Broadcasts />
 
       {/* 방송별 생방송 */}
