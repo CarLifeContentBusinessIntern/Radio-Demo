@@ -1,21 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ChannelList from '../components/ChannelList';
 import Category from '../components/Category';
+import ChannelList from '../components/ChannelList';
 import GridViewItem from '../components/GridViewItem';
+import RadioMix from '../components/RadioMix';
 import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
-import { usePlayer } from '../contexts/PlayerContext';
+// import { usePlayer } from '../contexts/PlayerContext';
 import DocumentaryList from '../components/DocumentaryList';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
-  const { playEpisode } = usePlayer();
-
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  // const { playEpisode } = usePlayer();
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -52,8 +52,8 @@ function RadioLiveVersion() {
 
   const handleLiveClick = (id: number) => {
     if (!id) return;
-    playEpisode(id, true);
-    navigate(`/player/${id}`);
+    // playEpisode(id, true);
+    navigate(`/player/${id}`, { state: { isLive: true } });
   };
 
   return (
@@ -77,6 +77,10 @@ function RadioLiveVersion() {
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}
       </div>
 
+      {/* 라디오 믹스 */}
+      <RadioMix />
+
+      {/* 방송사별 라디오 */}
       <ChannelList />
 
       {/* 방송별 생방송 */}

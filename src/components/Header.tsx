@@ -12,6 +12,7 @@ import RadioIcon from '../assets/ic_radio.png';
 import HomeIcon from '../assets/ic_home.svg';
 import RecentIcon from '../assets/ic_recent.svg';
 import PopularIcon from '../assets/ic_popular.svg';
+import { usePlayer } from '../contexts/PlayerContext';
 
 const navLinks = [
   { name: '홈', path: '/', icon: HomeIcon },
@@ -47,7 +48,7 @@ const HomeHeader = () => {
         {navLinks.map((link) => (
           <button
             key={link.name}
-            className={`flex flex-col items-center gap-1 group transition-opacity ${
+            className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
               link.name !== '라디오' ? 'opacity-60' : 'opacity-100'
             }`}
             onClick={() => navigate(link.path, { state: link.state })}
@@ -116,6 +117,8 @@ const SearchHeader = () => {
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
 const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
+  const { togglePlaylist, isPlaylsitOpen } = usePlayer();
+
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row items-center">
@@ -126,8 +129,16 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <p className="text-[32px]">{title}</p>
       </div>
       {isPlayer ? (
-        <button className="cursor-pointer">
-          <RiPlayListFill size={30} color="white" />
+        <button className="cursor-pointer" onClick={togglePlaylist}>
+          {isPlaylsitOpen ? (
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+              <RiPlayListFill size={30} color="black" />
+            </div>
+          ) : (
+            <div className="w-12 h-12 flex items-center justify-center">
+              <RiPlayListFill size={30} color="white" />
+            </div>
+          )}
         </button>
       ) : (
         <RightActions />
@@ -173,7 +184,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
     }
   };
 
-  return <div className="flex py-4 px-10 bg-black h-[100px] items-center">{renderHeader()}</div>;
+  return <div className="flex py-4 px-10 bg-black h-[80px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;
