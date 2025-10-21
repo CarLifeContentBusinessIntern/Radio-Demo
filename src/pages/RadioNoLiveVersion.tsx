@@ -6,7 +6,9 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
-import Broadcasts from '../components/Broadcasts';
+import RadioMix from '../components/RadioMix';
+import ChannelList from '../components/ChannelList';
+import DocumentaryList from '../components/DocumentaryList';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -23,11 +25,11 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-    radios(*, channels(*)),
-    themes(*)
-  `
+      radios(*, channels(*)),
+      themes!inner(*)
+      `
       )
-      .eq('themes.id', 1);
+      .eq('theme_id', 1);
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -45,7 +47,7 @@ function RadioNoLiveVersion() {
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">인기 채널</div>
+      <div className="text-2xl mb-7 font-semibold">라디오 인기 채널</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{
@@ -63,21 +65,25 @@ function RadioNoLiveVersion() {
                 title={item.radios.title}
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
-                onClick={() =>
-                  navigate(`/episodes/channel/${item.radios.id}`, {
-                    state: { title: item.radios.title },
-                  })
-                }
+                onClick={() => navigate(`/episodes/channel/${item.radios.id}`)}
               />
             ))}
       </div>
-      <Broadcasts />
 
-      {/* 카테고리 */}
-      <Category />
+      {/* 라디오 믹스 */}
+      <RadioMix />
+
+      {/* 방송사별 라디오 */}
+      <ChannelList />
 
       {/* 시간별 몰아보기 */}
       <TimeSlot />
+
+      {/* 라디오 다큐 */}
+      <DocumentaryList />
+
+      {/* 카테고리 */}
+      <Category />
     </div>
   );
 }

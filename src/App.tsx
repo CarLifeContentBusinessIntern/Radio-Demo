@@ -10,7 +10,6 @@ import { VersionProvider } from './contexts/VersionContext.tsx';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
 // import HomePage from './pages/HomePage.tsx';
 import Radio from './pages/Radio.tsx';
-import CircleViewPage from './pages/CircleViewPage.tsx';
 
 function AppRoutes() {
   return (
@@ -36,12 +35,6 @@ function AppRoutes() {
       <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="curation/:id" element={<GridViewPage />} />
-        </Route>
-      </Route>
-
-      <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
-        <Route element={<PlayerLayout />}>
-          <Route path="channel/:broadcasting" element={<CircleViewPage />} />
         </Route>
       </Route>
 
