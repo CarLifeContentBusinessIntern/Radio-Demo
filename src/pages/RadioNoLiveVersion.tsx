@@ -9,6 +9,7 @@ import TimeSlot from '../components/TimeSlot';
 import RadioMix from '../components/RadioMix';
 import ChannelList from '../components/ChannelList';
 import DocumentaryList from '../components/DocumentaryList';
+import type { Episode } from '../types/episode';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -25,16 +26,18 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-      radios(*, channels(*)),
+      radios(*, channels(*), episodes(*)),
       themes!inner(*)
       `
       )
-      .eq('theme_id', 1);
+      .eq('theme_id', 1)
+      .order('title', { referencedTable: 'radios.episodes', ascending: false });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
       setIsLoading(false);
     } else {
+      console.log('data', data);
       setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
     setIsLoading(false);
@@ -65,7 +68,13 @@ function RadioNoLiveVersion() {
                 title={item.radios.title}
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
-                onClick={() => navigate(`/episodes/channel/${item.radios.id}`)}
+                onClick={() => {
+                  if (item.radios.episodes) {
+                    navigate(`/player/${item.radios.episodes[0].id}`, {
+                      state: { playlist: item.radios },
+                    });
+                  }
+                }}
               />
             ))}
       </div>

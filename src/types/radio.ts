@@ -1,5 +1,6 @@
 import type { CategoryType } from './category';
 import type { ChannelType } from './channel';
+import type { Episode } from './episode';
 
 export type RadioType = {
   id: number;
@@ -13,6 +14,7 @@ export type RadioType = {
   categories?: CategoryType;
   channels?: ChannelType;
   is_live: boolean;
+  episodes?: Episode[];
 };
 
 export interface LiveRadio {

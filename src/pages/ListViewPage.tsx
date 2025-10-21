@@ -65,6 +65,7 @@ function ListViewPage({ type }: ListViewPageProps) {
               totalTime={item.total_time}
               date={item.date}
               hasAudio={item.audio_file ? true : false}
+              playlist={episodes}
             />
           );
         })}
