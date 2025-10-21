@@ -1,5 +1,6 @@
 import Skeleton from 'react-loading-skeleton';
 import { usePlayer } from '../contexts/PlayerContext';
+import { useNavigate } from 'react-router-dom';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -22,6 +23,7 @@ function ListViewItem({
   totalTime,
   date,
 }: ListViewItemProps) {
+  const navigate = useNavigate();
   const { playEpisode, hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -60,7 +62,7 @@ function ListViewItem({
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
-      onClick={() => (id ? playEpisode(id) : '')}
+      onClick={() => (id ? navigate(`/player/${id}`) : '')}
     >
       <div className="flex-shrink-0">
         {imgUrl ? (
