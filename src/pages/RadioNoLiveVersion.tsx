@@ -6,7 +6,8 @@ import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
-import Broadcasts from '../components/Broadcasts';
+import ChannelList from '../components/ChannelList';
+import DocumentaryList from '../components/DocumentaryList';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -23,9 +24,9 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-    radios(*, channels(*)),
-    themes(*)
-  `
+      radios(*, channels(*)),
+      themes!inner(*)
+      `
       )
       .eq('themes.id', 1);
 
@@ -46,12 +47,7 @@ function RadioNoLiveVersion() {
   return (
     <div className="pr-28 pt-7">
       <div className="text-2xl mb-7 font-semibold">인기 채널</div>
-      <div
-        className="grid gap-x-4 gap-y-7 mb-16 px-1"
-        style={{
-          gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-        }}
-      >
+      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {' '}
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
@@ -71,7 +67,9 @@ function RadioNoLiveVersion() {
               />
             ))}
       </div>
-      <Broadcasts />
+      <ChannelList />
+
+      <DocumentaryList />
 
       {/* 카테고리 */}
       <Category />

@@ -8,7 +8,7 @@ type VersionContext = {
 const VersionContext = createContext<VersionContext | undefined>(undefined);
 
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
-  const [isLiveVersion, setIsLiveVersion] = useState(true);
+  const [isLiveVersion, setIsLiveVersion] = useState(false);
 
   const toggleVersion = () => setIsLiveVersion((prev) => !prev);
 
