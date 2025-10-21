@@ -35,7 +35,7 @@ function Player() {
     hasBeenActivated,
     isLive,
     isPlaylsitOpen,
-    togglePlaylist,
+    // togglePlaylist,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
