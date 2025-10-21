@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import type { ThemeType } from '../types/theme';
 import CircleViewItem from './CircleViewItem';
-import { useNavigate } from 'react-router-dom';
 
 function RadioMix() {
   const navigate = useNavigate();
@@ -52,7 +52,10 @@ function RadioMix() {
                 key={item.id}
                 title={item.title}
                 img={item.img_url}
-                onClick={() => (item.episode_ids ? navigate(`/player/${item.episode_ids[0]}`) : '')}
+                onClick={() => {
+                  if (item.episode_ids)
+                    navigate(`/player/${item.episode_ids[0]}`, { state: { isLive: false } });
+                }}
               />
             ))}
       </div>

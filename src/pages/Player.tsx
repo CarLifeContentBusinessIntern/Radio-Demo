@@ -7,14 +7,19 @@ import {
   TbPlayerSkipBackFilled,
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
-import { useParams } from 'react-router-dom';
+import Skeleton from 'react-loading-skeleton';
+import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
-import Skeleton from 'react-loading-skeleton';
+import ScrollbarLayout from '../layouts/ScrollbarLayout';
+// import ScrollbarLayout from '../layouts/ScrollbarLayout';
 
 function Player() {
   const { id } = useParams();
   const [isMoreBtn, setIsMoreBtn] = useState(false);
+  // const contentRef = useRef<HTMLUListElement>(null);
+  const location = useLocation();
+  const liveStatus = location.state.isLive;
 
   const {
     currentEpisodeId,
@@ -29,13 +34,15 @@ function Player() {
     playEpisode,
     hasBeenActivated,
     isLive,
+    isPlaylsitOpen,
+    togglePlaylist,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
     if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
-      playEpisode(episodeId);
+      playEpisode(episodeId, liveStatus);
     }
   }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
 
@@ -79,6 +86,7 @@ function Player() {
 
   return (
     <div className="relative h-full overflow-hidden">
+      {/* 플레이어 배경 */}
       {currentEpisodeData.radios.img_url && (
         <div
           className="fixed inset-0 -z-10 bg-cover bg-center"
@@ -88,13 +96,61 @@ function Player() {
         </div>
       )}
 
+      {/* 확장 버튼 배경 */}
       <div
         className={`bg-black/80 fixed inset-0 z-10 mt-20
           transition-opacity duration-300 ease-in-out
           ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
         `}
-      ></div>
+      />
 
+      {/* 에피소드 목록 */}
+      <div
+        className={`bg-black/80 fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out 
+          ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
+      >
+        <div className="flex-1 relative overflow-hidden">
+          <ScrollbarLayout />
+          {/* <ul className="flex flex-col gap-1 h-100 overflow-y-auto" ref={contentRef}>
+            {playlist.map((episode) => {
+              const isActive = currentEpisodeId === episode.id;
+              return (
+                <li
+                  key={episode.id}
+                  className={`rounded-md cursor-pointer p-3 flex items-center justify-between gap-4 ${isActive ? 'bg-white/10' : 'hover: bg-white/5'}`}
+                  onClick={() => {
+                    playEpisode(episode.id, playlistIds);
+                    togglePlaylist();
+                  }}
+                >
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    {episode.radios.img_url ? (
+                      <img
+                        src={episode.radios.img_url}
+                        alt={episode.title}
+                        className="w-16 h-16 object-cover flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 bg-gray-400 flex-shrink-0"></div>
+                    )}
+                    <div className="flex flex-col min-w-0">
+                      <p className="text-[28px] font-semibold line-clamp-1">{episode.title}</p>
+                      <p className="text-[28px] text-gray-300 line-clamp-1">{`${episode.radios?.channels?.broadcasting} ${episode.radios?.channels?.channel}`}</p>
+                    </div>
+                  </div>
+                  {isActive && !isLive && (
+                    <div className="text-lg font-medium flex-shrink-0">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul> */}
+        </div>
+      </div>
+
+      {/* 플레이 화면 */}
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">

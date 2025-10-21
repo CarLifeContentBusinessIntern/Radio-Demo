@@ -11,7 +11,7 @@ type ListViewItemProps = {
   playTime?: string;
   totalTime?: string;
   date?: string;
-  hasAudio?: string;
+  hasAudio?: boolean;
 };
 
 function ListViewItem({
@@ -26,7 +26,7 @@ function ListViewItem({
   hasAudio,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { playEpisode, hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
+  const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -64,7 +64,7 @@ function ListViewItem({
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
-      onClick={() => (hasAudio ? navigate(`/player/${id}`) : '')}
+      onClick={() => (hasAudio ? navigate(`/player/${id}`, { state: { isLive: false } }) : '')}
     >
       <div className="flex-shrink-0">
         {imgUrl ? (

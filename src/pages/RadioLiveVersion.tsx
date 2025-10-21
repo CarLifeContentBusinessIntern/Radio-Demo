@@ -7,12 +7,14 @@ import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { LiveRadio } from '../types/radio';
 import RadioMix from '../components/RadioMix';
+// import { usePlayer } from '../contexts/PlayerContext';
 
 function RadioLiveVersion() {
   const navigate = useNavigate();
   const [liveData, setLiveData] = useState<LiveRadio[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   // const [broadcastingData, setBroadcastingData] = useState<ChannelType[]>([]);
+  // const { playEpisode } = usePlayer();
 
   useEffect(() => {
     async function fetchLiveData() {
@@ -49,7 +51,8 @@ function RadioLiveVersion() {
 
   const handleLiveClick = (id: number) => {
     if (!id) return;
-    navigate(`/player/${id}`);
+    // playEpisode(id, true);
+    navigate(`/player/${id}`, { state: { isLive: true } });
   };
 
   return (

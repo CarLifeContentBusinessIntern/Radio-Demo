@@ -12,6 +12,7 @@ import RadioIcon from '../assets/ic_radio.png';
 import HomeIcon from '../assets/ic_home.svg';
 import RecentIcon from '../assets/ic_recent.svg';
 import PopularIcon from '../assets/ic_popular.svg';
+import { usePlayer } from '../contexts/PlayerContext';
 
 const navLinks = [
   { name: '홈', path: '/', icon: HomeIcon },
@@ -104,6 +105,8 @@ const SearchHeader = () => {
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
 const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
+  const { togglePlaylist, isPlaylsitOpen } = usePlayer();
+
   return (
     <div className="flex flex-row justify-between items-center w-full">
       <div className="flex flex-row items-center">
@@ -114,8 +117,16 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <p className="text-[32px]">{title}</p>
       </div>
       {isPlayer ? (
-        <button className="cursor-pointer">
-          <RiPlayListFill size={30} color="white" />
+        <button className="cursor-pointer" onClick={togglePlaylist}>
+          {isPlaylsitOpen ? (
+            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
+              <RiPlayListFill size={30} color="black" />
+            </div>
+          ) : (
+            <div className="w-12 h-12 flex items-center justify-center">
+              <RiPlayListFill size={30} color="white" />
+            </div>
+          )}
         </button>
       ) : (
         <RightActions />

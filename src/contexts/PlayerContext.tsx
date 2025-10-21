@@ -18,12 +18,14 @@ interface PlayerState {
   duration: number;
   hasBeenActivated: boolean;
   isLive: boolean;
+  isPlaylsitOpen: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
   currentEpisodeData: Episode | undefined;
   currentAudioUrl: string | null;
   togglePlayPause: () => void;
+  togglePlaylist: () => void;
   playEpisode: (id: number, liveStatus?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
@@ -37,6 +39,7 @@ const initialPlayerStae: PlayerState = {
   duration: 0,
   hasBeenActivated: false,
   isLive: false,
+  isPlaylsitOpen: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -176,6 +179,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setState((prevState) => ({ ...prevState, isPlaying: !prevState.isPlaying }));
   }, [state.currentEpisodeId]);
 
+  const togglePlaylist = useCallback(() => {
+    setState((prevState) => ({ ...prevState, isPlaylsitOpen: !prevState.isPlaylsitOpen }));
+  }, []);
+
   const handleSeek = useCallback(
     (time: number) => {
       if (audioRef.current) {
@@ -210,6 +217,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     currentEpisodeData,
     currentAudioUrl,
     togglePlayPause,
+    togglePlaylist,
     playEpisode,
     handleSeek,
     handleSkip,

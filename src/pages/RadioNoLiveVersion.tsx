@@ -64,11 +64,7 @@ function RadioNoLiveVersion() {
                 title={item.radios.title}
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
-                onClick={() =>
-                  navigate(`/episodes/channel/${item.radios.id}`, {
-                    state: { title: item.radios.title },
-                  })
-                }
+                onClick={() => navigate(`/episodes/channel/${item.radios.id}`)}
               />
             ))}
       </div>
@@ -79,11 +75,11 @@ function RadioNoLiveVersion() {
       {/* 방송사별 라디오 */}
       <Broadcasts />
 
-      {/* 카테고리 */}
-      <Category />
-
       {/* 시간별 몰아보기 */}
       <TimeSlot />
+
+      {/* 카테고리 */}
+      <Category />
     </div>
   );
 }
