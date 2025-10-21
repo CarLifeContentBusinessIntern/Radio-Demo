@@ -8,4 +8,5 @@ export interface Episode {
   total_time: string;
   radios: RadioType;
   date: string;
+  audio_file: string;
 }
