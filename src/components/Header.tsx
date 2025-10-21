@@ -31,34 +31,6 @@ const navLinks = [
 ];
 
 // 홈 헤더
-// const HomeHeader = () => {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="flex flex-row justify-between items-center w-full">
-//       <div className="flex flex-row items-center sm:gap-7 md:gap-11 lg:gap-20">
-//         <button>
-//           <img src={PickleLogo} alt="Pickle Logo" />
-//         </button>
-//         {navLinks.map((link) => (
-//           <button
-//             key={link.name}
-//             className="flex flex-col items-center gap-1"
-//             onClick={() => navigate(link.path, { state: link.state })}
-//           >
-//             {link.icon ? (
-//               <img src={link.icon} className="h-10" />
-//             ) : (
-//               <div className="bg-gray-600 w-10 h-10" />
-//             )}
-//             <p className="text-2xl whitespace-nowrap">{link.name}</p>
-//           </button>
-//         ))}
-//       </div>
-//       <RightActions />
-//     </div>
-//   );
-// };
 const HomeHeader = () => {
   const navigate = useNavigate();
 
