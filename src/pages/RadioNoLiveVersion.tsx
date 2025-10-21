@@ -7,6 +7,7 @@ import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
 import Broadcasts from '../components/Broadcasts';
+import DocumentaryList from '../components/DocumentaryList';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -23,9 +24,9 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-    radios(*, channels(*)),
-    themes(*)
-  `
+      radios(*, channels(*)),
+      themes!inner(*)
+      `
       )
       .eq('themes.id', 1);
 
@@ -72,6 +73,8 @@ function RadioNoLiveVersion() {
             ))}
       </div>
       <Broadcasts />
+
+      <DocumentaryList />
 
       {/* 카테고리 */}
       <Category />
