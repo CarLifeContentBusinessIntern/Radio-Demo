@@ -7,6 +7,7 @@ import type { ThemeType } from '../types/theme';
 import Category from '../components/Category';
 import TimeSlot from '../components/TimeSlot';
 import Broadcasts from '../components/Broadcasts';
+import RadioMix from '../components/RadioMix';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -45,7 +46,7 @@ function RadioNoLiveVersion() {
   const navigate = useNavigate();
   return (
     <div className="pr-28 pt-7">
-      <div className="text-2xl mb-7 font-semibold">인기 채널</div>
+      <div className="text-2xl mb-7 font-semibold">라디오 인기 채널</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{
@@ -71,6 +72,11 @@ function RadioNoLiveVersion() {
               />
             ))}
       </div>
+
+      {/* 라디오 믹스 */}
+      <RadioMix />
+
+      {/* 방송사별 라디오 */}
       <Broadcasts />
 
       {/* 카테고리 */}
