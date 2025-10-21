@@ -82,10 +82,10 @@ const HomeHeader = () => {
               <img
                 src={link.icon}
                 alt={link.name}
-                className="h-6 sm:h-8 md:h-9 lg:h-10 w-auto transition-all "
+                className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
               />
             ) : (
-              <div className="bg-gray-600 w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10" />
+              <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
             )}
             <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
               {link.name}
