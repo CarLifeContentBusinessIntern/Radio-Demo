@@ -14,7 +14,7 @@ function ChannelList() {
   async function fetchChannels() {
     const { data, error } = await supabase
       .from('channels')
-      .select('*,radios(*)')
+      .select('*,radios(count)')
       .not('"order"', 'is', null) // order가 null인 애들 제외
       .order('order', { ascending: true });
 
@@ -31,7 +31,7 @@ function ChannelList() {
   }, []);
 
   const handleOnClick = (item: ChannelType) => {
-    if (item.radios.length !== 0) {
+    if (item.radios[0].count !== 0) {
       navigate(`/curation/${item.id}`, {
         state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
       });
