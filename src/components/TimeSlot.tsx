@@ -21,6 +21,7 @@ function TimeSlot() {
         setIsLoading(false);
         return;
       }
+      console.log('time', timeSlotData);
       setTimeSlots(timeSlotData);
       setIsLoading(false);
     }

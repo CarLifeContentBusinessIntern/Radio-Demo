@@ -21,6 +21,7 @@ function ListViewPage({ type }: ListViewPageProps) {
         .from('episodes')
         .select('*, radios(*, channels(*), episodes(*))')
         .eq(eqId, id)
+        .order('audio_file', { ascending: true })
         .order('date', { ascending: false })
         .order('title', { ascending: false });
       if (error) {
@@ -66,7 +67,8 @@ function ListViewPage({ type }: ListViewPageProps) {
               totalTime={item.total_time}
               date={item.date}
               hasAudio={item.audio_file ? true : false}
-              playlist={item.radios}
+              playlist={type === 'timeslot' ? episodes : item.radios}
+              mixType={type === 'timeslot' ? 'timeMix' : 'radioChannel'}
             />
           );
         })}

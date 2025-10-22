@@ -54,7 +54,7 @@ function RadioMix() {
                 onClick={() => {
                   if (item.episode_ids)
                     navigate(`/player/${item.episode_ids[0]}`, {
-                      state: { isLive: false, playlist: item, isMix: true },
+                      state: { isLive: false, playlist: item, mixType: 'themeMix' },
                     });
                 }}
               />

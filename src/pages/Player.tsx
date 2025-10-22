@@ -22,7 +22,7 @@ function Player() {
   const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const playlist = location.state?.playlist;
-  const isMix = location.state?.isMix;
+  const mixType = location.state?.mixType;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
@@ -51,34 +51,48 @@ function Player() {
     if (episodeId !== null) {
       playEpisode(episodeId, false);
     }
+    console.log('pli', playlist);
   }, [episodeId, playEpisode]);
 
   useEffect(() => {
-    if (isMix && playlist) {
-      const theme = playlist as ThemeType;
-      const episodeIds = theme.episode_ids || [];
-      const allEpisodesMap = new Map<number, Episode>();
+    if (!playlist) return;
 
-      theme.radio_themes?.forEach((rt) => {
-        rt.radios.episodes.forEach((episode) => {
-          const episodeWithRadio = {
-            ...episode,
-            radios: rt.radios,
-          };
-          allEpisodesMap.set(episode.id, episodeWithRadio);
+    switch (mixType) {
+      case 'themeMix': {
+        const theme = playlist as ThemeType;
+        const episodeIds = theme.episode_ids || [];
+        const allEpisodesMap = new Map<number, Episode>();
+
+        theme.radio_themes?.forEach((rt) => {
+          rt.radios.episodes?.forEach((episode) => {
+            allEpisodesMap.set(episode.id, { ...episode, radios: rt.radios });
+          });
         });
-      });
 
-      const processedEpisodes = episodeIds
-        .map((id) => allEpisodesMap.get(id))
-        .filter(Boolean) as Episode[];
+        const processedEpisodes = episodeIds
+          .map((id) => allEpisodesMap.get(id))
+          .filter(Boolean) as Episode[];
+        setFinalPlaylist(processedEpisodes);
+        break;
+      }
 
-      setFinalPlaylist(processedEpisodes);
-    } else if (!isMix && playlist) {
-      const radio = playlist as RadioType;
-      setFinalPlaylist(radio.episodes || []);
+      case 'timeMix': {
+        setFinalPlaylist(playlist as Episode[]);
+        break;
+      }
+
+      case 'radioChannel':
+      default: {
+        const radio = playlist as RadioType;
+        const episodeWithRadio = (radio.episodes || []).map((ep) => ({
+          ...ep,
+          radios: radio,
+        }));
+        setFinalPlaylist(episodeWithRadio);
+        break;
+      }
     }
-  }, [playlist, isMix]);
+  }, [playlist, mixType]);
 
   useEffect(() => {
     if (finalPlaylist.length > 0) {
@@ -159,6 +173,7 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
+                const isChannel = mixType === 'radioChannel';
                 return (
                   <li
                     key={item.id}
@@ -172,15 +187,15 @@ function Player() {
                       <ListViewItem
                         key={item.id}
                         id={item.id}
-                        imgUrl={isMix ? item.radios.img_url : (playlist as RadioType).img_url}
+                        imgUrl={!isChannel ? item.radios?.img_url : (playlist as RadioType).img_url}
                         title={item.title}
-                        subTitle={isMix ? item.radios.title : (playlist as RadioType).title}
+                        subTitle={!isChannel ? item.radios?.title : (playlist as RadioType).title}
                         playTime={isActive ? formatTime(currentTime) : ''}
                         totalTime={isActive ? item.total_time : ''}
                         date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
-                        isMix={isMix}
+                        mixType={mixType}
                       />
                     </div>
                   </li>

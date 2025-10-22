@@ -2,6 +2,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { RadioType } from '../types/radio';
+import type { Episode } from '../types/episode';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -13,8 +14,8 @@ type ListViewItemProps = {
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
-  playlist?: RadioType;
-  isMix?: boolean;
+  playlist?: RadioType | Episode[];
+  mixType?: string;
 };
 
 function ListViewItem({
@@ -28,7 +29,7 @@ function ListViewItem({
   date,
   hasAudio,
   playlist,
-  isMix,
+  mixType,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
@@ -73,7 +74,7 @@ function ListViewItem({
         hasAudio
           ? navigate(`/player/${id}`, {
               replace: true,
-              state: { isLive: false, playlist: playlist, isMix: isMix },
+              state: { isLive: false, playlist: playlist, mixType: mixType },
             })
           : ''
       }
