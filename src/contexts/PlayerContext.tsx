@@ -30,6 +30,9 @@ interface PlayerContextType extends PlayerState {
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
+  setPlaylist: (playlist: Episode[]) => void;
+  handlePlayNext: () => void;
+  handlePlayPrev: () => void;
 }
 
 const initialPlayerStae: PlayerState = {
@@ -55,6 +58,7 @@ export const usePlayer = () => {
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerStae);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [activePlaylist, setActivePlaylist] = useState<Episode[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -168,11 +172,52 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           duration: newDuration,
           hasBeenActivated: true,
           isLive: liveStatus,
+          isPlaylsitOpen: false,
         }));
       }
     },
     [episodes]
   );
+
+  const setPlaylist = useCallback((playlist: Episode[]) => {
+    setActivePlaylist(playlist);
+  }, []);
+
+  const changeEpisode = useCallback(
+    (direction: 1 | -1) => {
+      if (!activePlaylist.length || state.currentEpisodeId === null) return;
+
+      const playlistLength = activePlaylist.length;
+      let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+
+      if (currentIndex === -1) {
+        currentIndex = 0;
+      }
+
+      let searchCount = 0;
+      while (searchCount < playlistLength) {
+        const nextIndex = (currentIndex + direction + playlistLength) % playlistLength;
+        const nextEpisode = activePlaylist[nextIndex];
+
+        if (nextEpisode && nextEpisode.audio_file !== null) {
+          playEpisode(nextEpisode.id, state.isLive);
+          return;
+        }
+
+        currentIndex = nextIndex;
+        searchCount++;
+      }
+    },
+    [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]
+  );
+
+  const handlePlayNext = useCallback(() => {
+    changeEpisode(1);
+  }, [changeEpisode]);
+
+  const handlePlayPrev = useCallback(() => {
+    changeEpisode(-1);
+  }, [changeEpisode]);
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
@@ -222,6 +267,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handleSeek,
     handleSkip,
     formatTime,
+    setPlaylist,
+    handlePlayNext,
+    handlePlayPrev,
   };
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;

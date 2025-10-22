@@ -1,6 +1,9 @@
 import Skeleton from 'react-loading-skeleton';
-import { usePlayer } from '../contexts/PlayerContext';
 import { useNavigate } from 'react-router-dom';
+import { usePlayer } from '../contexts/PlayerContext';
+import type { RadioType } from '../types/radio';
+import type { Episode } from '../types/episode';
+import { toast } from 'react-toastify';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -12,6 +15,8 @@ type ListViewItemProps = {
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
+  playlist?: RadioType | Episode[];
+  mixType?: string;
 };
 
 function ListViewItem({
@@ -24,6 +29,8 @@ function ListViewItem({
   totalTime,
   date,
   hasAudio,
+  playlist,
+  mixType,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
@@ -64,7 +71,14 @@ function ListViewItem({
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
-      onClick={() => (hasAudio ? navigate(`/player/${id}`, { state: { isLive: false } }) : '')}
+      onClick={() =>
+        hasAudio
+          ? navigate(`/player/${id}`, {
+              replace: true,
+              state: { isLive: false, playlist: playlist, mixType: mixType },
+            })
+          : toast.error(`콘텐츠 준비 중입니다`)
+      }
     >
       <div className="flex-shrink-0">
         {imgUrl ? (

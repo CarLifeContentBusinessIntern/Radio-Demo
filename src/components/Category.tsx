@@ -3,6 +3,7 @@ import type { CategoryType } from '../types/category';
 import CircleViewItem from './CircleViewItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { toast } from 'react-toastify';
 
 function Category() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function Category() {
   async function fetchCategories() {
     const { data, error } = await supabase
       .from('categories')
-      .select('*')
+      .select('*, radios(*)')
       .order('order', { ascending: true });
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -40,14 +41,18 @@ function Category() {
                 key={item.id}
                 title={item.title}
                 img={item.img_url}
-                onClick={() =>
-                  navigate(`/curation/${item.id}`, {
-                    state: {
-                      title: `카테고리  I  ${item.title.replace('/', '・')}`,
-                      type: 'category',
-                    },
-                  })
-                }
+                onClick={() => {
+                  if (item.radios?.length !== 0) {
+                    navigate(`/curation/${item.id}`, {
+                      state: {
+                        title: `카테고리  I  ${item.title.replace('/', '・')}`,
+                        type: 'category',
+                      },
+                    });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`);
+                  }
+                }}
               />
             ))}
       </div>

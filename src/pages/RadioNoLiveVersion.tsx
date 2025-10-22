@@ -1,14 +1,15 @@
-import { useNavigate } from 'react-router-dom';
-import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Category from '../components/Category';
+import ChannelList from '../components/ChannelList';
+import DocumentaryList from '../components/DocumentaryList';
+import GridViewItem from '../components/GridViewItem';
+import RadioMix from '../components/RadioMix';
+import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
-import Category from '../components/Category';
-import TimeSlot from '../components/TimeSlot';
-import RadioMix from '../components/RadioMix';
-import ChannelList from '../components/ChannelList';
-import DocumentaryList from '../components/DocumentaryList';
+import { toast } from 'react-toastify';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -25,11 +26,12 @@ function RadioNoLiveVersion() {
       .from('radio_themes')
       .select(
         `
-      radios(*, channels(*)),
+      radios(*, channels(*), episodes(*)),
       themes!inner(*)
       `
       )
-      .eq('theme_id', 1);
+      .eq('theme_id', 1)
+      .order('title', { referencedTable: 'radios.episodes', ascending: false });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -54,7 +56,6 @@ function RadioNoLiveVersion() {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         }}
       >
-        {' '}
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
@@ -65,7 +66,17 @@ function RadioNoLiveVersion() {
                 title={item.radios.title}
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
-                onClick={() => navigate(`/episodes/channel/${item.radios.id}`)}
+                onClick={() => {
+                  const firstEpisode = item.radios.episodes?.[0];
+
+                  if (firstEpisode && firstEpisode.audio_file !== null) {
+                    navigate(`/player/${firstEpisode.id}`, {
+                      state: { playlist: item.radios },
+                    });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`);
+                  }
+                }}
               />
             ))}
       </div>
