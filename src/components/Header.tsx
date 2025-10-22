@@ -126,7 +126,7 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
           <img src={BackArrowIcon} alt="Back" />
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
-        <p className="text-[32px]">{title}</p>
+        <p className="text-[32px] whitespace-pre">{title}</p>
       </div>
       {isPlayer ? (
         <button className="cursor-pointer" onClick={togglePlaylist}>

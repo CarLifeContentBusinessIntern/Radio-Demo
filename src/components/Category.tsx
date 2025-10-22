@@ -44,7 +44,10 @@ function Category() {
                 onClick={() => {
                   if (item.radios?.length !== 0) {
                     navigate(`/curation/${item.id}`, {
-                      state: { title: item.title.replace('/', '・'), type: 'category' },
+                      state: {
+                        title: `카테고리  I  ${item.title.replace('/', '・')}`,
+                        type: 'category',
+                      },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`);
