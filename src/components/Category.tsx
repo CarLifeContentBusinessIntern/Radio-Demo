@@ -42,7 +42,10 @@ function Category() {
                 img={item.img_url}
                 onClick={() =>
                   navigate(`/curation/${item.id}`, {
-                    state: { title: item.title.replace('/', '・'), type: 'category' },
+                    state: {
+                      title: `카테고리  I  ${item.title.replace('/', '・')}`,
+                      type: 'category',
+                    },
                   })
                 }
               />
