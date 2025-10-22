@@ -3,6 +3,7 @@ import type { ChannelType } from '../types/channel';
 import { useEffect, useState } from 'react';
 import CircleViewItem from './CircleViewItem';
 import { supabase } from '../lib/supabaseClient';
+import { toast } from 'react-toastify';
 
 function ChannelList() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function ChannelList() {
   async function fetchChannels() {
     const { data, error } = await supabase
       .from('channels')
-      .select('*')
+      .select('*,radios(count)')
       .not('"order"', 'is', null) // order가 null인 애들 제외
       .order('order', { ascending: true });
 
@@ -30,9 +31,13 @@ function ChannelList() {
   }, []);
 
   const handleOnClick = (item: ChannelType) => {
-    navigate(`/curation/${item.id}`, {
-      state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
-    });
+    if (item.radios[0].count !== 0) {
+      navigate(`/curation/${item.id}`, {
+        state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
+      });
+    } else {
+      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+    }
   };
 
   return (

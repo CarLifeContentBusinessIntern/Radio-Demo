@@ -50,7 +50,7 @@ function Category() {
                       },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`);
+                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }
                 }}
               />
