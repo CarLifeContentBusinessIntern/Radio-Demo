@@ -26,13 +26,17 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     isLive,
     handlePlayNext,
     handlePlayPrev,
+    activePlaylist,
   } = usePlayer();
 
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
-    navigate(`/player/${targetId}`, { state: { isLive: isLive } });
+    console.log(activePlaylist);
+    navigate(`/player/${targetId}`, {
+      state: { isLive: isLive, playlist: activePlaylist, mixType: 'timeMix' },
+    });
   };
 
   const handleControlsClick = (e: React.MouseEvent) => {
