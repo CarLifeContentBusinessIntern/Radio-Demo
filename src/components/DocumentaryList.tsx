@@ -53,7 +53,7 @@ function DocumentaryList() {
                 title={item.radios.title}
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel ? item.radios.channels?.channel : ''}`}
                 img={item.radios.img_url}
-                onClick={() => toast.error(`콘텐츠 준비 중입니다`)}
+                onClick={() => toast.error(`콘텐츠 준비 중입니다`, { toastId: item.radios.id })}
               />
             ))}
       </div>
