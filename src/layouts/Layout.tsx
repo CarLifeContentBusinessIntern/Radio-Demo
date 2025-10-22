@@ -47,7 +47,7 @@ function Layout({
       clearTimeout(timeout);
       content?.removeEventListener('scroll', handleScroll);
     };
-  }, [scrollKey]);
+  }, [scrollKey, isLiveVersion]);
 
   // 렌더링 완료 후 복원된 스크롤 위치로 이동
   useEffect(() => {
