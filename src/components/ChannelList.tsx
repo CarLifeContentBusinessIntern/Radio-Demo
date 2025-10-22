@@ -21,7 +21,6 @@ function ChannelList() {
     if (error) {
       console.error('Supabase 연결 실패:', error);
     } else {
-      console.log(data);
       setChannels(data);
     }
     setIsLoading(false);
