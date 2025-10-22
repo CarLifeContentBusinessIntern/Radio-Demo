@@ -130,15 +130,11 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
       </div>
       {isPlayer ? (
         <button className="cursor-pointer" onClick={togglePlaylist}>
-          {isPlaylsitOpen ? (
-            <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center">
-              <RiPlayListFill size={30} color="black" />
-            </div>
-          ) : (
-            <div className="w-12 h-12 flex items-center justify-center">
-              <RiPlayListFill size={30} color="white" />
-            </div>
-          )}
+          <div
+            className={`w-12 h-12 flex items-center justify-center ${isPlaylsitOpen ? 'rounded-full bg-white' : ''}`}
+          >
+            <RiPlayListFill size={30} color={isPlaylsitOpen ? 'black' : 'white'} />
+          </div>
         </button>
       ) : (
         <RightActions />
