@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import type { TimeSlotType } from '../types/timeSlot';
 import CircleViewItem from './CircleViewItem';
+import { toast } from 'react-toastify';
 
 function TimeSlot() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ function TimeSlot() {
     async function fetchTimeSlotData() {
       const { data: timeSlotData, error: timeSlotError } = await supabase
         .from('time_slots')
-        .select(`*`)
+        .select(`*, episodes(*)`)
         .order('order', { ascending: true });
 
       if (timeSlotError) {
@@ -42,9 +43,13 @@ function TimeSlot() {
                 title={item.title}
                 subTitle={item.time_slot}
                 img={item.img_url}
-                onClick={() =>
-                  navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } })
-                }
+                onClick={() => {
+                  if (item.episodes && item.episodes.length > 0) {
+                    navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+                  }
+                }}
               />
             ))}
       </div>
