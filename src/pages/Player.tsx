@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -10,16 +10,21 @@ import {
 import Skeleton from 'react-loading-skeleton';
 import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
+import ListViewItem from '../components/ListViewItem';
+import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
-import ScrollbarLayout from '../layouts/ScrollbarLayout';
-// import ScrollbarLayout from '../layouts/ScrollbarLayout';
+import type { Episode } from '../types/episode';
+import type { RadioType } from '../types/radio';
+import type { MixThemeType } from '../types/theme';
 
 function Player() {
   const { id } = useParams();
-  const [isMoreBtn, setIsMoreBtn] = useState(false);
-  // const contentRef = useRef<HTMLUListElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const liveStatus = location.state.isLive;
+  const playlist = location.state?.playlist;
+  const mixType = location.state?.mixType;
+  const [isMoreBtn, setIsMoreBtn] = useState(false);
+  const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
@@ -32,21 +37,69 @@ function Player() {
     handleSkip,
     formatTime,
     playEpisode,
-    hasBeenActivated,
     isLive,
     isPlaylsitOpen,
-    // togglePlaylist,
+    togglePlaylist,
+    setPlaylist,
+    handlePlayNext,
+    handlePlayPrev,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
-    if (episodeId !== null && (episodeId !== currentEpisodeId || !hasBeenActivated)) {
-      playEpisode(episodeId, liveStatus);
+    if (episodeId !== null) {
+      playEpisode(episodeId, false);
     }
-  }, [episodeId, currentEpisodeId, playEpisode, hasBeenActivated]);
+  }, [episodeId, playEpisode]);
 
-  if (!currentEpisodeData) {
+  useEffect(() => {
+    if (!playlist) return;
+
+    switch (mixType) {
+      case 'themeMix': {
+        const theme = playlist as MixThemeType;
+        const episodeIds = theme.episode_ids || [];
+        const allEpisodesMap = new Map<number, Episode>();
+
+        theme.radio_themes?.forEach((rt) => {
+          rt.radios.episodes?.forEach((episode) => {
+            allEpisodesMap.set(episode.id, { ...episode, radios: rt.radios });
+          });
+        });
+
+        const processedEpisodes = episodeIds
+          .map((id) => allEpisodesMap.get(id))
+          .filter(Boolean) as Episode[];
+        setFinalPlaylist(processedEpisodes);
+        break;
+      }
+
+      case 'timeMix': {
+        setFinalPlaylist(playlist as Episode[]);
+        break;
+      }
+
+      case 'radioChannel':
+      default: {
+        const radio = playlist as RadioType;
+        const episodeWithRadio = (radio.episodes || []).map((ep) => ({
+          ...ep,
+          radios: radio,
+        }));
+        setFinalPlaylist(episodeWithRadio);
+        break;
+      }
+    }
+  }, [playlist, mixType]);
+
+  useEffect(() => {
+    if (finalPlaylist.length > 0) {
+      setPlaylist(finalPlaylist);
+    }
+  }, [finalPlaylist, setPlaylist]);
+
+  if (!currentEpisodeData || finalPlaylist.length === 0) {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
@@ -98,7 +151,7 @@ function Player() {
 
       {/* 확장 버튼 배경 */}
       <div
-        className={`bg-black/80 fixed inset-0 z-10 mt-20
+        className={`bg-black/60 fixed inset-0 z-20 mt-20
           transition-opacity duration-300 ease-in-out
           ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
         `}
@@ -106,47 +159,48 @@ function Player() {
 
       {/* 에피소드 목록 */}
       <div
-        className={`bg-black/80 fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out 
+        className={`bg-black fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out
           ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
       >
-        <div className="flex-1 relative overflow-hidden">
-          <ScrollbarLayout />
-          {/* <ul className="flex flex-col gap-1 h-100 overflow-y-auto" ref={contentRef}>
-            {playlist.map((episode) => {
-              const isActive = currentEpisodeId === episode.id;
-              return (
-                <li
-                  key={episode.id}
-                  className={`rounded-md cursor-pointer p-3 flex items-center justify-between gap-4 ${isActive ? 'bg-white/10' : 'hover: bg-white/5'}`}
-                  onClick={() => {
-                    playEpisode(episode.id, playlistIds);
-                    togglePlaylist();
-                  }}
-                >
-                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                    {episode.radios.img_url ? (
-                      <img
-                        src={episode.radios.img_url}
-                        alt={episode.title}
-                        className="w-16 h-16 object-cover flex-shrink-0"
+        <div className="flex relative overflow-hidden w-full">
+          <Scrollbar scrollableRef={contentRef} />
+
+          <div
+            ref={contentRef}
+            className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
+          >
+            <ul className="flex flex-col gap-1">
+              {finalPlaylist.map((item: Episode) => {
+                const isActive = currentEpisodeId === item.id;
+                const isChannel = mixType === 'radioChannel';
+                return (
+                  <li
+                    key={item.id}
+                    className={`rounded-md cursor-pointer p-3 flex items-center`}
+                    onClick={() => {
+                      playEpisode(item.id);
+                      togglePlaylist();
+                    }}
+                  >
+                    <div className="w-full">
+                      <ListViewItem
+                        id={item.id}
+                        imgUrl={!isChannel ? item.radios?.img_url : (playlist as RadioType).img_url}
+                        title={item.title}
+                        subTitle={!isChannel ? item.radios?.title : (playlist as RadioType).title}
+                        playTime={isActive ? formatTime(currentTime) : ''}
+                        totalTime={isActive ? item.total_time : ''}
+                        date={item.date}
+                        hasAudio={item.audio_file ? true : false}
+                        playlist={playlist}
+                        mixType={mixType}
                       />
-                    ) : (
-                      <div className="w-16 h-16 bg-gray-400 flex-shrink-0"></div>
-                    )}
-                    <div className="flex flex-col min-w-0">
-                      <p className="text-[28px] font-semibold line-clamp-1">{episode.title}</p>
-                      <p className="text-[28px] text-gray-300 line-clamp-1">{`${episode.radios?.channels?.broadcasting} ${episode.radios?.channels?.channel}`}</p>
                     </div>
-                  </div>
-                  {isActive && !isLive && (
-                    <div className="text-lg font-medium flex-shrink-0">
-                      {formatTime(currentTime)} / {formatTime(duration)}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul> */}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -208,13 +262,13 @@ function Player() {
               <p className="text-[12px]">1.0x</p>
             </button>
 
-            <button>
+            <button onClick={handlePlayPrev}>
               <TbPlayerSkipBackFilled size={30} />
             </button>
             <button onClick={togglePlayPause}>
               {isPlaying ? <TbPlayerPauseFilled size={30} /> : <TbPlayerPlayFilled size={30} />}
             </button>
-            <button>
+            <button onClick={handlePlayNext}>
               <TbPlayerSkipForwardFilled size={30} />
             </button>
 

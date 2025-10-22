@@ -1,38 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
-import type { ThemeType } from '../types/theme';
+import { type ThemeType } from '../types/theme';
 import CircleViewItem from './CircleViewItem';
+import { toast } from 'react-toastify';
 
 function RadioMix() {
   const navigate = useNavigate();
-  const [radioMix, setRadioMix] = useState<ThemeType[]>([]);
+  const [radioMixTheme, setRadioMixTheme] = useState<ThemeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchRadioMix() {
-      const { data, error } = await supabase
+    async function fetchRadioMixTheme() {
+      const { data: mixThemeData, error: mixThemeError } = await supabase
         .from('themes')
-        .select('*')
+        .select('*, radio_themes(*, radios(*, channels(*), episodes(*)))')
         .eq('section', '라디오 믹스')
         .order('id', { ascending: true });
 
-      if (error) {
-        console.log('❌ Error fetching radio mix data:', error.message);
+      if (mixThemeError) {
+        console.log('❌ Error fetching radio mix data:', mixThemeError.message);
         setIsLoading(false);
 
         return;
       }
-      if (!data) {
+      if (!mixThemeData) {
         setIsLoading(false);
         return;
       }
-      setRadioMix(data);
+      setRadioMixTheme(mixThemeData);
       setIsLoading(false);
     }
-
-    fetchRadioMix();
-  });
+    fetchRadioMixTheme();
+  }, []);
 
   return (
     <div>
@@ -47,14 +47,19 @@ function RadioMix() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />
             ))
-          : radioMix.map((item) => (
+          : radioMixTheme.map((item) => (
               <CircleViewItem
                 key={item.id}
                 title={item.title}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.episode_ids)
-                    navigate(`/player/${item.episode_ids[0]}`, { state: { isLive: false } });
+                  if (item.episode_ids) {
+                    navigate(`/player/${item.episode_ids[0]}`, {
+                      state: { isLive: false, playlist: item, mixType: 'themeMix' },
+                    });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`);
+                  }
                 }}
               />
             ))}

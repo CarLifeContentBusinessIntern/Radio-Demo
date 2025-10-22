@@ -19,8 +19,9 @@ function ListViewPage({ type }: ListViewPageProps) {
     async function fetchEpisodesData() {
       const { data, error } = await supabase
         .from('episodes')
-        .select('*, radios(*, channels(*))')
+        .select('*, radios(*, channels(*), episodes(*))')
         .eq(eqId, id)
+        .order('audio_file', { ascending: true })
         .order('date', { ascending: false })
         .order('title', { ascending: false });
       if (error) {
@@ -64,7 +65,9 @@ function ListViewPage({ type }: ListViewPageProps) {
               playTime={item.play_time}
               totalTime={item.total_time}
               date={item.date}
-              hasAudio={item.audio_file ? true : false}
+              hasAudio={!!item.audio_file}
+              playlist={type === 'timeslot' ? episodes : item.radios}
+              mixType={type === 'timeslot' ? 'timeMix' : 'radioChannel'}
             />
           );
         })}

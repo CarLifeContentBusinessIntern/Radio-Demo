@@ -3,6 +3,7 @@ import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { RadioType } from '../types/radio';
+import { toast } from 'react-toastify';
 
 function GridViewPage() {
   const navigate = useNavigate();
@@ -22,8 +23,9 @@ function GridViewPage() {
 
       const { data, error } = await supabase
         .from('radios')
-        .select('*,channels(*)')
+        .select('*, channels(*), episodes(*)')
         .order(filterRadiosOrder, { ascending: true })
+        .order('title', { referencedTable: 'episodes', ascending: false })
         .eq(filterColumn, id);
 
       if (error) {
@@ -56,9 +58,14 @@ function GridViewPage() {
                     : `${item.channels.broadcasting} ${item.channels.channel}`
                 }
                 img={item.img_url}
-                onClick={() =>
-                  navigate(`/episodes/channel/${item.id}`, { state: { title: item.title } })
-                }
+                onClick={() => {
+                  const firstEpisodeId = item.episodes?.[0]?.id;
+                  if (firstEpisodeId !== undefined && item.episodes?.[0]?.audio_file !== null) {
+                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item } });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`);
+                  }
+                }}
               />
             ))}
       </div>
