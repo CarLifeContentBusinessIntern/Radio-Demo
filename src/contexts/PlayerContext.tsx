@@ -168,6 +168,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           duration: newDuration,
           hasBeenActivated: true,
           isLive: liveStatus,
+          isPlaylsitOpen: false,
         }));
       }
     },

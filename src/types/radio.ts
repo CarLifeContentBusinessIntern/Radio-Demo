@@ -6,11 +6,11 @@ export type RadioType = {
   id: number;
   title: string;
   time_slot: string;
+  img_url: string;
   category_id: number;
   channel_id: number;
   live_no: number;
   live_episode_id: number;
-  img_url: string;
   categories?: CategoryType;
   channels?: ChannelType;
   is_live: boolean;

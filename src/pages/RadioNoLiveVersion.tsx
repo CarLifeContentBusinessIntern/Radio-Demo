@@ -1,15 +1,14 @@
-import { useNavigate } from 'react-router-dom';
-import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Category from '../components/Category';
+import ChannelList from '../components/ChannelList';
+import DocumentaryList from '../components/DocumentaryList';
+import GridViewItem from '../components/GridViewItem';
+import RadioMix from '../components/RadioMix';
+import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
-import Category from '../components/Category';
-import TimeSlot from '../components/TimeSlot';
-import RadioMix from '../components/RadioMix';
-import ChannelList from '../components/ChannelList';
-import DocumentaryList from '../components/DocumentaryList';
-import type { Episode } from '../types/episode';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -37,7 +36,7 @@ function RadioNoLiveVersion() {
       console.error('Supabase 연결 실패:', error);
       setIsLoading(false);
     } else {
-      console.log('data', data);
+      console.log(data);
       setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
     setIsLoading(false);
@@ -69,7 +68,7 @@ function RadioNoLiveVersion() {
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
                 onClick={() => {
-                  if (item.radios.episodes) {
+                  if (item.radios.episodes[0].audio_file !== null) {
                     navigate(`/player/${item.radios.episodes[0].id}`, {
                       state: { playlist: item.radios },
                     });

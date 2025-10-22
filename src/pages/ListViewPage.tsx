@@ -19,7 +19,7 @@ function ListViewPage({ type }: ListViewPageProps) {
     async function fetchEpisodesData() {
       const { data, error } = await supabase
         .from('episodes')
-        .select('*, radios(*, channels(*))')
+        .select('*, radios(*, channels(*), episodes(*))')
         .eq(eqId, id)
         .order('date', { ascending: false })
         .order('title', { ascending: false });
@@ -28,6 +28,7 @@ function ListViewPage({ type }: ListViewPageProps) {
         setIsLoading(false);
         return;
       }
+      console.log('epi', data);
       setEpisodes(data);
       setIsLoading(false);
     }
@@ -65,7 +66,7 @@ function ListViewPage({ type }: ListViewPageProps) {
               totalTime={item.total_time}
               date={item.date}
               hasAudio={item.audio_file ? true : false}
-              playlist={episodes}
+              playlist={item.radios}
             />
           );
         })}

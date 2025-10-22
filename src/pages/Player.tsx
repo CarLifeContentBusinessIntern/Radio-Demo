@@ -14,14 +14,18 @@ import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { Episode } from '../types/episode';
+import type { RadioType } from '../types/radio';
+import type { ThemeType } from '../types/theme';
 
 function Player() {
   const { id } = useParams();
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  // const liveStatus = location.state?.liveStatus;
   const playlist = location.state?.playlist;
+  const isMix = location.state?.isMix;
+
+  const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
@@ -34,7 +38,6 @@ function Player() {
     handleSkip,
     formatTime,
     playEpisode,
-    // hasBeenActivated,
     isLive,
     isPlaylsitOpen,
     togglePlaylist,
@@ -48,7 +51,34 @@ function Player() {
     }
   }, [episodeId, playEpisode]);
 
-  if (!currentEpisodeData) {
+  useEffect(() => {
+    if (isMix && playlist) {
+      const theme = playlist as ThemeType;
+      const episodeIds = theme.episode_ids || [];
+      const allEpisodesMap = new Map<number, Episode>();
+
+      theme.radio_themes?.forEach((rt) => {
+        rt.radios.episodes.forEach((episode) => {
+          const episodeWithRadio = {
+            ...episode,
+            radios: rt.radios,
+          };
+          allEpisodesMap.set(episode.id, episodeWithRadio);
+        });
+      });
+
+      const processedEpisodes = episodeIds
+        .map((id) => allEpisodesMap.get(id))
+        .filter(Boolean) as Episode[];
+
+      setFinalPlaylist(processedEpisodes);
+    } else if (!isMix && playlist) {
+      const radio = playlist as RadioType;
+      setFinalPlaylist(radio.episodes || []);
+    }
+  }, [playlist, isMix]);
+
+  if (!currentEpisodeData || finalPlaylist.length === 0) {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
@@ -108,15 +138,18 @@ function Player() {
 
       {/* 에피소드 목록 */}
       <div
-        className={`bg-black fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out 
+        className={`bg-black fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out
           ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
       >
-        <div className="flex relative overflow-hidden">
+        <div className="flex relative overflow-hidden w-full">
           <Scrollbar scrollableRef={contentRef} />
 
-          <div ref={contentRef} className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24">
+          <div
+            ref={contentRef}
+            className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
+          >
             <ul className="flex flex-col gap-1">
-              {playlist.episodes.map((item: Episode) => {
+              {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
                 return (
                   <li
@@ -131,14 +164,15 @@ function Player() {
                       <ListViewItem
                         key={item.id}
                         id={item.id}
-                        imgUrl={playlist.img_url}
+                        imgUrl={isMix ? item.radios.img_url : (playlist as RadioType).img_url}
                         title={item.title}
-                        subTitle={playlist.title}
+                        subTitle={isMix ? item.radios.title : (playlist as RadioType).title}
                         playTime={isActive ? formatTime(currentTime) : ''}
                         totalTime={isActive ? item.total_time : ''}
                         date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
+                        isMix={isMix}
                       />
                     </div>
                   </li>

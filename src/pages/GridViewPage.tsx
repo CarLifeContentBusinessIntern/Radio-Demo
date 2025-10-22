@@ -22,8 +22,9 @@ function GridViewPage() {
 
       const { data, error } = await supabase
         .from('radios')
-        .select('*,channels(*)')
+        .select('*, channels(*), episodes(*)')
         .order(filterRadiosOrder, { ascending: true })
+        .order('title', { referencedTable: 'episodes', ascending: false })
         .eq(filterColumn, id);
 
       if (error) {
@@ -57,7 +58,7 @@ function GridViewPage() {
                 }
                 img={item.img_url}
                 onClick={() =>
-                  navigate(`/episodes/channel/${item.id}`, { state: { title: item.title } })
+                  navigate(`/player/${item.episodes[0].id}`, { state: { playlist: item } })
                 }
               />
             ))}
