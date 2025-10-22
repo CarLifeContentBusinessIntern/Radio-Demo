@@ -77,7 +77,7 @@ function ListViewItem({
               replace: true,
               state: { isLive: false, playlist: playlist, mixType: mixType },
             })
-          : toast.error(`콘텐츠 준비 중입니다`)
+          : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
       }
     >
       <div className="flex-shrink-0">

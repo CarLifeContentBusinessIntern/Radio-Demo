@@ -63,7 +63,7 @@ function GridViewPage() {
                   if (firstEpisodeId !== undefined && item.episodes?.[0]?.audio_file !== null) {
                     navigate(`/player/${firstEpisodeId}`, { state: { playlist: item } });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`);
+                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }
                 }}
               />

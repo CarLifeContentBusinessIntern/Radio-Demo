@@ -5,4 +5,5 @@ export type ChannelType = {
   frequency: string;
   img_url: string;
   order: number;
+  radios: { count: number }[];
 };
