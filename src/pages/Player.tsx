@@ -15,7 +15,7 @@ import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { Episode } from '../types/episode';
 import type { RadioType } from '../types/radio';
-import type { ThemeType } from '../types/theme';
+import type { MixThemeType } from '../types/theme';
 
 function Player() {
   const { id } = useParams();
@@ -51,7 +51,6 @@ function Player() {
     if (episodeId !== null) {
       playEpisode(episodeId, false);
     }
-    console.log('pli', playlist);
   }, [episodeId, playEpisode]);
 
   useEffect(() => {
@@ -59,7 +58,7 @@ function Player() {
 
     switch (mixType) {
       case 'themeMix': {
-        const theme = playlist as ThemeType;
+        const theme = playlist as MixThemeType;
         const episodeIds = theme.episode_ids || [];
         const allEpisodesMap = new Map<number, Episode>();
 

@@ -16,6 +16,22 @@ export type RadioThemeType = {
   radios: RadioType[];
 };
 
+export type MixThemeType = {
+  id: number;
+  title: string;
+  img_url: string;
+  section: string;
+  episode_ids: number[];
+  radio_themes?: MixRadioThemeType[];
+};
+
+export type MixRadioThemeType = {
+  id: number;
+  radio_id: number;
+  theme_id: number;
+  radios: RadioType;
+};
+
 export type RadioMixType = {
   radios: RadioType;
   themes: ThemeType;

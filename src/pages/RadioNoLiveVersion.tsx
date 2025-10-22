@@ -56,7 +56,6 @@ function RadioNoLiveVersion() {
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         }}
       >
-        {' '}
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
@@ -68,10 +67,14 @@ function RadioNoLiveVersion() {
                 subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
                 img={item.radios.img_url}
                 onClick={() => {
-                  if (item.radios.episodes[0].audio_file !== null) {
-                    navigate(`/player/${item.radios.episodes[0].id}`, {
+                  const firstEpisode = item.radios.episodes?.[0];
+
+                  if (firstEpisode && firstEpisode.audio_file !== null) {
+                    navigate(`/player/${firstEpisode.id}`, {
                       state: { playlist: item.radios },
                     });
+                  } else {
+                    console.log('❌ 재생할 에피소드가 없습니다');
                   }
                 }}
               />

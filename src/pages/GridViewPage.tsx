@@ -57,9 +57,14 @@ function GridViewPage() {
                     : `${item.channels.broadcasting} ${item.channels.channel}`
                 }
                 img={item.img_url}
-                onClick={() =>
-                  navigate(`/player/${item.episodes[0].id}`, { state: { playlist: item } })
-                }
+                onClick={() => {
+                  const firstEpisodeId = item.episodes?.[0]?.id;
+                  if (firstEpisodeId !== undefined) {
+                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item } });
+                  } else {
+                    console.log('❌ 재생할 에피소드가 없습니다');
+                  }
+                }}
               />
             ))}
       </div>
