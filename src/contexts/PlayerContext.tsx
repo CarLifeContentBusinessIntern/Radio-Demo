@@ -183,53 +183,41 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setActivePlaylist(playlist);
   }, []);
 
-  const handlePlayNext = useCallback(() => {
-    if (!activePlaylist.length || state.currentEpisodeId === null) return;
+  const changeEpisode = useCallback(
+    (direction: 1 | -1) => {
+      if (!activePlaylist.length || state.currentEpisodeId === null) return;
 
-    let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+      const playlistLength = activePlaylist.length;
+      let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
 
-    if (currentIndex === -1) {
-      currentIndex = 0;
-    }
-
-    let searchCount = 0;
-    while (searchCount < activePlaylist.length) {
-      const nextIndex = (currentIndex + 1) % activePlaylist.length;
-      const nextEpisode = activePlaylist[nextIndex];
-
-      if (nextEpisode && nextEpisode.audio_file !== null) {
-        playEpisode(nextEpisode.id, state.isLive);
-        return;
+      if (currentIndex === -1) {
+        currentIndex = 0;
       }
 
-      currentIndex = nextIndex;
-      searchCount++;
-    }
-  }, [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]);
+      let searchCount = 0;
+      while (searchCount < playlistLength) {
+        const nextIndex = (currentIndex + direction + playlistLength) % playlistLength;
+        const nextEpisode = activePlaylist[nextIndex];
+
+        if (nextEpisode && nextEpisode.audio_file !== null) {
+          playEpisode(nextEpisode.id, state.isLive);
+          return;
+        }
+
+        currentIndex = nextIndex;
+        searchCount++;
+      }
+    },
+    [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]
+  );
+
+  const handlePlayNext = useCallback(() => {
+    changeEpisode(1);
+  }, [changeEpisode]);
 
   const handlePlayPrev = useCallback(() => {
-    if (!activePlaylist.length || state.currentEpisodeId === null) return;
-
-    let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
-
-    if (currentIndex === -1) {
-      currentIndex = 0;
-    }
-
-    let searchCount = 0;
-    while (searchCount < activePlaylist.length) {
-      const prevIndex = (currentIndex - 1 + activePlaylist.length) % activePlaylist.length;
-      const prevEpisode = activePlaylist[prevIndex];
-
-      if (prevEpisode && prevEpisode.audio_file !== null) {
-        playEpisode(prevEpisode.id, state.isLive);
-        return;
-      }
-
-      currentIndex = prevIndex;
-      searchCount++;
-    }
-  }, [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]);
+    changeEpisode(-1);
+  }, [changeEpisode]);
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;

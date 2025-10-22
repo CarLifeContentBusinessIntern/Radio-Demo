@@ -184,7 +184,6 @@ function Player() {
                   >
                     <div className="w-full">
                       <ListViewItem
-                        key={item.id}
                         id={item.id}
                         imgUrl={!isChannel ? item.radios?.img_url : (playlist as RadioType).img_url}
                         title={item.title}
