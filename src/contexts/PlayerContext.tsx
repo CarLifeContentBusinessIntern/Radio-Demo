@@ -30,6 +30,9 @@ interface PlayerContextType extends PlayerState {
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number) => string;
+  setPlaylist: (playlist: Episode[]) => void;
+  handlePlayNext: () => void;
+  handlePlayPrev: () => void;
 }
 
 const initialPlayerStae: PlayerState = {
@@ -55,6 +58,7 @@ export const usePlayer = () => {
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerStae);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [activePlaylist, setActivePlaylist] = useState<Episode[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -175,6 +179,58 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     [episodes]
   );
 
+  const setPlaylist = useCallback((playlist: Episode[]) => {
+    setActivePlaylist(playlist);
+  }, []);
+
+  const handlePlayNext = useCallback(() => {
+    if (!activePlaylist.length || state.currentEpisodeId === null) return;
+
+    let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+
+    if (currentIndex === -1) {
+      currentIndex = 0;
+    }
+
+    let searchCount = 0;
+    while (searchCount < activePlaylist.length) {
+      const nextIndex = (currentIndex + 1) % activePlaylist.length;
+      const nextEpisode = activePlaylist[nextIndex];
+
+      if (nextEpisode && nextEpisode.audio_file !== null) {
+        playEpisode(nextEpisode.id, state.isLive);
+        return;
+      }
+
+      currentIndex = nextIndex;
+      searchCount++;
+    }
+  }, [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]);
+
+  const handlePlayPrev = useCallback(() => {
+    if (!activePlaylist.length || state.currentEpisodeId === null) return;
+
+    let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+
+    if (currentIndex === -1) {
+      currentIndex = 0;
+    }
+
+    let searchCount = 0;
+    while (searchCount < activePlaylist.length) {
+      const prevIndex = (currentIndex - 1 + activePlaylist.length) % activePlaylist.length;
+      const prevEpisode = activePlaylist[prevIndex];
+
+      if (prevEpisode && prevEpisode.audio_file !== null) {
+        playEpisode(prevEpisode.id, state.isLive);
+        return;
+      }
+
+      currentIndex = prevIndex;
+      searchCount++;
+    }
+  }, [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode]);
+
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
     setState((prevState) => ({ ...prevState, isPlaying: !prevState.isPlaying }));
@@ -223,6 +279,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handleSeek,
     handleSkip,
     formatTime,
+    setPlaylist,
+    handlePlayNext,
+    handlePlayPrev,
   };
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;

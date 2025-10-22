@@ -19,12 +19,11 @@ import type { ThemeType } from '../types/theme';
 
 function Player() {
   const { id } = useParams();
-  const [isMoreBtn, setIsMoreBtn] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const playlist = location.state?.playlist;
   const isMix = location.state?.isMix;
-
+  const [isMoreBtn, setIsMoreBtn] = useState(false);
   const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
@@ -41,6 +40,9 @@ function Player() {
     isLive,
     isPlaylsitOpen,
     togglePlaylist,
+    setPlaylist,
+    handlePlayNext,
+    handlePlayPrev,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -77,6 +79,12 @@ function Player() {
       setFinalPlaylist(radio.episodes || []);
     }
   }, [playlist, isMix]);
+
+  useEffect(() => {
+    if (finalPlaylist.length > 0) {
+      setPlaylist(finalPlaylist);
+    }
+  }, [finalPlaylist, setPlaylist]);
 
   if (!currentEpisodeData || finalPlaylist.length === 0) {
     return (
@@ -241,13 +249,13 @@ function Player() {
               <p className="text-[12px]">1.0x</p>
             </button>
 
-            <button>
+            <button onClick={handlePlayPrev}>
               <TbPlayerSkipBackFilled size={30} />
             </button>
             <button onClick={togglePlayPause}>
               {isPlaying ? <TbPlayerPauseFilled size={30} /> : <TbPlayerPlayFilled size={30} />}
             </button>
-            <button>
+            <button onClick={handlePlayNext}>
               <TbPlayerSkipForwardFilled size={30} />
             </button>
 

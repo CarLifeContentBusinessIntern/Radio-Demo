@@ -24,6 +24,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     duration,
     hasBeenActivated,
     isLive,
+    handlePlayNext,
+    handlePlayPrev,
   } = usePlayer();
 
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
@@ -69,7 +71,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       </div>
 
       <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={30} />
+        <TbPlayerSkipBackFilled size={30} onClick={handlePlayPrev} />
 
         <div className="relative w-6 h-6" onClick={togglePlayPause}>
           <TbPlayerPlayFilled
@@ -86,7 +88,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           />
         </div>
 
-        <TbPlayerSkipForwardFilled size={30} />
+        <TbPlayerSkipForwardFilled size={30} onClick={handlePlayNext} />
       </div>
     </div>
   );
