@@ -33,6 +33,7 @@ interface PlayerContextType extends PlayerState {
   setPlaylist: (playlist: Episode[]) => void;
   handlePlayNext: () => void;
   handlePlayPrev: () => void;
+  activePlaylist: Episode[];
 }
 
 const initialPlayerStae: PlayerState = {
@@ -270,6 +271,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setPlaylist,
     handlePlayNext,
     handlePlayPrev,
+    activePlaylist,
   };
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
