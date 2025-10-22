@@ -33,7 +33,6 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
-    console.log(activePlaylist);
     navigate(`/player/${targetId}`, {
       state: { isLive: isLive, playlist: activePlaylist, mixType: 'timeMix' },
     });
