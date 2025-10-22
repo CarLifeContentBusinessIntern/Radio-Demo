@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { RadioType } from '../types/radio';
 import type { Episode } from '../types/episode';
+import { toast } from 'react-toastify';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -76,7 +77,7 @@ function ListViewItem({
               replace: true,
               state: { isLive: false, playlist: playlist, mixType: mixType },
             })
-          : ''
+          : toast.error(`콘텐츠 준비 중입니다`)
       }
     >
       <div className="flex-shrink-0">

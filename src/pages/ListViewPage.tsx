@@ -29,7 +29,6 @@ function ListViewPage({ type }: ListViewPageProps) {
         setIsLoading(false);
         return;
       }
-      console.log('epi', data);
       setEpisodes(data);
       setIsLoading(false);
     }

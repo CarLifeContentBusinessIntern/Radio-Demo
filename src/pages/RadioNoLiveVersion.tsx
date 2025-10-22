@@ -9,6 +9,7 @@ import TimeSlot from '../components/TimeSlot';
 import { supabase } from '../lib/supabaseClient';
 import type { RadioType } from '../types/radio';
 import type { ThemeType } from '../types/theme';
+import { toast } from 'react-toastify';
 
 interface PopularRadioInterface {
   radios: RadioType;
@@ -36,7 +37,6 @@ function RadioNoLiveVersion() {
       console.error('Supabase 연결 실패:', error);
       setIsLoading(false);
     } else {
-      console.log(data);
       setPopularRadios(data as unknown as PopularRadioInterface[]);
     }
     setIsLoading(false);
@@ -74,7 +74,7 @@ function RadioNoLiveVersion() {
                       state: { playlist: item.radios },
                     });
                   } else {
-                    console.log('❌ 재생할 에피소드가 없습니다');
+                    toast.error(`콘텐츠 준비 중입니다`);
                   }
                 }}
               />
