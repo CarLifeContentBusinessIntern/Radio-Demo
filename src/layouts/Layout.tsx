@@ -56,7 +56,7 @@ function Layout({
       if (contentRef.current) {
         contentRef.current.scrollTo(0, saved ? Number(saved) : 0);
       }
-    }, 200); // 기다려 DOM 렌더링 후 scrollTo
+    }, 300); // 기다려 DOM 렌더링 후 scrollTo
   }, [pathname, scrollKey]);
 
   const mainContent = (
