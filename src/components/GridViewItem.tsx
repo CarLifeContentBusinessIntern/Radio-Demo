@@ -1,4 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 interface GridViewItemProps {
   isLoading?: boolean;
@@ -13,8 +14,7 @@ function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItem
     return (
       <div>
         <Skeleton
-          className="w-full aspect-square mb-4"
-          borderRadius="45px"
+          className="w-full aspect-square mb-4 rounded-[11%]"
           baseColor="#444"
           highlightColor="gray"
         />
@@ -27,10 +27,11 @@ function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItem
   return (
     <div className="cursor-pointer" onClick={onClick}>
       {img ? (
-        <img
+        <ImageWithSkeleton
           src={img}
           alt="썸네일"
           className="w-full aspect-square rounded-[11%] mb-4 object-cover"
+          skeletonClassName="w-full aspect-square mb-4 rounded-[11%]"
         />
       ) : (
         <div className="bg-gray-600 w-full aspect-square rounded-[11%] mb-4" />
