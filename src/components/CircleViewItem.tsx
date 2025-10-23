@@ -33,11 +33,11 @@ function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleView
         <ImageWithSkeleton
           src={img}
           alt={title}
-          className="w-full aspect-square rounded-[50%] mb-4 flex items-center justify-center overflow-hidden"
-          skeletonClassName="absolute inset-0 w-full aspect-square rounded-[50%] mb-4"
+          className="w-full aspect-square rounded-full mb-4 flex items-center justify-center overflow-hidden"
+          skeletonClassName="absolute inset-0 rounded-full"
         />
       ) : (
-        <div className="bg-gray-600 w-full rounded-[50%] aspect-square mb-4" />
+        <div className="bg-gray-600 w-full rounded-full aspect-square mb-4" />
       )}
 
       <p className="text-[28px] mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
