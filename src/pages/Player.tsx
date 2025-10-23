@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -100,6 +100,16 @@ function Player() {
     }
   }, [finalPlaylist, setPlaylist]);
 
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const playedColor = '#B76EEF';
+  const unplayedColor = '#ffffff';
+  const sliderStyle = useMemo(
+    () => ({
+      background: `linear-gradient(to right, ${playedColor} ${progressPercent}%, ${unplayedColor} ${progressPercent}%)`,
+    }),
+    [progressPercent, playedColor, unplayedColor]
+  );
+
   if (!currentEpisodeData || finalPlaylist.length === 0) {
     return (
       <div className="relative h-full overflow-hidden">
@@ -143,10 +153,15 @@ function Player() {
       {/* 플레이어 배경 */}
       {currentEpisodeData.radios.img_url && (
         <div
-          className="fixed inset-0 -z-10 bg-cover bg-center"
+          className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
           style={{ backgroundImage: `url('${currentEpisodeData.radios.img_url}')` }}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+          <div
+            className="absolute inset-0 backdrop-blur-lg"
+            style={{
+              background: 'radial-gradient(circle at 0% 70%, rgba(0,0,0,0.1) 0%, black 50%)',
+            }}
+          />
         </div>
       )}
 
@@ -242,7 +257,8 @@ function Player() {
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
               disabled={isLive}
-              className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
+              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600ZZZZ"
+              style={sliderStyle}
             />
 
             <div
