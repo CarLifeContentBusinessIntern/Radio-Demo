@@ -1,6 +1,7 @@
 // import { useVersion } from '../contexts/VersionContext';
 
 import Skeleton from 'react-loading-skeleton';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 interface CircleViewItemProps {
   isLoading?: boolean;
@@ -16,8 +17,7 @@ function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleView
     return (
       <div>
         <Skeleton
-          className="w-full aspect-square mb-4"
-          style={{ borderRadius: '50%' }}
+          className="w-full aspect-square mb-4 rounded-full"
           baseColor="#444"
           highlightColor="gray"
         />
@@ -29,10 +29,17 @@ function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleView
 
   return (
     <div className="cursor-pointer" onClick={onClick}>
-      <img
-        src={img}
-        className="w-full aspect-square rounded-full mb-4 flex items-center justify-center overflow-hidden"
-      />
+      {img ? (
+        <ImageWithSkeleton
+          src={img}
+          alt={title}
+          className="w-full aspect-square rounded-full mb-4 flex items-center justify-center overflow-hidden"
+          skeletonClassName="absolute inset-0 rounded-full"
+        />
+      ) : (
+        <div className="bg-gray-600 w-full rounded-full aspect-square mb-4" />
+      )}
+
       <p className="text-[28px] mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
       <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
     </div>

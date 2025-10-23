@@ -16,6 +16,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { Episode } from '../types/episode';
 import type { RadioType } from '../types/radio';
 import type { MixThemeType } from '../types/theme';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 
 function Player() {
   const { id } = useParams();
@@ -209,10 +210,13 @@ function Player() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">
             {currentEpisodeData.radios.img_url ? (
-              <img
+              <ImageWithSkeleton
                 src={currentEpisodeData.radios.img_url}
                 alt={currentEpisodeData.title}
                 className="w-40 h-40 md:w-60 md:h-60 object-cover"
+                skeletonClassName="w-[224px] h-[224px]"
+                baseColor="#222"
+                highlightColor="#444"
               />
             ) : (
               <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
