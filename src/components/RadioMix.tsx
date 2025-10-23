@@ -55,7 +55,7 @@ function RadioMix() {
                 onClick={() => {
                   if (item.episode_ids) {
                     navigate(`/player/${item.episode_ids[0]}`, {
-                      state: { isLive: false, playlist: item, mixType: 'themeMix' },
+                      state: { isLive: false, playlist: item, playlistType: 'ThemeType' },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });

@@ -5,8 +5,8 @@ export interface Episode {
   imgUrl?: string;
   title: string;
   play_time?: string;
-  total_time: string;
+  total_time?: string;
   radios: RadioType;
-  date: string;
-  audio_file: string;
+  date?: string;
+  audio_file?: string;
 }

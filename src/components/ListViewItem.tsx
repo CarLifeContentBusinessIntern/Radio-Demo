@@ -17,7 +17,7 @@ type ListViewItemProps = {
   date?: string;
   hasAudio?: boolean;
   playlist?: RadioType | Episode[];
-  mixType?: string;
+  playlistType?: string;
 };
 
 function ListViewItem({
@@ -31,7 +31,7 @@ function ListViewItem({
   date,
   hasAudio,
   playlist,
-  mixType,
+  playlistType,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
@@ -76,7 +76,7 @@ function ListViewItem({
         hasAudio
           ? navigate(`/player/${id}`, {
               replace: true,
-              state: { isLive: false, playlist: playlist, mixType: mixType },
+              state: { isLive: false, playlist: playlist, playlistType: playlistType },
             })
           : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
       }
