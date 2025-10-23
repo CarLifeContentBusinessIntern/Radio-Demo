@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -16,33 +16,34 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { Episode } from '../types/episode';
 import type { RadioType } from '../types/radio';
 import type { MixThemeType } from '../types/theme';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 
 function Player() {
   const { id } = useParams();
   const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const playlist = location.state?.playlist;
-  const mixType = location.state?.mixType;
+  const playlistType = location.state?.playlistType;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
     currentEpisodeData,
-    isPlaying,
     currentTime,
     duration,
+    isPlaying,
+    isLive,
+    isPlaylsitOpen,
     togglePlayPause,
+    togglePlaylist,
+    handlePlayNext,
+    handlePlayPrev,
     handleSeek,
     handleSkip,
     formatTime,
     playEpisode,
-    isLive,
-    isPlaylsitOpen,
-    togglePlaylist,
     setPlaylist,
-    handlePlayNext,
-    handlePlayPrev,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -56,8 +57,9 @@ function Player() {
   useEffect(() => {
     if (!playlist) return;
 
-    switch (mixType) {
-      case 'themeMix': {
+    switch (playlistType) {
+      case 'ThemeType':
+      case 'MixThemeType': {
         const theme = playlist as MixThemeType;
         const episodeIds = theme.episode_ids || [];
         const allEpisodesMap = new Map<number, Episode>();
@@ -75,12 +77,12 @@ function Player() {
         break;
       }
 
-      case 'timeMix': {
+      case 'EpisodeType': {
         setFinalPlaylist(playlist as Episode[]);
         break;
       }
 
-      case 'radioChannel':
+      case 'RadioType':
       default: {
         const radio = playlist as RadioType;
         const episodeWithRadio = (radio.episodes || []).map((ep) => ({
@@ -91,13 +93,23 @@ function Player() {
         break;
       }
     }
-  }, [playlist, mixType]);
+  }, [playlist, playlistType]);
 
   useEffect(() => {
     if (finalPlaylist.length > 0) {
       setPlaylist(finalPlaylist);
     }
   }, [finalPlaylist, setPlaylist]);
+
+  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const playedColor = '#B76EEF';
+  const unplayedColor = '#ffffff';
+  const sliderStyle = useMemo(
+    () => ({
+      background: `linear-gradient(to right, ${playedColor} ${progressPercent}%, ${unplayedColor} ${progressPercent}%)`,
+    }),
+    [progressPercent, playedColor, unplayedColor]
+  );
 
   if (!currentEpisodeData || finalPlaylist.length === 0) {
     return (
@@ -142,10 +154,15 @@ function Player() {
       {/* 플레이어 배경 */}
       {currentEpisodeData.radios.img_url && (
         <div
-          className="fixed inset-0 -z-10 bg-cover bg-center"
+          className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
           style={{ backgroundImage: `url('${currentEpisodeData.radios.img_url}')` }}
         >
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
+          <div
+            className="absolute inset-0 backdrop-blur-lg"
+            style={{
+              background: 'radial-gradient(circle at 0% 70%, rgba(0,0,0,0.1) 0%, black 50%)',
+            }}
+          />
         </div>
       )}
 
@@ -172,7 +189,7 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
-                const isChannel = mixType === 'radioChannel';
+                const isChannel = playlistType === 'RadioType';
                 return (
                   <li
                     key={item.id}
@@ -193,7 +210,7 @@ function Player() {
                         date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
-                        mixType={mixType}
+                        playlistType={playlistType}
                       />
                     </div>
                   </li>
@@ -209,10 +226,13 @@ function Player() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">
             {currentEpisodeData.radios.img_url ? (
-              <img
+              <ImageWithSkeleton
                 src={currentEpisodeData.radios.img_url}
                 alt={currentEpisodeData.title}
                 className="w-40 h-40 md:w-60 md:h-60 object-cover"
+                skeletonClassName="w-[224px] h-[224px]"
+                baseColor="#222"
+                highlightColor="#444"
               />
             ) : (
               <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
@@ -241,7 +261,8 @@ function Player() {
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
               disabled={isLive}
-              className="w-full h-1 bg-white rounded-lg appearance-none cursor-pointer range-sm"
+              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600"
+              style={sliderStyle}
             />
 
             <div

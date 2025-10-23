@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
 import { VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
@@ -10,8 +10,15 @@ import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 // import HomePage from './pages/HomePage.tsx';
 import Radio from './pages/Radio.tsx';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 function AppRoutes() {
+  const location = useLocation();
+  useEffect(() => {
+    toast.dismiss();
+  }, [location.pathname]);
+
   return (
     <Routes>
       <Route
