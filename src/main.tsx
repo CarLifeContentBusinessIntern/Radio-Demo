@@ -8,10 +8,11 @@ import './index.css';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
+
     <ToastContainer
       position="top-center"
       autoClose={2000}
-      hideProgressBar={false}
+      hideProgressBar={true}
       newestOnTop={false}
       rtl={false}
       pauseOnHover={false}

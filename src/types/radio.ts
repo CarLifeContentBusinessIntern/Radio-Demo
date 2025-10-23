@@ -17,7 +17,7 @@ export type RadioType = {
   episodes?: Episode[];
 };
 
-export interface LiveRadio {
+export interface LiveRadioType {
   id: number;
   title: string;
   is_live: boolean;
@@ -25,4 +25,5 @@ export interface LiveRadio {
   channels: ChannelType;
   img_url: string;
   live_episode_id: number;
+  episodes?: Episode[];
 }

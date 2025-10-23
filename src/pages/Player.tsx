@@ -22,27 +22,27 @@ function Player() {
   const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const playlist = location.state?.playlist;
-  const mixType = location.state?.mixType;
+  const playlistType = location.state?.playlistType;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
     currentEpisodeData,
-    isPlaying,
     currentTime,
     duration,
+    isPlaying,
+    isLive,
+    isPlaylsitOpen,
     togglePlayPause,
+    togglePlaylist,
+    handlePlayNext,
+    handlePlayPrev,
     handleSeek,
     handleSkip,
     formatTime,
     playEpisode,
-    isLive,
-    isPlaylsitOpen,
-    togglePlaylist,
     setPlaylist,
-    handlePlayNext,
-    handlePlayPrev,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
@@ -56,8 +56,9 @@ function Player() {
   useEffect(() => {
     if (!playlist) return;
 
-    switch (mixType) {
-      case 'themeMix': {
+    switch (playlistType) {
+      case 'ThemeType':
+      case 'MixThemeType': {
         const theme = playlist as MixThemeType;
         const episodeIds = theme.episode_ids || [];
         const allEpisodesMap = new Map<number, Episode>();
@@ -75,12 +76,12 @@ function Player() {
         break;
       }
 
-      case 'timeMix': {
+      case 'EpisodeType': {
         setFinalPlaylist(playlist as Episode[]);
         break;
       }
 
-      case 'radioChannel':
+      case 'RadioType':
       default: {
         const radio = playlist as RadioType;
         const episodeWithRadio = (radio.episodes || []).map((ep) => ({
@@ -91,7 +92,7 @@ function Player() {
         break;
       }
     }
-  }, [playlist, mixType]);
+  }, [playlist, playlistType]);
 
   useEffect(() => {
     if (finalPlaylist.length > 0) {
@@ -172,7 +173,7 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
-                const isChannel = mixType === 'radioChannel';
+                const isChannel = playlistType === 'radioChannel';
                 return (
                   <li
                     key={item.id}
@@ -193,7 +194,7 @@ function Player() {
                         date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
-                        mixType={mixType}
+                        playlistType={playlistType}
                       />
                     </div>
                   </li>
