@@ -29,7 +29,6 @@ function PopularRadio() {
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
-      setIsLoading(false);
     } else {
       setPopularRadios(data as unknown as PopularRadioInterface[]);
     }

@@ -189,7 +189,7 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
-                const isChannel = playlistType === 'radioChannel';
+                const isChannel = playlistType === 'RadioType';
                 return (
                   <li
                     key={item.id}
@@ -261,7 +261,7 @@ function Player() {
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
               disabled={isLive}
-              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600ZZZZ"
+              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600"
               style={sliderStyle}
             />
 
