@@ -4,6 +4,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { RadioType } from '../types/radio';
 import type { Episode } from '../types/episode';
 import { toast } from 'react-toastify';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -82,7 +83,12 @@ function ListViewItem({
     >
       <div className="flex-shrink-0">
         {imgUrl ? (
-          <img src={imgUrl} alt={title} className="w-28 h-28 rounded-[11px] object-cover" />
+          <ImageWithSkeleton
+            src={imgUrl}
+            alt={title}
+            className="w-28 h-28 rounded-[11px] object-cover"
+            skeletonClassName="rounded-[11px]"
+          />
         ) : (
           <div className="w-28 h-28 rounded-md bg-gray-400"></div>
         )}
