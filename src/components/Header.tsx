@@ -120,7 +120,7 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
   const { togglePlaylist, isPlaylsitOpen } = usePlayer();
 
   return (
-    <div className="flex flex-row justify-between items-center w-full">
+    <div className="flex flex-row justify-between items-center w-full z-30">
       <div className="flex flex-row items-center">
         <button onClick={() => navigate(-1)} className="pr-11">
           <img src={BackArrowIcon} alt="Back" />

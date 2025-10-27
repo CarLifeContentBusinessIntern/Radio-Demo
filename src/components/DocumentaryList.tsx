@@ -28,7 +28,6 @@ function DocumentaryList() {
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
-      setIsLoading(false);
     } else {
       setDocumentaries(data as unknown as DocumentaryInterface[]);
     }
