@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
+import { FaAngleDown } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
@@ -123,7 +124,7 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
     <div className="flex flex-row justify-between items-center w-full z-30">
       <div className="flex flex-row items-center">
         <button onClick={() => navigate(-1)} className="pr-11">
-          <img src={BackArrowIcon} alt="Back" />
+          {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
         <p className="text-[32px] whitespace-pre">{title}</p>
