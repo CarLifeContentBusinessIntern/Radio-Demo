@@ -17,16 +17,16 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
   const navigate = useNavigate();
   const {
     isPlaying,
-    togglePlayPause,
+    isLive,
     currentEpisodeId,
     currentEpisodeData,
     currentTime,
     duration,
+    activePlaylist,
     hasBeenActivated,
-    isLive,
+    togglePlayPause,
     handlePlayNext,
     handlePlayPrev,
-    activePlaylist,
   } = usePlayer();
 
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;

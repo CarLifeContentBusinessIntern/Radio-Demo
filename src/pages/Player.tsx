@@ -160,7 +160,7 @@ function Player() {
           <div
             className="absolute inset-0 backdrop-blur-lg"
             style={{
-              background: 'radial-gradient(circle at 0% 70%, rgba(0,0,0,0.1) 0%, black 50%)',
+              background: 'radial-gradient(circle at -10% 70%, rgba(0,0,0,0.1) 0%, black 50%)',
             }}
           />
         </div>
@@ -168,7 +168,7 @@ function Player() {
 
       {/* 확장 버튼 배경 */}
       <div
-        className={`bg-black/60 fixed inset-0 z-20 mt-20
+        className={`bg-black/70 fixed inset-0 z-20
           transition-opacity duration-300 ease-in-out
           ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
         `}
@@ -176,7 +176,7 @@ function Player() {
 
       {/* 에피소드 목록 */}
       <div
-        className={`bg-black fixed inset-0 z-10 mt-20 transition-opacity duration-300 ease-in-out
+        className={`bg-black fixed inset-0 z-10 pt-20 transition-opacity duration-300 ease-in-out
           ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
       >
         <div className="flex relative overflow-hidden w-full">
@@ -294,10 +294,10 @@ function Player() {
             </button>
 
             <button
-              className={`text-gray-400 ${isLive ? 'invisible' : ''}`}
+              className={`text-gray-400 ${isLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
               onClick={() => setIsMoreBtn(!isMoreBtn)}
             >
-              <IoEllipsisVertical size={30} color="white" />
+              <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />
             </button>
           </div>
         </div>
