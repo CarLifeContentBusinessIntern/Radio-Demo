@@ -11,6 +11,7 @@ type ListViewPageProps = {
 function ListViewPage({ type }: ListViewPageProps) {
   const location = useLocation();
   const isPickle = location.state?.isPickle;
+  const isRound = location.state?.isRound;
 
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
@@ -48,8 +49,11 @@ function ListViewPage({ type }: ListViewPageProps) {
       setIsLoading(false);
     }
 
-    if (isPickle) fetchPickSeriesData();
-    else fetchEpisodesData();
+    if (isPickle) {
+      fetchPickSeriesData();
+    } else {
+      fetchEpisodesData();
+    }
   }, [eqId, id, isPickle]);
 
   return (
@@ -78,6 +82,7 @@ function ListViewPage({ type }: ListViewPageProps) {
                 hasAudio={!!item.audio_file}
                 playlist={type === 'timeslot' ? episodes : item.radios}
                 playlistType={type === 'timeslot' ? 'EpisodeType' : 'RadioType'}
+                isRound={isRound ?? true}
               />
             );
           })}

@@ -46,5 +46,5 @@ export type PickleSeriesType = {
   id: number;
   series_name: string;
   img_src: string;
-  tags: string[];
+  subtitle: string;
 };

@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import GridViewItem from './GridViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { PickleSeriesType, PickleThemeType } from '../types/theme';
+import type { PickleThemeType } from '../types/theme';
+import GridViewItem from './GridViewItem';
 
 interface DriveMoodInterface {
   id: number;
-  pickle_theme_id: number;
-  pickle_series_id: number;
+  series_name: string;
+  img_src: string;
+  subtitle: string;
   pickle_themes: PickleThemeType;
-  pickle_series: PickleSeriesType;
   order: number;
 }
 
@@ -20,9 +20,9 @@ function DriveMood() {
 
   async function fetchDriveMoodData() {
     const { data, error } = await supabase
-      .from('pickle_themes_series')
-      .select('*, pickle_themes(*), pickle_series(*)')
-      .eq('pickle_theme_id', 3)
+      .from('pickle_series')
+      .select('*, pickle_themes(*)')
+      .eq('theme_id', 3)
       .order('order', { ascending: true });
 
     if (error) {
@@ -54,12 +54,12 @@ function DriveMood() {
           : themes.map((item) => (
               <GridViewItem
                 key={item.id}
-                title={item.pickle_series.series_name}
-                subTitle={item.pickle_series.tags.join(' ')}
-                img={item.pickle_series.img_src ?? ''}
+                title={item.series_name}
+                subTitle={item.subtitle}
+                img={item.img_src ?? ''}
                 onClick={() => {
-                  navigate(`/episodes/series/${item.pickle_series.id}`, {
-                    state: { isPickle: true },
+                  navigate(`/episodes/series/${item.id}`, {
+                    state: { isPickle: true, isRound: false },
                   });
                 }}
               />

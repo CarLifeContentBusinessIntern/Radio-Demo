@@ -18,6 +18,7 @@ type ListViewItemProps = {
   hasAudio?: boolean;
   playlist?: RadioType | Episode[];
   playlistType?: string;
+  isRound?: boolean;
 };
 
 function ListViewItem({
@@ -32,6 +33,7 @@ function ListViewItem({
   hasAudio,
   playlist,
   playlistType,
+  isRound,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
@@ -90,7 +92,7 @@ function ListViewItem({
             skeletonClassName="rounded-[11px]"
           />
         ) : (
-          <div className="w-28 h-28 rounded-md bg-gray-400"></div>
+          <div className={`w-28 h-28 bg-gray-400 ${isRound ? 'rounded-md' : ''}`}></div>
         )}
       </div>
 
