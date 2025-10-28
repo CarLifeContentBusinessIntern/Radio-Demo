@@ -12,6 +12,7 @@ import SettingPage from './pages/SettingPage.tsx';
 import Radio from './pages/Radio.tsx';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import CategoryPage from './pages/CategoryPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -95,6 +96,14 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="radio" element={<Radio />} />
+        </Route>
+      </Route>
+
+      <Route
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="category" element={<CategoryPage />} />
         </Route>
       </Route>
     </Routes>

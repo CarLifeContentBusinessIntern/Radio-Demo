@@ -3,7 +3,7 @@ import { PiToggleLeftLight, PiToggleRightFill } from 'react-icons/pi';
 import { useVersion } from '../contexts/VersionContext';
 
 function SettingPage() {
-  const { isLiveVersion, toggleVersion } = useVersion();
+  const { isLiveVersion, toggleLiveVersion, isRadioVersion, toggleRadioVersion } = useVersion();
 
   return (
     <div>
@@ -35,9 +35,18 @@ function SettingPage() {
         <div className="flex px-4 items-center h-[170px] justify-between">
           <p className="text-[42px]">Live</p>
           {isLiveVersion ? (
-            <PiToggleRightFill size={80} className="cursor-pointer" onClick={toggleVersion} />
+            <PiToggleRightFill size={80} className="cursor-pointer" onClick={toggleLiveVersion} />
           ) : (
-            <PiToggleLeftLight size={80} className="cursor-pointer" onClick={toggleVersion} />
+            <PiToggleLeftLight size={80} className="cursor-pointer" onClick={toggleLiveVersion} />
+          )}
+        </div>
+        <div className="border-t border-gray-400 border-[1px] w-full" />
+        <div className="flex px-4 items-center h-[170px] justify-between">
+          <p className="text-[42px]">라디오</p>
+          {isRadioVersion ? (
+            <PiToggleRightFill size={80} className="cursor-pointer" onClick={toggleRadioVersion} />
+          ) : (
+            <PiToggleLeftLight size={80} className="cursor-pointer" onClick={toggleRadioVersion} />
           )}
         </div>
       </div>

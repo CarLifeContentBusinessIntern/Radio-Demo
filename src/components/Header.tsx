@@ -8,32 +8,36 @@ import GridIcon from '../assets/gridIcon.svg';
 import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
 import type { HeaderType } from '../types';
-import RadioIcon from '../assets/ic_radio.png';
 import HomeIcon from '../assets/ic_home.svg';
 import RecentIcon from '../assets/ic_recent.svg';
 import PopularIcon from '../assets/ic_popular.svg';
 import { usePlayer } from '../contexts/PlayerContext';
-
-const navLinks = [
-  { name: '홈', path: '/', icon: HomeIcon },
-  { name: '라디오', path: '/radio', icon: RadioIcon },
-  {
-    name: '인기채널',
-    path: '/curation/1',
-    state: { type: 'channel', title: '인기 채널' },
-    icon: PopularIcon,
-  },
-  {
-    name: '최근청취',
-    path: '/episodes/channel/11',
-    state: { title: '최근 청취' },
-    icon: RecentIcon,
-  },
-];
+import CategoryIcon from '../assets/ic_category.svg';
+import { useVersion } from '../contexts/VersionContext';
+import RadioIcon from '../assets/ic_radio.png';
 
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
+  const { isRadioVersion } = useVersion();
+  const navLinks = [
+    { name: '홈', path: '/', icon: HomeIcon },
+    isRadioVersion === true
+      ? { name: '라디오', path: '/radio', icon: RadioIcon }
+      : { name: '카테고리', path: '/category', icon: CategoryIcon },
+    {
+      name: '인기채널',
+      path: '/curation/1',
+      state: { type: 'channel', title: '인기 채널' },
+      icon: PopularIcon,
+    },
+    {
+      name: '최근청취',
+      path: '/episodes/channel/11',
+      state: { title: '최근 청취' },
+      icon: RecentIcon,
+    },
+  ];
 
   return (
     <div className="flex flex-row justify-between items-center w-full">
