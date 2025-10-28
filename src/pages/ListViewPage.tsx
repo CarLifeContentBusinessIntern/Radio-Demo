@@ -39,13 +39,14 @@ function ListViewPage({ type }: ListViewPageProps) {
     }
 
     async function fetchPickSeriesData() {
-      const { data: pickSeriesData, error: pickSeriesError } = await supabase
-        .from('pickle_series_episodes')
-        .select('*');
-      if (pickSeriesError) {
+      const { data, error } = await supabase
+        .from('pickle_episodes')
+        .select('*, pickle_podcasts(*)')
+        .eq('series_id', id);
+      if (error) {
         console.log('');
       }
-      setPickleEpisodes(pickSeriesData);
+      setPickleEpisodes(data ?? []);
       setIsLoading(false);
     }
 
@@ -56,6 +57,45 @@ function ListViewPage({ type }: ListViewPageProps) {
     }
   }, [eqId, id, isPickle]);
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-y-1">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ListViewItem isLoading={true} key={index} />
+        ))}
+      </div>
+    );
+  }
+
+  if (isPickle) {
+    return (
+      <div className="flex flex-col gap-y-1">
+        {pickleEpisodes &&
+          pickleEpisodes.length > 0 &&
+          pickleEpisodes.map((item) => {
+            const subTitleText = item.pickle_podcasts?.title ?? '';
+            const imgUrl = item.pickle_podcasts?.img_url;
+
+            return (
+              <ListViewItem
+                key={item.id}
+                id={item.id}
+                imgUrl={imgUrl}
+                title={item.title}
+                subTitle={subTitleText}
+                // playTime={item.play_time}
+                // totalTime={item.total_time}
+                date={item.uploadAt}
+                hasAudio={!!item.audio_file}
+                // playlist={pickleEpisodes}
+                // playlistType={'PickleType'}
+                isRound={isRound ?? true}
+              />
+            );
+          })}
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-y-1">
       {isLoading
