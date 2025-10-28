@@ -10,7 +10,14 @@ interface GridViewItemProps {
   isRounded?: boolean;
 }
 
-function GridViewItem({ isLoading, title, subTitle, img, onClick, isRounded }: GridViewItemProps) {
+function GridViewItem({
+  isLoading,
+  title,
+  subTitle,
+  img,
+  onClick,
+  isRounded = true,
+}: GridViewItemProps) {
   if (isLoading) {
     return (
       <div>
