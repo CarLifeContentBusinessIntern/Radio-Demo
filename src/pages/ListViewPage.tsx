@@ -1,19 +1,23 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { Episode } from '../types/episode';
+import type { Episode, PickleEpisode } from '../types/episode';
 
 type ListViewPageProps = {
-  type: 'channel' | 'timeslot';
+  type: 'channel' | 'timeslot' | 'series';
 };
 
 function ListViewPage({ type }: ListViewPageProps) {
+  const location = useLocation();
+  const isPickle = location.state?.isPickle;
+
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const eqId = type === 'channel' ? 'radio_id' : 'time_slot_id';
+  const eqId = type === 'channel' ? 'radio_id' : type === 'timeslot' ? 'time_slot_id' : 'series_id';
 
   useEffect(() => {
     async function fetchEpisodesData() {
@@ -33,8 +37,20 @@ function ListViewPage({ type }: ListViewPageProps) {
       setIsLoading(false);
     }
 
-    fetchEpisodesData();
-  }, [eqId, id]);
+    async function fetchPickSeriesData() {
+      const { data: pickSeriesData, error: pickSeriesError } = await supabase
+        .from('pickle_series_episodes')
+        .select('*');
+      if (pickSeriesError) {
+        console.log('');
+      }
+      setPickleEpisodes(pickSeriesData);
+      setIsLoading(false);
+    }
+
+    if (isPickle) fetchPickSeriesData();
+    else fetchEpisodesData();
+  }, [eqId, id, isPickle]);
 
   return (
     <div className="flex flex-col gap-y-1">

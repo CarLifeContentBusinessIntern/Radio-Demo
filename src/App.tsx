@@ -35,6 +35,7 @@ function AppRoutes() {
         <Route element={<PlayerLayout />}>
           <Route path="episodes/channel/:id" element={<ListViewPage type="channel" />} />
           <Route path="episodes/timeslot/:id" element={<ListViewPage type="timeslot" />} />
+          <Route path="episodes/series/:id" element={<ListViewPage type="series" />} />
         </Route>
       </Route>
 
