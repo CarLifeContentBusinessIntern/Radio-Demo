@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
 import { FaAngleDown } from 'react-icons/fa6';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
@@ -35,6 +35,7 @@ const navLinks = [
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <div className="flex flex-row justify-between items-center w-full">
@@ -46,28 +47,32 @@ const HomeHeader = () => {
         </button>
 
         {/* 네비게이션 버튼들 */}
-        {navLinks.map((link) => (
-          <button
-            key={link.name}
-            className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
-              link.name !== '라디오' ? 'opacity-60' : 'opacity-100'
-            }`}
-            onClick={() => navigate(link.path, { state: link.state })}
-          >
-            {link.icon ? (
-              <img
-                src={link.icon}
-                alt={link.name}
-                className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
-              />
-            ) : (
-              <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
-            )}
-            <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
-              {link.name}
-            </p>
-          </button>
-        ))}
+        {navLinks.map((link) => {
+          const isActive = location.pathname === link.path;
+
+          return (
+            <button
+              key={link.name}
+              className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
+                isActive ? 'opacity-100' : 'opacity-60'
+              }`}
+              onClick={() => navigate(link.path, { state: link.state })}
+            >
+              {link.icon ? (
+                <img
+                  src={link.icon}
+                  alt={link.name}
+                  className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
+                />
+              ) : (
+                <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
+              )}
+              <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
+                {link.name}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {/* 오른쪽 액션 영역 */}
