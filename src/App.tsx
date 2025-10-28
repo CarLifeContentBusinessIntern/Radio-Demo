@@ -13,6 +13,7 @@ import Radio from './pages/Radio.tsx';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import CategoryPage from './pages/CategoryPage.tsx';
+import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -104,6 +105,15 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="category" element={<CategoryPage />} />
+        </Route>
+      </Route>
+      <Route
+        element={
+          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
+        }
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
         </Route>
       </Route>
     </Routes>

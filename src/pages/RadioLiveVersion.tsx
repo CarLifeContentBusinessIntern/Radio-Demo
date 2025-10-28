@@ -1,5 +1,5 @@
 import LiveRadio from '../components/LiveRadio';
-import Category from '../components/Category';
+import RadioCategory from '../components/RadioCategory';
 import ChannelList from '../components/ChannelList';
 import RadioMix from '../components/RadioMix';
 import TimeSlot from '../components/TimeSlot';
@@ -25,7 +25,7 @@ function RadioLiveVersion() {
       <DocumentaryList />
 
       {/* 카테고리 */}
-      <Category />
+      <RadioCategory />
 
       {/* 시간별 몰아보기 */}
       <TimeSlot />

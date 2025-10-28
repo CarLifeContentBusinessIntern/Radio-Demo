@@ -7,14 +7,15 @@ interface GridViewItemProps {
   subTitle?: string;
   img?: string;
   onClick?: () => void;
+  isRounded?: boolean;
 }
 
-function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItemProps) {
+function GridViewItem({ isLoading, title, subTitle, img, onClick, isRounded }: GridViewItemProps) {
   if (isLoading) {
     return (
       <div>
         <Skeleton
-          className="w-full aspect-square mb-4 rounded-[11%]"
+          className={`w-full aspect-square mb-4 ${isRounded ? 'rounded-[11%]' : ''}`}
           baseColor="#444"
           highlightColor="gray"
         />
@@ -30,11 +31,13 @@ function GridViewItem({ isLoading, title, subTitle, img, onClick }: GridViewItem
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
-          className="w-full aspect-square rounded-[11%] mb-4 object-cover"
-          skeletonClassName="w-full aspect-square mb-4 rounded-[11%]"
+          className={`w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4 object-cover`}
+          skeletonClassName={`w-full aspect-square mb-4 ${isRounded ? 'rounded-[11%]' : ''} `}
         />
       ) : (
-        <div className="bg-gray-600 w-full aspect-square rounded-[11%] mb-4" />
+        <div
+          className={`bg-gray-600 w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4`}
+        />
       )}
       <p className="text-[28px] mb-1 px-1 font-semibold truncate">{title}</p>
       <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
