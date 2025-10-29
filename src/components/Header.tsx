@@ -23,8 +23,8 @@ const HomeHeader = () => {
   const navLinks = [
     { name: '홈', path: '/', icon: HomeIcon },
     isRadioVersion === true
-      ? { name: '라디오', path: '/radio', icon: RadioIcon }
-      : { name: '카테고리', path: '/category', icon: CategoryIcon },
+      ? { name: '라디오', path: '/category-radio', icon: RadioIcon }
+      : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
     {
       name: '인기채널',
       path: '/curation/1',

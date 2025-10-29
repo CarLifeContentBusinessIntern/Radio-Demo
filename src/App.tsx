@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
-import { VersionProvider } from './contexts/VersionContext.tsx';
+import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
@@ -9,14 +9,15 @@ import Player from './pages/Player.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 // import HomePage from './pages/HomePage.tsx';
-import Radio from './pages/Radio.tsx';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import CategoryPage from './pages/CategoryPage.tsx';
 import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
+import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
+import Radio from './pages/Radio.tsx';
 
 function AppRoutes() {
   const location = useLocation();
+  const { isRadioVersion } = useVersion();
   useEffect(() => {
     toast.dismiss();
   }, [location.pathname]);
@@ -91,7 +92,6 @@ function AppRoutes() {
       >
         <Route path="setting" element={<SettingPage />} />
       </Route>
-
       <Route
         element={<Layout defaultType="radio" scrollbar={true} paddingX={false} paddingB={true} />}
       >
@@ -99,12 +99,18 @@ function AppRoutes() {
           <Route path="radio" element={<Radio />} />
         </Route>
       </Route>
-
       <Route
-        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+        element={
+          <Layout
+            defaultType={isRadioVersion ? 'radio' : 'home'}
+            scrollbar={true}
+            paddingX={false}
+            paddingB={true}
+          />
+        }
       >
         <Route element={<PlayerLayout />}>
-          <Route path="category" element={<CategoryPage />} />
+          <Route path="category-radio" element={<CategoryAndRadioPage />} />
         </Route>
       </Route>
       <Route
