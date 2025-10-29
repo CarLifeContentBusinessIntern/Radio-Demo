@@ -36,3 +36,15 @@ export type RadioMixType = {
   radios: RadioType;
   themes: ThemeType;
 };
+
+export type PickleThemeType = {
+  id: number;
+  theme_name: string;
+};
+
+export type PickleSeriesType = {
+  id: number;
+  series_name: string;
+  img_src: string;
+  subtitle: string;
+};

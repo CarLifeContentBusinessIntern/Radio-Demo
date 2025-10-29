@@ -3,7 +3,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
 interface ImageWithSkeletonProps {
-  src: string;
+  src: string | undefined;
   alt?: string;
   className?: string;
   skeletonClassName: string;
@@ -34,7 +34,7 @@ export default function ImageWithSkeleton({
 
       {/* Image */}
       <img
-        src={src}
+        src={src ?? ''}
         alt={alt}
         onLoad={() => setIsLoaded(true)}
         className={`w-full h-full object-cover transition-opacity duration-300 ${
