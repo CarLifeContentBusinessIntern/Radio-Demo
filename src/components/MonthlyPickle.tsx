@@ -30,7 +30,6 @@ function MonthlyPickle() {
     } else {
       setThemes(data);
     }
-    console.log('data', data);
     setIsLoading(false);
   }
 

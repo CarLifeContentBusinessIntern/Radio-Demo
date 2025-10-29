@@ -7,7 +7,8 @@ export interface Episode {
   title: string;
   play_time?: string;
   total_time?: string;
-  radios: RadioType;
+  radios?: RadioType;
+  pickle_podcasts?: PodcastType;
   date?: string;
   audio_file?: string;
 }

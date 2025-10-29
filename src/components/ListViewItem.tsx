@@ -2,7 +2,7 @@ import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { RadioType } from '../types/radio';
-import type { Episode } from '../types/episode';
+import type { Episode, PickleEpisode } from '../types/episode';
 import { toast } from 'react-toastify';
 import ImageWithSkeleton from './ImageWithSkeleton';
 
@@ -16,8 +16,9 @@ type ListViewItemProps = {
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
-  playlist?: RadioType | Episode[];
+  playlist?: RadioType | Episode[] | PickleEpisode[];
   playlistType?: string;
+  isPickle?: boolean;
   isRound?: boolean;
 };
 
@@ -33,10 +34,11 @@ function ListViewItem({
   hasAudio,
   playlist,
   playlistType,
+  isPickle,
   isRound,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
+  const { hasBeenActivated, currentTime, duration, currentEpisodeId, formatTime } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -70,16 +72,25 @@ function ListViewItem({
       </div>
     );
   }
-
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() =>
         hasAudio
-          ? navigate(`/player/${id}`, {
-              replace: true,
-              state: { isLive: false, playlist: playlist, playlistType: playlistType },
-            })
+          ? isPickle
+            ? navigate(`/player/podcasts/${id}`, {
+                replace: true,
+                state: {
+                  isLive: false,
+                  playlist: playlist,
+                  playlistType: playlistType,
+                  isPickle: true,
+                },
+              })
+            : navigate(`/player/${id}`, {
+                replace: true,
+                state: { isLive: false, playlist: playlist, playlistType: playlistType },
+              })
           : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
       }
     >
@@ -99,8 +110,7 @@ function ListViewItem({
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
-          <div className="text-[#A6A6A9] truncate">{subTitle}</div>
-          <div className="text-[#A6A6A9] truncate">{date}</div>
+          <div className="text-[#A6A6A9] truncate">{`${subTitle} ${date}`}</div>
         </div>
         {hasBeenActivated && currentEpisodeId === id && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
@@ -115,7 +125,7 @@ function ListViewItem({
       <div className="hidden md:block">
         <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
           {playTime ?? playTime}
-          {totalTime ? ` / ${totalTime}` : ''}
+          {totalTime ? ` / ${totalTime}` : ` / ${formatTime(duration)}`}
         </p>
       </div>
     </div>

@@ -74,6 +74,7 @@ function AppRoutes() {
         }
       >
         <Route path="/player/:id" element={<Player />} />
+        <Route path="/player/podcasts/:id" element={<Player />} />
       </Route>
 
       <Route

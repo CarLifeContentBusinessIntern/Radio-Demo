@@ -10,26 +10,28 @@ import {
 import Skeleton from 'react-loading-skeleton';
 import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
-import type { Episode } from '../types/episode';
+import type { Episode, PickleEpisode } from '../types/episode';
 import type { RadioType } from '../types/radio';
 import type { MixThemeType } from '../types/theme';
-import ImageWithSkeleton from '../components/ImageWithSkeleton';
 
 function Player() {
   const { id } = useParams();
-  const contentRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
+  const isPickle = location.state?.isPickle;
+  const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
     currentEpisodeData,
+    currentEpisodeType,
     currentTime,
     duration,
     isPlaying,
@@ -50,9 +52,13 @@ function Player() {
 
   useEffect(() => {
     if (episodeId !== null) {
-      playEpisode(episodeId, false);
+      if (isPickle) {
+        playEpisode(episodeId, false, true);
+      } else {
+        playEpisode(episodeId, false, false);
+      }
     }
-  }, [episodeId, playEpisode]);
+  }, [episodeId, playEpisode, isPickle]);
 
   useEffect(() => {
     if (!playlist) return;
@@ -79,6 +85,23 @@ function Player() {
 
       case 'EpisodeType': {
         setFinalPlaylist(playlist as Episode[]);
+        break;
+      }
+
+      case 'PickleEpisodeType': {
+        const pickleEpisodes = playlist as PickleEpisode[];
+
+        const processedEpisodes: Episode[] = pickleEpisodes.map((ep) => {
+          return {
+            id: ep.id,
+            title: ep.title,
+            audio_file: ep.audio_file,
+            imgUrl: ep.src,
+            date: ep.uploadAt,
+            pickle_podcasts: ep.pickle_podcasts,
+          };
+        });
+        setFinalPlaylist(processedEpisodes);
         break;
       }
 
@@ -152,10 +175,18 @@ function Player() {
   return (
     <div className="relative h-full overflow-hidden">
       {/* 플레이어 배경 */}
-      {currentEpisodeData.radios.img_url && (
+      {(currentEpisodeData.radios?.img_url ||
+        currentEpisodeData.imgUrl ||
+        currentEpisodeData.pickle_podcasts?.img_url) && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{ backgroundImage: `url('${currentEpisodeData.radios.img_url}')` }}
+          style={{
+            backgroundImage: `url('${
+              currentEpisodeData.radios?.img_url ||
+              currentEpisodeData.imgUrl ||
+              currentEpisodeData.pickle_podcasts?.img_url
+            }')`,
+          }}
         >
           <div
             className="absolute inset-0 backdrop-blur-lg"
@@ -190,28 +221,33 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
-                const isChannel = playlistType === 'RadioType';
+                // const isChannel = playlistType === 'RadioType';
+                const imageUrl =
+                  item.radios?.img_url || item.imgUrl || item.pickle_podcasts?.img_url;
+                const subTitle = item.radios?.title || item.pickle_podcasts?.title;
+
                 return (
                   <li
                     key={item.id}
                     className={`rounded-md cursor-pointer p-3 flex items-center`}
                     onClick={() => {
-                      playEpisode(item.id);
+                      playEpisode(item.id, false, currentEpisodeType === 'podcast' ? true : false);
                       togglePlaylist();
                     }}
                   >
                     <div className="w-full">
                       <ListViewItem
                         id={item.id}
-                        imgUrl={!isChannel ? item.radios?.img_url : (playlist as RadioType).img_url}
+                        imgUrl={imageUrl}
                         title={item.title}
-                        subTitle={!isChannel ? item.radios?.title : (playlist as RadioType).title}
+                        subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime) : ''}
                         totalTime={isActive ? item.total_time : ''}
                         date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}
+                        isPickle={isPickle}
                       />
                     </div>
                   </li>
@@ -226,9 +262,15 @@ function Player() {
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">
-            {currentEpisodeData.radios.img_url ? (
+            {currentEpisodeData.radios?.img_url ||
+            currentEpisodeData.imgUrl ||
+            currentEpisodeData.pickle_podcasts?.img_url ? (
               <ImageWithSkeleton
-                src={currentEpisodeData.radios.img_url}
+                src={
+                  currentEpisodeData.radios?.img_url ||
+                  currentEpisodeData.imgUrl ||
+                  currentEpisodeData.pickle_podcasts?.img_url
+                }
                 alt={currentEpisodeData.title}
                 className="w-40 h-40 md:w-60 md:h-60 object-cover"
                 skeletonClassName="w-[224px] h-[224px]"
@@ -245,7 +287,9 @@ function Player() {
               {currentEpisodeData.title}
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
-              {`${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
+              {currentEpisodeType === 'podcast'
+                ? `${currentEpisodeData.pickle_podcasts?.title} ${currentEpisodeData.date}`
+                : `${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-[32px] text-[#A6A6A9]">
               {isLive ? 'LIVE' : `${formatTime(currentTime)} / ${formatTime(duration)}`}

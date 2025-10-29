@@ -42,9 +42,10 @@ function ListViewPage({ type }: ListViewPageProps) {
       const { data, error } = await supabase
         .from('pickle_episodes')
         .select('*, pickle_podcasts(*)')
-        .eq('series_id', id);
+        .eq('series_id', id)
+        .order('id', { ascending: true });
       if (error) {
-        console.log('');
+        console.log('❌ 픽시리즈 데이터 조회 실패', error);
       }
       setPickleEpisodes(data ?? []);
       setIsLoading(false);
@@ -68,34 +69,43 @@ function ListViewPage({ type }: ListViewPageProps) {
   }
 
   if (isPickle) {
-    return (
-      <div className="flex flex-col gap-y-1">
-        {pickleEpisodes &&
-          pickleEpisodes.length > 0 &&
-          pickleEpisodes.map((item) => {
-            const subTitleText = item.pickle_podcasts?.title ?? '';
-            const imgUrl = item.pickle_podcasts?.img_url;
+    if (pickleEpisodes.length > 0) {
+      return (
+        <div className="flex flex-col gap-y-1">
+          {pickleEpisodes &&
+            pickleEpisodes.map((item) => {
+              const subTitleText = item.pickle_podcasts?.title ?? '';
+              const imgUrl = item.src ?? item.pickle_podcasts.img_url;
 
-            return (
-              <ListViewItem
-                key={item.id}
-                id={item.id}
-                imgUrl={imgUrl}
-                title={item.title}
-                subTitle={subTitleText}
-                // playTime={item.play_time}
-                // totalTime={item.total_time}
-                date={item.uploadAt}
-                hasAudio={!!item.audio_file}
-                // playlist={pickleEpisodes}
-                // playlistType={'PickleType'}
-                isRound={isRound ?? true}
-              />
-            );
-          })}
-      </div>
-    );
+              return (
+                <ListViewItem
+                  key={item.id}
+                  id={item.id}
+                  imgUrl={imgUrl}
+                  title={item.title}
+                  subTitle={subTitleText}
+                  // playTime={item.play_time}
+                  // totalTime={item.total_time}
+                  date={item.uploadAt}
+                  hasAudio={!!item.audio_file}
+                  playlist={pickleEpisodes}
+                  playlistType={'PickleEpisodeType'}
+                  isPickle={isPickle}
+                  isRound={isRound ?? true}
+                />
+              );
+            })}
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center justify-center h-[calc(100vh-220px)]">
+          <p>콘텐츠가 없습니다</p>
+        </div>
+      );
+    }
   }
+
   return (
     <div className="flex flex-col gap-y-1">
       {isLoading
