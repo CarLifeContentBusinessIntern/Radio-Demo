@@ -26,4 +26,5 @@ export interface PickleEpisode {
   series_id: number;
   uploadAt: string;
   pickle_podcasts: PodcastType;
+  total_time: string;
 }

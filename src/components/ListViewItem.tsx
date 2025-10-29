@@ -5,6 +5,7 @@ import type { RadioType } from '../types/radio';
 import type { Episode, PickleEpisode } from '../types/episode';
 import { toast } from 'react-toastify';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { formatTimeString } from '../utils/timeUtils';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -38,7 +39,7 @@ function ListViewItem({
   isRound,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
+  const { hasBeenActivated, currentTime, duration, currentEpisodeId, isPlaying } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -110,9 +111,11 @@ function ListViewItem({
       </div>
 
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
-        <div className="font-semibold truncatve">{title}</div>
+        <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
-          <div className="text-[#A6A6A9] truncate">{`${subTitle} ${date}`}</div>
+          <div className="text-[#A6A6A9] truncate">
+            {`${subTitle} · ${date} ${formatTimeString(totalTime) ? `· ${formatTimeString(totalTime)}` : ''}`}
+          </div>
         </div>
         {hasBeenActivated && currentEpisodeId === id && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
@@ -125,10 +128,12 @@ function ListViewItem({
       </div>
 
       <div className="hidden md:block">
-        <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
-          {playTime ?? playTime}
-          {totalTime ? ` / ${totalTime}` : ``}
-        </p>
+        {(!isPickle || (isPickle && isPlaying)) && (
+          <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
+            {playTime ?? playTime}
+            {totalTime ? ` / ${totalTime}` : ``}
+          </p>
+        )}
       </div>
     </div>
   );
