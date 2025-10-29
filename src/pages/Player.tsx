@@ -83,27 +83,28 @@ function Player() {
         break;
       }
 
+      case 'PickleEpisodeType':
       case 'EpisodeType': {
         setFinalPlaylist(playlist as Episode[]);
         break;
       }
 
-      case 'PickleEpisodeType': {
-        const pickleEpisodes = playlist as PickleEpisode[];
+      // case 'PickleEpisodeType': {
+      //   const pickleEpisodes = playlist as PickleEpisode[];
 
-        const processedEpisodes: Episode[] = pickleEpisodes.map((ep) => {
-          return {
-            id: ep.id,
-            title: ep.title,
-            audio_file: ep.audio_file,
-            imgUrl: ep.src,
-            date: ep.uploadAt,
-            pickle_podcasts: ep.pickle_podcasts,
-          };
-        });
-        setFinalPlaylist(processedEpisodes);
-        break;
-      }
+      //   const processedEpisodes: Episode[] = pickleEpisodes.map((ep) => {
+      //     return {
+      //       id: ep.id,
+      //       title: ep.title,
+      //       audio_file: ep.audio_file,
+      //       imgUrl: ep.imgUrl,
+      //       date: ep.date,
+      //       pickle_podcasts: ep.pickle_podcasts,
+      //     };
+      //   });
+      //   setFinalPlaylist(processedEpisodes);
+      //   break;
+      // }
 
       case 'RadioType':
       default: {
@@ -122,6 +123,7 @@ function Player() {
     if (finalPlaylist.length > 0) {
       setPlaylist(finalPlaylist);
     }
+    console.log('finalpli', finalPlaylist);
   }, [finalPlaylist, setPlaylist]);
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -222,8 +224,7 @@ function Player() {
               {finalPlaylist.map((item: Episode) => {
                 const isActive = currentEpisodeId === item.id;
                 // const isChannel = playlistType === 'RadioType';
-                const imageUrl =
-                  item.radios?.img_url || item.imgUrl || item.pickle_podcasts?.img_url;
+                const imageUrl = item.radios?.img_url || item.src || item.pickle_podcasts?.img_url;
                 const subTitle = item.radios?.title || item.pickle_podcasts?.title;
 
                 return (
@@ -242,8 +243,8 @@ function Player() {
                         title={item.title}
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime) : ''}
-                        totalTime={isActive ? item.total_time : ''}
-                        date={item.date}
+                        totalTime={isActive ? (item.total_time ?? '') : ''}
+                        date={item.uploadAt}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}

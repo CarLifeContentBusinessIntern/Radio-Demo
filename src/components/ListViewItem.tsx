@@ -38,7 +38,7 @@ function ListViewItem({
   isRound,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { hasBeenActivated, currentTime, duration, currentEpisodeId, formatTime } = usePlayer();
+  const { hasBeenActivated, currentTime, duration, currentEpisodeId } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -99,16 +99,18 @@ function ListViewItem({
           <ImageWithSkeleton
             src={imgUrl}
             alt={title}
-            className="w-28 h-28 rounded-[11px] object-cover"
+            className={`w-28 h-28 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
             skeletonClassName="rounded-[11px]"
           />
         ) : (
-          <div className={`w-28 h-28 bg-gray-400 ${isRound ? 'rounded-md' : ''}`}></div>
+          <div
+            className={`w-28 h-28 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
+          ></div>
         )}
       </div>
 
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
-        <div className="font-semibold truncate">{title}</div>
+        <div className="font-semibold truncatve">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">{`${subTitle} ${date}`}</div>
         </div>
@@ -125,7 +127,7 @@ function ListViewItem({
       <div className="hidden md:block">
         <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
           {playTime ?? playTime}
-          {totalTime ? ` / ${totalTime}` : ` / ${formatTime(duration)}`}
+          {totalTime ? ` / ${totalTime}` : ``}
         </p>
       </div>
     </div>

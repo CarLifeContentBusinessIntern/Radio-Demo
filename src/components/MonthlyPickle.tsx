@@ -59,7 +59,7 @@ function MonthlyPickle() {
                 img={item.img_src ?? ''}
                 onClick={() => {
                   navigate(`/episodes/series/${item.id}`, {
-                    state: { isPickle: true, isRound: false },
+                    state: { isPickle: true, isRound: false, title: item.series_name },
                   });
                 }}
               />
