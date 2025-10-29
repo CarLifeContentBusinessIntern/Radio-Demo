@@ -1,20 +1,21 @@
 import { useMemo, useState } from 'react';
+import { FaAngleDown } from 'react-icons/fa6';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
 import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
+import CategoryIcon from '../assets/ic_category.svg';
+import HomeIcon from '../assets/ic_home.svg';
+import PopularIcon from '../assets/ic_popular.svg';
+import RadioIcon from '../assets/ic_radio.png';
+import RecentIcon from '../assets/ic_recent.svg';
 import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
-import type { HeaderType } from '../types';
-import HomeIcon from '../assets/ic_home.svg';
-import RecentIcon from '../assets/ic_recent.svg';
-import PopularIcon from '../assets/ic_popular.svg';
 import { usePlayer } from '../contexts/PlayerContext';
-import CategoryIcon from '../assets/ic_category.svg';
 import { useVersion } from '../contexts/VersionContext';
-import RadioIcon from '../assets/ic_radio.png';
+import type { HeaderType } from '../types';
 
 // 홈 헤더
 const HomeHeader = () => {
@@ -52,28 +53,32 @@ const HomeHeader = () => {
         </button>
 
         {/* 네비게이션 버튼들 */}
-        {navLinks.map((link) => (
-          <button
-            key={link.name}
-            className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
-              link.name !== '라디오' ? 'opacity-60' : 'opacity-100'
-            }`}
-            onClick={() => navigate(link.path, { state: link.state })}
-          >
-            {link.icon ? (
-              <img
-                src={link.icon}
-                alt={link.name}
-                className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
-              />
-            ) : (
-              <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
-            )}
-            <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
-              {link.name}
-            </p>
-          </button>
-        ))}
+        {navLinks.map((link) => {
+          const isActive = location.pathname === link.path;
+
+          return (
+            <button
+              key={link.name}
+              className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
+                isActive ? 'opacity-100' : 'opacity-60'
+              }`}
+              onClick={() => navigate(link.path, { state: link.state })}
+            >
+              {link.icon ? (
+                <img
+                  src={link.icon}
+                  alt={link.name}
+                  className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
+                />
+              ) : (
+                <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
+              )}
+              <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
+                {link.name}
+              </p>
+            </button>
+          );
+        })}
       </div>
 
       {/* 오른쪽 액션 영역 */}
@@ -130,7 +135,7 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
     <div className="flex flex-row justify-between items-center w-full z-30">
       <div className="flex flex-row items-center">
         <button onClick={() => navigate(-1)} className="pr-11">
-          <img src={BackArrowIcon} alt="Back" />
+          {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
         <p className="text-[32px] whitespace-pre">{title}</p>

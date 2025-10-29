@@ -20,6 +20,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     isLive,
     currentEpisodeId,
     currentEpisodeData,
+    currentEpisodeType,
     currentTime,
     duration,
     activePlaylist,
@@ -33,9 +34,22 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
-    navigate(`/player/${targetId}`, {
-      state: { isLive: isLive, playlist: activePlaylist, playlistType: 'EpisodeType' },
-    });
+
+    if (currentEpisodeType === 'podcast') {
+      navigate(`/player/podcasts/${id}`, {
+        replace: true,
+        state: {
+          isLive: false,
+          playlist: activePlaylist,
+          playlistType: 'PickleEpisodeType',
+          isPickle: true,
+        },
+      });
+    } else {
+      navigate(`/player/${targetId}`, {
+        state: { isLive: isLive, playlist: activePlaylist, playlistType: 'EpisodeType' },
+      });
+    }
   };
 
   const handleControlsClick = (e: React.MouseEvent) => {
@@ -43,6 +57,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
   };
 
   if (!hasBeenActivated) return null;
+
+  const imageUrl =
+    currentEpisodeData?.radios?.img_url ||
+    currentEpisodeData?.imgUrl ||
+    currentEpisodeData?.pickle_podcasts?.img_url;
 
   return (
     <div
@@ -55,12 +74,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       />
 
       <div className="flex-shrink-0">
-        {currentEpisodeData?.radios.img_url ? (
-          <img
-            src={currentEpisodeData?.radios.img_url}
-            alt={title}
-            className="w-24 h-24 rounded-[11px] object-cover"
-          />
+        {imageUrl ? (
+          <img src={imageUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>
         )}
@@ -69,7 +84,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
         <p className="text-[28px] truncate">
-          {`${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
+          {currentEpisodeType === 'podcast'
+            ? `${currentEpisodeData?.pickle_podcasts?.title} ${currentEpisodeData?.date}`
+            : `${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
         </p>
       </div>
 

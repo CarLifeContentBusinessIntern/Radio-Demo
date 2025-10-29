@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { Episode } from '../types/episode';
+import type { Episode, PickleEpisode } from '../types/episode';
 
 type ListViewPageProps = {
-  type: 'channel' | 'timeslot';
+  type: 'channel' | 'timeslot' | 'series';
 };
 
 function ListViewPage({ type }: ListViewPageProps) {
+  const location = useLocation();
+  const isPickle = location.state?.isPickle;
+  const isRound = location.state?.isRound;
+
   const { id } = useParams();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const eqId = type === 'channel' ? 'radio_id' : 'time_slot_id';
+  const eqId = type === 'channel' ? 'radio_id' : type === 'timeslot' ? 'time_slot_id' : 'series_id';
 
   useEffect(() => {
     async function fetchEpisodesData() {
@@ -33,8 +38,73 @@ function ListViewPage({ type }: ListViewPageProps) {
       setIsLoading(false);
     }
 
-    fetchEpisodesData();
-  }, [eqId, id]);
+    async function fetchPickSeriesData() {
+      const { data, error } = await supabase
+        .from('pickle_episodes')
+        .select('*, pickle_podcasts(*)')
+        .eq('series_id', id)
+        .order('id', { ascending: true });
+      if (error) {
+        console.log('❌ 픽시리즈 데이터 조회 실패', error);
+      }
+      setPickleEpisodes(data ?? []);
+      setIsLoading(false);
+    }
+
+    if (isPickle) {
+      fetchPickSeriesData();
+    } else {
+      fetchEpisodesData();
+    }
+  }, [eqId, id, isPickle]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-y-1">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <ListViewItem isLoading={true} key={index} />
+        ))}
+      </div>
+    );
+  }
+
+  if (isPickle) {
+    if (pickleEpisodes.length > 0) {
+      return (
+        <div className="flex flex-col gap-y-1">
+          {pickleEpisodes &&
+            pickleEpisodes.map((item) => {
+              const subTitleText = item.pickle_podcasts?.title ?? '';
+              const imgUrl = item.src ?? item.pickle_podcasts.img_url;
+
+              return (
+                <ListViewItem
+                  key={item.id}
+                  id={item.id}
+                  imgUrl={imgUrl}
+                  title={item.title}
+                  subTitle={subTitleText}
+                  // playTime={item.play_time}
+                  // totalTime={item.total_time}
+                  date={item.uploadAt}
+                  hasAudio={!!item.audio_file}
+                  playlist={pickleEpisodes}
+                  playlistType={'PickleEpisodeType'}
+                  isPickle={isPickle}
+                  isRound={isRound ?? true}
+                />
+              );
+            })}
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center justify-center h-[calc(100vh-220px)]">
+          <p>콘텐츠가 없습니다</p>
+        </div>
+      );
+    }
+  }
 
   return (
     <div className="flex flex-col gap-y-1">
@@ -62,6 +132,7 @@ function ListViewPage({ type }: ListViewPageProps) {
                 hasAudio={!!item.audio_file}
                 playlist={type === 'timeslot' ? episodes : item.radios}
                 playlistType={type === 'timeslot' ? 'EpisodeType' : 'RadioType'}
+                isRound={isRound ?? true}
               />
             );
           })}
