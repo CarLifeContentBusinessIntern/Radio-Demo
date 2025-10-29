@@ -1,5 +1,10 @@
+import Category from '../components/Category';
+import { useVersion } from '../contexts/VersionContext';
+
 function HomePage() {
-  return <div>홈페이지</div>;
+  const { isRadioVersion } = useVersion();
+
+  return <div>{isRadioVersion && <Category />}</div>;
 }
 
 export default HomePage;
