@@ -24,17 +24,12 @@ export function formatTimeString(totalTime: string | undefined) {
 
   const parts = totalTime.split(':');
 
-  try {
-    if (parts.length === 2) {
-      return `${parts[0]}분 ${parts[1]}초`;
-    } else if (parts.length === 3) {
-      return `${parts[0]}시간 ${parts[1]}분 ${parts[2]}초`;
-    } else {
-      console.warn('Unexpected time format:', totalTime);
-      return totalTime;
-    }
-  } catch (error) {
-    console.error('Error formatting time string:', error);
-    return '시간 오류';
+  if (parts.length === 2) {
+    return `${parts[0]}분 ${parts[1]}초`;
+  } else if (parts.length === 3) {
+    return `${parts[0]}시간 ${parts[1]}분 ${parts[2]}초`;
+  } else {
+    console.warn('Unexpected time format:', totalTime);
+    return totalTime;
   }
 }

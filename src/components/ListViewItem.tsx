@@ -114,7 +114,7 @@ function ListViewItem({
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">
-            {`${subTitle} · ${date} ${formatTimeString(totalTime) ? `· ${formatTimeString(totalTime)}` : ''}`}
+            {[subTitle, date, formatTimeString(totalTime)].filter(Boolean).join(' · ')}
           </div>
         </div>
         {hasBeenActivated && currentEpisodeId === id && (
@@ -128,9 +128,9 @@ function ListViewItem({
       </div>
 
       <div className="hidden md:block">
-        {(!isPickle || (isPickle && isPlaying)) && (
+        {(!isPickle || isPlaying) && (
           <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
-            {playTime ?? playTime}
+            {playTime}
             {totalTime ? ` / ${totalTime}` : ``}
           </p>
         )}
