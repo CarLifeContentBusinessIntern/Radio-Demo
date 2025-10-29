@@ -1,9 +1,9 @@
-import type { RadioType } from './radio';
+import type { PicklePodcastsType } from './picklePodcast';
 
 export type CategoryType = {
   id: number;
   title: string;
-  category: string;
+  order: string;
   img_url: string;
-  radios?: RadioType[];
+  pickle_podcasts: PicklePodcastsType[];
 };

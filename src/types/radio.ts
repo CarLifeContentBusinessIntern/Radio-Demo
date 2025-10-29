@@ -1,4 +1,4 @@
-import type { CategoryType } from './category';
+import type { RadioCategoryType } from './radioCategory';
 import type { ChannelType } from './channel';
 import type { Episode } from './episode';
 
@@ -11,7 +11,7 @@ export type RadioType = {
   channel_id: number;
   live_no: number;
   live_episode_id: number;
-  categories?: CategoryType;
+  categories?: RadioCategoryType;
   channels?: ChannelType;
   is_live: boolean;
   episodes?: Episode[];

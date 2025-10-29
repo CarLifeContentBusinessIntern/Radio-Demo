@@ -1,4 +1,4 @@
-import Category from '../components/Category';
+import RadioCategory from '../components/RadioCategory';
 import ChannelList from '../components/ChannelList';
 import DocumentaryList from '../components/DocumentaryList';
 import PopularRadio from '../components/PopularRadio';
@@ -24,7 +24,7 @@ function RadioNoLiveVersion() {
       <DocumentaryList />
 
       {/* 카테고리 */}
-      <Category />
+      <RadioCategory />
     </div>
   );
 }

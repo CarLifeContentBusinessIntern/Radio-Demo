@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
-import { VersionProvider } from './contexts/VersionContext.tsx';
+import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
@@ -10,11 +10,15 @@ import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import HomePage from './pages/HomePage.tsx';
 import Radio from './pages/Radio.tsx';
+// import HomePage from './pages/HomePage.tsx';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
+import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
+  const { isRadioVersion } = useVersion();
   useEffect(() => {
     toast.dismiss();
   }, [location.pathname]);
@@ -90,12 +94,34 @@ function AppRoutes() {
       >
         <Route path="setting" element={<SettingPage />} />
       </Route>
-
       <Route
         element={<Layout defaultType="radio" scrollbar={true} paddingX={false} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
           <Route path="radio" element={<Radio />} />
+        </Route>
+      </Route>
+      <Route
+        element={
+          <Layout
+            defaultType={isRadioVersion ? 'radio' : 'home'}
+            scrollbar={true}
+            paddingX={false}
+            paddingB={true}
+          />
+        }
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="category-radio" element={<CategoryAndRadioPage />} />
+        </Route>
+      </Route>
+      <Route
+        element={
+          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
+        }
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
         </Route>
       </Route>
     </Routes>
