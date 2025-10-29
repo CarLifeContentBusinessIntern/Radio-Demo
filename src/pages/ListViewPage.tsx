@@ -92,7 +92,7 @@ function ListViewPage({ type }: ListViewPageProps) {
                   title={item.title}
                   subTitle={subTitleText}
                   // playTime={item.play_time}
-                  // totalTime={item.total_time}
+                  totalTime={item.total_time}
                   date={item.uploadAt}
                   hasAudio={!!item.audio_file}
                   playlist={pickleEpisodes}

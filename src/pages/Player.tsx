@@ -14,7 +14,7 @@ import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
-import type { Episode, PickleEpisode } from '../types/episode';
+import type { Episode } from '../types/episode';
 import type { RadioType } from '../types/radio';
 import type { MixThemeType } from '../types/theme';
 
@@ -225,7 +225,7 @@ function Player() {
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime) : ''}
                         totalTime={isActive ? (item.total_time ?? '') : ''}
-                        date={item.uploadAt}
+                        date={isPickle ? item.uploadAt : item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}
@@ -264,7 +264,7 @@ function Player() {
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast'
-                ? `${currentEpisodeData.pickle_podcasts?.title} ${currentEpisodeData.date}`
+                ? `${currentEpisodeData.pickle_podcasts?.title} · ${currentEpisodeData.date}`
                 : `${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-[32px] text-[#A6A6A9]">
