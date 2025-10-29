@@ -89,23 +89,6 @@ function Player() {
         break;
       }
 
-      // case 'PickleEpisodeType': {
-      //   const pickleEpisodes = playlist as PickleEpisode[];
-
-      //   const processedEpisodes: Episode[] = pickleEpisodes.map((ep) => {
-      //     return {
-      //       id: ep.id,
-      //       title: ep.title,
-      //       audio_file: ep.audio_file,
-      //       imgUrl: ep.imgUrl,
-      //       date: ep.date,
-      //       pickle_podcasts: ep.pickle_podcasts,
-      //     };
-      //   });
-      //   setFinalPlaylist(processedEpisodes);
-      //   break;
-      // }
-
       case 'RadioType':
       default: {
         const radio = playlist as RadioType;
@@ -123,7 +106,6 @@ function Player() {
     if (finalPlaylist.length > 0) {
       setPlaylist(finalPlaylist);
     }
-    console.log('finalpli', finalPlaylist);
   }, [finalPlaylist, setPlaylist]);
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -174,20 +156,19 @@ function Player() {
     handleSeek(Number(e.target.value));
   };
 
+  const imgUrl =
+    currentEpisodeData.radios?.img_url ||
+    currentEpisodeData.imgUrl ||
+    currentEpisodeData.pickle_podcasts?.img_url;
+
   return (
     <div className="relative h-full overflow-hidden">
       {/* 플레이어 배경 */}
-      {(currentEpisodeData.radios?.img_url ||
-        currentEpisodeData.imgUrl ||
-        currentEpisodeData.pickle_podcasts?.img_url) && (
+      {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
           style={{
-            backgroundImage: `url('${
-              currentEpisodeData.radios?.img_url ||
-              currentEpisodeData.imgUrl ||
-              currentEpisodeData.pickle_podcasts?.img_url
-            }')`,
+            backgroundImage: `url('${imgUrl}')`,
           }}
         >
           <div
@@ -263,15 +244,9 @@ function Player() {
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
         <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
           <div className="flex-shrink-0">
-            {currentEpisodeData.radios?.img_url ||
-            currentEpisodeData.imgUrl ||
-            currentEpisodeData.pickle_podcasts?.img_url ? (
+            {imgUrl ? (
               <ImageWithSkeleton
-                src={
-                  currentEpisodeData.radios?.img_url ||
-                  currentEpisodeData.imgUrl ||
-                  currentEpisodeData.pickle_podcasts?.img_url
-                }
+                src={imgUrl}
                 alt={currentEpisodeData.title}
                 className="w-40 h-40 md:w-60 md:h-60 object-cover"
                 skeletonClassName="w-[224px] h-[224px]"

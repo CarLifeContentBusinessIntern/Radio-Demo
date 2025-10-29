@@ -1,41 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import type { PickleThemeType } from '../types/theme';
 import GridViewItem from './GridViewItem';
-
-interface DriveMoodInterface {
-  id: number;
-  series_name: string;
-  img_src: string;
-  subtitle: string;
-  pickle_themes: PickleThemeType;
-  order: number;
-}
+import { usePickleSeries } from '../hooks/usePickleSeries';
 
 function DriveMood() {
   const navigate = useNavigate();
-  const [themes, setThemes] = useState<DriveMoodInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  async function fetchDriveMoodData() {
-    const { data, error } = await supabase
-      .from('pickle_series')
-      .select('*, pickle_themes(*)')
-      .eq('theme_id', 3)
-      .order('order', { ascending: true });
-
-    if (error) {
-      console.log('❌ DriveMood 데이터 조회 실패 : ', error);
-    } else {
-      setThemes(data);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchDriveMoodData();
-  }, []);
+  const { data: themes, isLoading } = usePickleSeries(3, 'DriveMood');
 
   return (
     <>

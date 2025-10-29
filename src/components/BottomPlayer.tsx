@@ -58,6 +58,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   if (!hasBeenActivated) return null;
 
+  const imageUrl =
+    currentEpisodeData?.radios?.img_url ||
+    currentEpisodeData?.imgUrl ||
+    currentEpisodeData?.pickle_podcasts?.img_url;
+
   return (
     <div
       className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
@@ -69,18 +74,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       />
 
       <div className="flex-shrink-0">
-        {currentEpisodeData?.radios?.img_url ||
-        currentEpisodeData?.imgUrl ||
-        currentEpisodeData?.pickle_podcasts?.img_url ? (
-          <img
-            src={
-              currentEpisodeData?.radios?.img_url ||
-              currentEpisodeData?.imgUrl ||
-              currentEpisodeData?.pickle_podcasts?.img_url
-            }
-            alt={title}
-            className="w-24 h-24 rounded-[11px] object-cover"
-          />
+        {imageUrl ? (
+          <img src={imageUrl} alt={title} className="w-24 h-24 rounded-[11px] object-cover" />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>
         )}
@@ -91,7 +86,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         <p className="text-[28px] truncate">
           {currentEpisodeType === 'podcast'
             ? `${currentEpisodeData?.pickle_podcasts?.title} ${currentEpisodeData?.date}`
-            : `${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}{' '}
+            : `${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
         </p>
       </div>
 

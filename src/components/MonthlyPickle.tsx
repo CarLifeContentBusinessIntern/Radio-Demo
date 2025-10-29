@@ -1,41 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import type { PickleThemeType } from '../types/theme';
+import { usePickleSeries } from '../hooks/usePickleSeries';
 import CircleViewItem from './CircleViewItem';
-
-interface MonthlyPickleInterface {
-  id: number;
-  series_name: string;
-  img_src: string;
-  subtitle: string;
-  pickle_themes: PickleThemeType;
-  order: number;
-}
 
 function MonthlyPickle() {
   const navigate = useNavigate();
-  const [themes, setThemes] = useState<MonthlyPickleInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  async function fetchMonthlyData() {
-    const { data, error } = await supabase
-      .from('pickle_series')
-      .select('*, pickle_themes(*)')
-      .eq('theme_id', 2)
-      .order('order', { ascending: true });
-
-    if (error) {
-      console.log('❌ MonthlyPickle 데이터 조회 실패 : ', error);
-    } else {
-      setThemes(data);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchMonthlyData();
-  }, []);
+  const { data: themes, isLoading } = usePickleSeries(2, 'MonthlyPickle');
 
   return (
     <>

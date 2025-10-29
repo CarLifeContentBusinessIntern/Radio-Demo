@@ -100,7 +100,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   //     ? pickleEpisodes.find((item) => item.id === state.currentEpisodeId)
   //     : episodes.find((item) => item.id === state.currentEpisodeId);
 
-  const currentEpisodeData = useMemo(() => {
+  const currentEpisodeData = useMemo<Episode | undefined>(() => {
     if (state.currentEpisodeId === null) {
       return episodes.find((item) => item.id === DEFAULT_EPISODE_ID);
     }
