@@ -2,17 +2,21 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 
 type VersionContext = {
   isLiveVersion: boolean;
-  toggleVersion: () => void;
+  toggleLiveVersion: () => void;
+  isRadioVersion: boolean;
+  toggleRadioVersion: () => void;
 };
 
 const VersionContext = createContext<VersionContext | undefined>(undefined);
 
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
   const [isLiveVersion, setIsLiveVersion] = useState(false);
+  const [isRadioVersion, setIsRadioVersion] = useState(false);
 
-  const toggleVersion = () => setIsLiveVersion((prev) => !prev);
+  const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
+  const toggleRadioVersion = () => setIsRadioVersion((prev) => !prev);
 
-  const value = { isLiveVersion, toggleVersion };
+  const value = { isLiveVersion, toggleLiveVersion, isRadioVersion, toggleRadioVersion };
 
   return <VersionContext.Provider value={value}>{children}</VersionContext.Provider>;
 };
