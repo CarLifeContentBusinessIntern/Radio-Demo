@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { Episode, PickleEpisode } from '../types/episode';
 
 type ListViewPageProps = {
-  type: 'channel' | 'timeslot' | 'series';
+  type: 'channel' | 'timeslot' | 'series' | 'podcasts';
 };
 
 function ListViewPage({ type }: ListViewPageProps) {
@@ -18,7 +18,13 @@ function ListViewPage({ type }: ListViewPageProps) {
   const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const eqId = type === 'channel' ? 'radio_id' : type === 'timeslot' ? 'time_slot_id' : 'series_id';
+  const typeToIdMap = {
+    channel: 'radio_id',
+    timeslot: 'time_slot_id',
+    series: 'series_id',
+    podcasts: 'podcast_id',
+  };
+  const eqId = typeToIdMap[type];
 
   useEffect(() => {
     async function fetchEpisodesData() {
@@ -38,21 +44,21 @@ function ListViewPage({ type }: ListViewPageProps) {
       setIsLoading(false);
     }
 
-    async function fetchPickSeriesData() {
+    async function fetchPickleEpisodeData() {
       const { data, error } = await supabase
         .from('pickle_episodes')
         .select('*, pickle_podcasts(*)')
-        .eq('series_id', id)
+        .eq(eqId, id)
         .order('id', { ascending: true });
       if (error) {
-        console.log('❌ 픽시리즈 데이터 조회 실패', error);
+        console.log('❌ 피클 에피소드 데이터 조회 실패', error);
       }
       setPickleEpisodes(data ?? []);
       setIsLoading(false);
     }
 
     if (isPickle) {
-      fetchPickSeriesData();
+      fetchPickleEpisodeData();
     } else {
       fetchEpisodesData();
     }

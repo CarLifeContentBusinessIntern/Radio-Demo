@@ -5,7 +5,7 @@ import GridViewItem from './GridViewItem';
 import { toast } from 'react-toastify';
 import type { CategoryType } from '../types/category';
 
-function Category() {
+function Category({ title }: { title: boolean }) {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +31,7 @@ function Category() {
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">카테고리</div>
+      {title && <div className="text-2xl mb-7 font-semibold">카테고리</div>}
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
