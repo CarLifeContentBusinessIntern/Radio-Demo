@@ -19,7 +19,7 @@ function HomePage() {
       <DriveMood />
 
       {/* 라디오 버전인 경우에만 카테고리 섹션 */}
-      {isRadioVersion && <Category />}
+      {isRadioVersion && <Category title={true} />}
     </div>
   );
 }

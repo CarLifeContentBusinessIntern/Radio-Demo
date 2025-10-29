@@ -3,11 +3,11 @@ import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'react-toastify';
-import type { PicklePodcastsType } from '../types/picklePodcast';
+import type { PodcastType } from '../types/podcast';
 function PickleGridViewPage() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const [podcasts, setPodcasts] = useState<PicklePodcastsType[]>([]);
+  const [podcasts, setPodcasts] = useState<PodcastType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // 팟캐스트 조회
@@ -16,8 +16,6 @@ function PickleGridViewPage() {
       const { data, error } = await supabase
         .from('pickle_podcasts')
         .select('*, pickle_episodes(*)')
-        // .order(filterSeriesOrder, { ascending: true })
-        // .order('title', { referencedTable: 'episodes', ascending: false })
         .eq('category_id', id);
 
       if (error) {
@@ -47,8 +45,10 @@ function PickleGridViewPage() {
                 isRounded={false}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.episodes?.length > 0) {
-                    navigate(`/episodes/channel/${item.id}`);
+                  if (item.pickle_episodes?.length > 0) {
+                    navigate(`/episodes/podcasts/${item.id}`, {
+                      state: { title: item.title, isPickle: true, isRound: false },
+                    });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }
