@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
@@ -20,24 +20,27 @@ import RadioIcon from '../assets/ic_radio.png';
 const HomeHeader = () => {
   const navigate = useNavigate();
   const { isRadioVersion } = useVersion();
-  const navLinks = [
-    { name: '홈', path: '/', icon: HomeIcon },
-    isRadioVersion === true
-      ? { name: '라디오', path: '/category-radio', icon: RadioIcon }
-      : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
-    {
-      name: '인기채널',
-      path: '/curation/1',
-      state: { type: 'channel', title: '인기 채널' },
-      icon: PopularIcon,
-    },
-    {
-      name: '최근청취',
-      path: '/episodes/channel/11',
-      state: { title: '최근 청취' },
-      icon: RecentIcon,
-    },
-  ];
+  const navLinks = useMemo(
+    () => [
+      { name: '홈', path: '/', icon: HomeIcon },
+      isRadioVersion === true
+        ? { name: '라디오', path: '/category-radio', icon: RadioIcon }
+        : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
+      {
+        name: '인기채널',
+        path: '/curation/1',
+        state: { type: 'channel', title: '인기 채널' },
+        icon: PopularIcon,
+      },
+      {
+        name: '최근청취',
+        path: '/episodes/channel/11',
+        state: { title: '최근 청취' },
+        icon: RecentIcon,
+      },
+    ],
+    [isRadioVersion]
+  );
 
   return (
     <div className="flex flex-row justify-between items-center w-full">

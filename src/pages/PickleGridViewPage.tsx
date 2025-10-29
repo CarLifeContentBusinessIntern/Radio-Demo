@@ -10,7 +10,7 @@ function PickleGridViewPage() {
   const [podcasts, setPodcasts] = useState<PicklePodcastsType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // 라디오 조회
+  // 팟캐스트 조회
   useEffect(() => {
     const fetchPodcasts = async () => {
       const { data, error } = await supabase
@@ -18,7 +18,7 @@ function PickleGridViewPage() {
         .select('*, pickle_episodes(*)')
         // .order(filterSeriesOrder, { ascending: true })
         // .order('title', { referencedTable: 'episodes', ascending: false })
-        .eq('id', id);
+        .eq('category_id', id);
 
       if (error) {
         console.error('Supabase 연결 실패:', error);
@@ -47,8 +47,7 @@ function PickleGridViewPage() {
                 isRounded={false}
                 img={item.img_url}
                 onClick={() => {
-                  const firstEpisodeId = item.episodes?.[0]?.id;
-                  if (firstEpisodeId !== undefined) {
+                  if (item.episodes?.length > 0) {
                     navigate(`/episodes/channel/${item.id}`);
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });

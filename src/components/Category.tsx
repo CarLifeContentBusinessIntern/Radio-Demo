@@ -40,8 +40,7 @@ function Category() {
               title={item.title}
               img={item.img_url}
               onClick={() => {
-                const firstRadioId = item.pickle_podcasts?.[0]?.id;
-                if (firstRadioId !== undefined) {
+                if (item.pickle_podcasts?.length > 0) {
                   navigate(`/pickle/curation/${item.id}`, {
                     state: { title: item.title },
                   });
