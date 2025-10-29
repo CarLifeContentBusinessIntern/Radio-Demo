@@ -18,14 +18,13 @@ function ListViewPage({ type }: ListViewPageProps) {
   const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const eqId =
-    type === 'channel'
-      ? 'radio_id'
-      : type === 'timeslot'
-        ? 'time_slot_id'
-        : type === 'series'
-          ? 'series_id'
-          : 'podcast_id';
+  const typeToIdMap = {
+    channel: 'radio_id',
+    timeslot: 'time_slot_id',
+    series: 'series_id',
+    podcasts: 'podcast_id',
+  };
+  const eqId = typeToIdMap[type];
 
   useEffect(() => {
     async function fetchEpisodesData() {
@@ -52,7 +51,7 @@ function ListViewPage({ type }: ListViewPageProps) {
         .eq(eqId, id)
         .order('id', { ascending: true });
       if (error) {
-        console.log('❌ 픽시리즈 데이터 조회 실패', error);
+        console.log('❌ 피클 에피소드 데이터 조회 실패', error);
       }
       setPickleEpisodes(data ?? []);
       setIsLoading(false);
