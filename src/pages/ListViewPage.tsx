@@ -5,7 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { Episode, PickleEpisode } from '../types/episode';
 
 type ListViewPageProps = {
-  type: 'channel' | 'timeslot' | 'series' | 'podcasts';
+  type: 'channel' | 'timeslot' | 'series' | 'podcast';
 };
 
 function ListViewPage({ type }: ListViewPageProps) {
@@ -22,7 +22,7 @@ function ListViewPage({ type }: ListViewPageProps) {
     channel: 'radio_id',
     timeslot: 'time_slot_id',
     series: 'series_id',
-    podcasts: 'podcast_id',
+    podcast: 'podcast_id',
   };
   const eqId = typeToIdMap[type];
 
@@ -80,7 +80,10 @@ function ListViewPage({ type }: ListViewPageProps) {
         <div className="flex flex-col gap-y-1">
           {pickleEpisodes &&
             pickleEpisodes.map((item) => {
-              const subTitleText = item.pickle_podcasts?.title ?? '';
+              const subTitleText =
+                item.pickle_podcasts?.title && type === 'podcast'
+                  ? ''
+                  : item.pickle_podcasts?.title;
               const imgUrl = item.src ?? item.pickle_podcasts.img_url;
 
               return (
