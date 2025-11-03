@@ -161,6 +161,8 @@ function Player() {
     currentEpisodeData.imgUrl ||
     currentEpisodeData.pickle_podcasts?.img_url;
 
+  const isHourDisplay = duration >= 3600;
+
   return (
     <div className="relative h-full overflow-hidden">
       {/* 플레이어 배경 */}
@@ -223,7 +225,7 @@ function Player() {
                         imgUrl={imageUrl}
                         title={item.title}
                         subTitle={subTitle}
-                        playTime={isActive ? formatTime(currentTime) : ''}
+                        playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
                         totalTime={isActive ? (item.total_time ?? '') : ''}
                         date={isPickle ? item.uploadAt : item.date}
                         hasAudio={item.audio_file ? true : false}
@@ -268,12 +270,15 @@ function Player() {
                 : `${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
             </p>
             <p className="text-lg md:text-[32px] text-[#A6A6A9]">
-              {isLive ? 'LIVE' : `${formatTime(currentTime)} / ${formatTime(duration)}`}
+              {isLive
+                ? 'LIVE'
+                : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
             </p>
           </div>
         </div>
 
         <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
+          ,{' '}
           <div className="flex flex-col items-center gap-5">
             <input
               type="range"
@@ -297,7 +302,6 @@ function Player() {
               </button>
             </div>
           </div>
-
           <div className="flex items-center justify-between gap-16 z-20">
             <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
               <img src={speedIcon} />
