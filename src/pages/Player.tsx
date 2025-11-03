@@ -278,7 +278,6 @@ function Player() {
         </div>
 
         <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
-          ,{' '}
           <div className="flex flex-col items-center gap-5">
             <input
               type="range"
