@@ -15,8 +15,6 @@ function RecentPage() {
         .not('recent_order', 'is', null)
         .order('recent_order', { ascending: true });
 
-      console.log('dd', data);
-
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
       }
@@ -42,7 +40,7 @@ function RecentPage() {
     <div className="flex flex-col gap-y-1">
       {recentEpisodes?.map((item) => {
         const subTitleText = item.pickle_podcasts?.title ?? '';
-        const imgUrl = item.src ?? item.pickle_podcasts.img_url;
+        const imgUrl = item.src ?? item.pickle_podcasts?.img_url;
 
         return (
           <ListViewItem
