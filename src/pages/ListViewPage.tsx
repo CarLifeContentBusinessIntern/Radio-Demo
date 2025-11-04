@@ -84,7 +84,7 @@ function ListViewPage({ type }: ListViewPageProps) {
                 item.pickle_podcasts?.title && type === 'podcast'
                   ? ''
                   : item.pickle_podcasts?.title;
-              const imgUrl = item.src ?? item.pickle_podcasts.img_url;
+              const imgUrl = item.src ?? item.pickle_podcasts?.img_url;
 
               return (
                 <ListViewItem
