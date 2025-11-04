@@ -68,7 +68,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
-      <div className="absolute top-0 left-0 w-full h-[4px] bg-[#464A4D]">
+      <div className="absolute top-0 left-0 w-full h-[4px] bg-gray-600">
         <div
           className="h-full bg-[#B76EEF] transition-width duration-100 ease-linear"
           style={{ width: `${progress}%` }}

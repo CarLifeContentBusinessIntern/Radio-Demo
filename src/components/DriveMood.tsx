@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import GridViewItem from './GridViewItem';
 import { usePickleSeries } from '../hooks/usePickleSeries';
+import GridViewItem from './GridViewItem';
+import { handleClickSeries } from './PicklePick';
 
 function DriveMood() {
   const navigate = useNavigate();
@@ -26,11 +27,7 @@ function DriveMood() {
                 title={item.series_name}
                 subTitle={item.subtitle}
                 img={item.img_src ?? ''}
-                onClick={() => {
-                  navigate(`/episodes/series/${item.id}`, {
-                    state: { isPickle: true, isRound: false, title: item.series_name },
-                  });
-                }}
+                onClick={() => handleClickSeries(navigate, item)}
               />
             ))}
       </div>
