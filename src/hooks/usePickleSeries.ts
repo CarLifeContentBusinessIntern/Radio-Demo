@@ -12,7 +12,7 @@ export function usePickleSeries(themeId: number, themeName: string) {
 
       const { data, error } = await supabase
         .from('pickle_series')
-        .select('*, pickle_themes(*)')
+        .select('*, pickle_themes(*), pickle_episodes!series_id(*)')
         .eq('theme_id', themeId)
         .order('order', { ascending: true });
 
@@ -22,7 +22,7 @@ export function usePickleSeries(themeId: number, themeName: string) {
       } else {
         setData(data);
       }
-      setIsLoading(false); // 로딩 완료
+      setIsLoading(false);
     }
 
     fetchPickleSeriesData();

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { usePickleSeries } from '../hooks/usePickleSeries';
 import CircleViewItem from './CircleViewItem';
+import { toast } from 'react-toastify';
 
 function MonthlyPickle() {
   const navigate = useNavigate();
@@ -27,9 +28,13 @@ function MonthlyPickle() {
                 subTitle={item.subtitle}
                 img={item.img_src ?? ''}
                 onClick={() => {
-                  navigate(`/episodes/series/${item.id}`, {
-                    state: { isPickle: true, isRound: false, title: item.series_name },
-                  });
+                  if (item.pickle_episodes?.length ?? 0) {
+                    navigate(`/episodes/series/${item.id}`, {
+                      state: { isPickle: true, isRound: false, title: item.series_name },
+                    });
+                  } else {
+                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+                  }
                 }}
               />
             ))}

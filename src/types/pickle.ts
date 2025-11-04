@@ -1,3 +1,4 @@
+import type { PickleEpisode } from './episode';
 import type { PickleThemeType } from './theme';
 
 export interface PickleSeries {
@@ -7,4 +8,5 @@ export interface PickleSeries {
   subtitle: string;
   pickle_themes: PickleThemeType;
   order: number;
+  pickle_episodes?: PickleEpisode[];
 }
