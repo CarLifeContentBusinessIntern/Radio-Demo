@@ -129,7 +129,7 @@ function ListViewItem({
 
       <div className="hidden md:block">
         {(!isPickle || isPlaying) && (
-          <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
+          <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
             {playTime}
             {totalTime ? ` / ${totalTime}` : ``}
           </p>

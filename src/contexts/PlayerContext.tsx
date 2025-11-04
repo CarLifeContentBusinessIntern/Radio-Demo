@@ -11,6 +11,7 @@ import {
 import { supabase } from '../lib/supabaseClient';
 import type { Episode, PickleEpisode } from '../types/episode';
 import { timeStringToSeconds } from '../utils/timeUtils';
+import { useNavigate } from 'react-router-dom';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -31,10 +32,12 @@ interface PlayerContextType extends PlayerState {
   playEpisode: (id: number, liveStatus?: boolean, isPickle?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
-  formatTime: (seconds: number) => string;
+  formatTime: (seconds: number, forceHourFormat: boolean) => string;
   setPlaylist: (playlist: Episode[]) => void;
   handlePlayNext: () => void;
   handlePlayPrev: () => void;
+  handlePlayBarNext: () => void;
+  handlePlayBarPrev: () => void;
   activePlaylist: Episode[];
 }
 
@@ -65,6 +68,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<Episode[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -228,7 +232,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const changeEpisode = useCallback(
-    (direction: 1 | -1) => {
+    (direction: 1 | -1, isPlayBar: boolean) => {
       if (!activePlaylist.length || state.currentEpisodeId === null) return;
 
       const playlistLength = activePlaylist.length;
@@ -244,11 +248,25 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         const nextEpisode = activePlaylist[nextIndex];
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
-          playEpisode(
-            nextEpisode.id,
-            state.isLive,
-            state.currentEpisodeType === 'podcast' ? true : false
-          );
+          const isPodcast = state.currentEpisodeType === 'podcast';
+          playEpisode(nextEpisode.id, state.isLive, isPodcast);
+
+          if (!isPlayBar) {
+            if (isPodcast) {
+              navigate(`/player/podcasts/${nextEpisode.id}`, {
+                replace: true,
+                state: {
+                  isLive: false,
+                  isPickle: true,
+                },
+              });
+            } else {
+              navigate(`/player/${nextEpisode.id}`, {
+                replace: true,
+                state: { isLive: false },
+              });
+            }
+          }
           return;
         }
 
@@ -256,15 +274,30 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         searchCount++;
       }
     },
-    [activePlaylist, state.currentEpisodeId, state.isLive, playEpisode, state.currentEpisodeType]
+    [
+      activePlaylist,
+      state.currentEpisodeId,
+      state.isLive,
+      playEpisode,
+      state.currentEpisodeType,
+      navigate,
+    ]
   );
 
   const handlePlayNext = useCallback(() => {
-    changeEpisode(1);
+    changeEpisode(1, false);
   }, [changeEpisode]);
 
   const handlePlayPrev = useCallback(() => {
-    changeEpisode(-1);
+    changeEpisode(-1, false);
+  }, [changeEpisode]);
+
+  const handlePlayBarNext = useCallback(() => {
+    changeEpisode(1, true);
+  }, [changeEpisode]);
+
+  const handlePlayBarPrev = useCallback(() => {
+    changeEpisode(-1, true);
   }, [changeEpisode]);
 
   const togglePlayPause = useCallback(() => {
@@ -298,11 +331,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     [state.currentTime, state.duration]
   );
 
-  const formatTime = useCallback((seconds: number) => {
-    if (isNaN(seconds)) return '00:00';
-    const minutes = Math.floor(seconds / 60);
+  const formatTime = useCallback((seconds: number, forceHourFormat: boolean = false) => {
+    if (isNaN(seconds) || seconds < 0) return forceHourFormat ? '00:00:00' : '00:00';
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+    const hStr = hours.toString();
+    const mStr = minutes.toString().padStart(2, '0');
+    const sStr = secs.toString().padStart(2, '0');
+
+    if (hours > 0 || forceHourFormat) {
+      return `${hStr}:${mStr}:${sStr}`;
+    } else {
+      // 그 외에는 MM:SS 형식
+      return `${mStr}:${sStr}`;
+    }
   }, []);
 
   const contextValue: PlayerContextType = {
@@ -318,6 +363,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setPlaylist,
     handlePlayNext,
     handlePlayPrev,
+    handlePlayBarNext,
+    handlePlayBarPrev,
     activePlaylist,
   };
 

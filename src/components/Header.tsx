@@ -35,8 +35,7 @@ const HomeHeader = () => {
       },
       {
         name: '최근청취',
-        path: '/episodes/channel/11',
-        state: { title: '최근 청취' },
+        path: '/episodes/recent',
         icon: RecentIcon,
       },
     ],
