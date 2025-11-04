@@ -86,7 +86,6 @@ function ListViewItem({
         hasAudio
           ? isPickle
             ? navigate(`/player/podcasts/${id}`, {
-                replace: true,
                 state: {
                   isLive: false,
                   playlist: playlist,
@@ -95,7 +94,6 @@ function ListViewItem({
                 },
               })
             : navigate(`/player/${id}`, {
-                replace: true,
                 state: { isLive: false, playlist: playlist, playlistType: playlistType },
               })
           : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
