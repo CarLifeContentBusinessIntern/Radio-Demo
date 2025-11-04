@@ -232,6 +232,7 @@ function Player() {
                         playlist={playlist}
                         playlistType={playlistType}
                         isPickle={isPickle}
+                        isPlayer={true}
                       />
                     </div>
                   </li>
