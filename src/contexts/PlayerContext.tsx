@@ -31,7 +31,7 @@ interface PlayerContextType extends PlayerState {
   playEpisode: (id: number, liveStatus?: boolean, isPickle?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
-  formatTime: (seconds: number) => string;
+  formatTime: (seconds: number, forceHourFormat: boolean) => string;
   setPlaylist: (playlist: Episode[]) => void;
   handlePlayNext: () => void;
   handlePlayPrev: () => void;
@@ -298,11 +298,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     [state.currentTime, state.duration]
   );
 
-  const formatTime = useCallback((seconds: number) => {
-    if (isNaN(seconds)) return '00:00';
-    const minutes = Math.floor(seconds / 60);
+  const formatTime = useCallback((seconds: number, forceHourFormat: boolean = false) => {
+    if (isNaN(seconds) || seconds < 0) return forceHourFormat ? '00:00:00' : '00:00';
+
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+    const hStr = hours.toString();
+    const mStr = minutes.toString().padStart(2, '0');
+    const sStr = secs.toString().padStart(2, '0');
+
+    if (hours > 0 || forceHourFormat) {
+      return `${hStr}:${mStr}:${sStr}`;
+    } else {
+      // 그 외에는 MM:SS 형식
+      return `${mStr}:${sStr}`;
+    }
   }, []);
 
   const contextValue: PlayerContextType = {
