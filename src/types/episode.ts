@@ -1,30 +1,24 @@
-import type { PodcastType } from './podcast';
-import type { RadioType } from './radio';
+import type { ProgramType } from './program';
 
-export interface Episode {
-  id: number;
-  imgUrl?: string;
-  src?: string;
-  title: string;
-  play_time?: string;
-  total_time?: string;
-  radios?: RadioType;
-  pickle_podcasts?: PodcastType;
-  date?: string;
-  uploadAt?: string;
-  audio_file?: string;
-}
-
-export interface PickleEpisode {
+export type EpisodeType = {
   id: number;
   title: string;
-  src: string;
+  img_url: string;
   audio_file: string;
-  category_id: number;
-  creator: string;
-  podcast_id: number;
+  date: string;
+  duration: string;
+  type: string;
+  created_at: string;
+  program_id: number;
+  order_recent: number;
+  programs?: ProgramType;
+};
+
+export type SeriesEpisodesType = {
+  id: number;
   series_id: number;
-  uploadAt: string;
-  pickle_podcasts: PodcastType;
-  total_time: string;
-}
+  episode_id: number;
+  order: number;
+  created_at: string;
+  episodes?: EpisodeType;
+};

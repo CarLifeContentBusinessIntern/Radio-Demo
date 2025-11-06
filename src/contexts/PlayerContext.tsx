@@ -9,9 +9,9 @@ import {
   type ReactNode,
 } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import type { Episode, PickleEpisode } from '../types/episode';
 import { timeStringToSeconds } from '../utils/timeUtils';
 import { useNavigate } from 'react-router-dom';
+import type { EpisodeType } from '../types/episode';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -25,20 +25,20 @@ interface PlayerState {
 }
 
 interface PlayerContextType extends PlayerState {
-  currentEpisodeData: Episode | undefined;
+  currentEpisodeData: EpisodeType | undefined;
   currentAudioUrl: string | null;
   togglePlayPause: () => void;
   togglePlaylist: () => void;
-  playEpisode: (id: number, liveStatus?: boolean, isPickle?: boolean) => void;
+  playEpisode: (id: number, liveStatus?: boolean, isPodcast?: boolean) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number, forceHourFormat: boolean) => string;
-  setPlaylist: (playlist: Episode[]) => void;
+  setPlaylist: (playlist: EpisodeType[]) => void;
   handlePlayNext: () => void;
   handlePlayPrev: () => void;
   handlePlayBarNext: () => void;
   handlePlayBarPrev: () => void;
-  activePlaylist: Episode[];
+  activePlaylist: EpisodeType[];
 }
 
 const initialPlayerStae: PlayerState = {
@@ -64,17 +64,14 @@ export const usePlayer = () => {
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerStae);
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
-  const [activePlaylist, setActivePlaylist] = useState<Episode[]>([]);
+  const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
+  const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchEpisodes() {
-      const { data, error } = await supabase
-        .from('episodes')
-        .select('*, radios!episodes_radio_id_fkey(*, channels(*))');
+      const { data, error } = await supabase.from('episodes').select('*, programs(*)');
 
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
@@ -84,54 +81,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchEpisodes();
-
-    async function fetchPickleEpisodes() {
-      const { data, error } = await supabase
-        .from('pickle_episodes')
-        .select('*, pickle_podcasts(*)');
-      if (error) {
-        console.log('❌ Error fetching episodes data:', error.message);
-      } else if (data) {
-        setPickleEpisodes(data);
-      }
-    }
-    fetchPickleEpisodes();
   }, []);
 
   const DEFAULT_EPISODE_ID = 1;
-  // const currentEpisodeData =
-  //   state.currentEpisodeId !== null && state.currentEpisodeType === 'podcast'
-  //     ? pickleEpisodes.find((item) => item.id === state.currentEpisodeId)
-  //     : episodes.find((item) => item.id === state.currentEpisodeId);
 
-  const currentEpisodeData = useMemo<Episode | undefined>(() => {
+  const currentEpisodeData = useMemo<EpisodeType | undefined>(() => {
     if (state.currentEpisodeId === null) {
       return episodes.find((item) => item.id === DEFAULT_EPISODE_ID);
     }
 
-    if (state.currentEpisodeType === 'podcast') {
-      const podcastEp = pickleEpisodes.find((item) => item.id === state.currentEpisodeId);
-
-      if (!podcastEp) return undefined;
-
-      return {
-        id: podcastEp.id,
-        title: podcastEp.title,
-        audio_file: podcastEp.audio_file,
-        imgUrl: podcastEp.src,
-        date: podcastEp.uploadAt,
-        pickle_podcasts: podcastEp.pickle_podcasts,
-      } as Episode;
-    }
-
     return episodes.find((item) => item.id === state.currentEpisodeId);
-  }, [state.currentEpisodeId, state.currentEpisodeType, episodes, pickleEpisodes]);
+  }, [state.currentEpisodeId, episodes]);
 
-  const getEpisodeDuration = (episode: Episode): number => {
-    if (typeof episode.total_time === 'string') {
-      return timeStringToSeconds(episode.total_time);
-    } else if (typeof episode.total_time === 'number') {
-      return episode.total_time;
+  const getEpisodeDuration = (episode: EpisodeType): number => {
+    if (typeof episode.duration === 'string') {
+      return timeStringToSeconds(episode.duration);
+    } else if (typeof episode.duration === 'number') {
+      return episode.duration;
     }
     return 2712;
   };
@@ -185,7 +151,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
-      const episode = currentEpisodeData as Episode;
+      const episode = currentEpisodeData as EpisodeType;
 
       if (episode) {
         const newDuration = getEpisodeDuration(episode);
@@ -200,11 +166,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (id: number, liveStatus = false, isPickle = false) => {
-      const type = isPickle ? 'podcast' : 'radio';
-      const episode = isPickle
-        ? pickleEpisodes.find((item) => item.id === id)
-        : episodes.find((item) => item.id === id);
+    (id: number, liveStatus = false, isPodcast = false) => {
+      const type = isPodcast ? 'podcast' : 'radio';
+      const episode = episodes.find((item) => item.id === id);
 
       if (episode?.audio_file === null) return;
 
@@ -224,10 +188,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         }));
       }
     },
-    [episodes, pickleEpisodes]
+    [episodes]
   );
 
-  const setPlaylist = useCallback((playlist: Episode[]) => {
+  const setPlaylist = useCallback((playlist: EpisodeType[]) => {
     setActivePlaylist(playlist);
   }, []);
 
@@ -257,13 +221,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                 replace: true,
                 state: {
                   isLive: false,
-                  isPickle: true,
+                  playlist: activePlaylist,
                 },
               });
             } else {
               navigate(`/player/${nextEpisode.id}`, {
                 replace: true,
-                state: { isLive: false },
+                state: { isLive: false, playlist: activePlaylist },
               });
             }
           }
@@ -354,6 +318,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     ...state,
     currentEpisodeData,
     currentAudioUrl,
+    activePlaylist,
     togglePlayPause,
     togglePlaylist,
     playEpisode,
@@ -365,7 +330,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayPrev,
     handlePlayBarNext,
     handlePlayBarPrev,
-    activePlaylist,
   };
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
