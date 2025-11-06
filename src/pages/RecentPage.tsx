@@ -39,8 +39,8 @@ function RecentPage() {
   return (
     <div className="flex flex-col gap-y-1">
       {recentEpisodes?.map((item) => {
-        const subTitleText = item.programs?.title ?? '';
-        const imgUrl = item.img_url ?? item.programs?.broadcastings?.img_url;
+        const subTitleText = item.programs?.title;
+        const imgUrl = item.img_url ?? item.programs?.img_url;
 
         return (
           <ListViewItem
@@ -53,7 +53,6 @@ function RecentPage() {
             date={item.date}
             hasAudio={!!item.audio_file}
             playlist={recentEpisodes}
-            playlistType={'PickleEpisodeType'}
             isRound={false}
           />
         );
