@@ -18,7 +18,7 @@ function RadioNoLiveVersion() {
       <ChannelList />
 
       {/* 시간별 몰아보기 */}
-      {/* <TimeSlot /> */}
+      <TimeSlot />
 
       {/* 라디오 다큐 */}
       {/* <DocumentaryList /> */}

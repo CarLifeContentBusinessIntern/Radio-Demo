@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import type { TimeSlotType } from '../types/timeSlot';
-import CircleViewItem from './CircleViewItem';
 import { toast } from 'react-toastify';
+import { useSection } from '../hooks/useSection';
+import CircleViewItem from './CircleViewItem';
 
 function TimeSlot() {
   const navigate = useNavigate();
-  const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchTimeSlotData() {
-      const { data: timeSlotData, error: timeSlotError } = await supabase
-        .from('time_slots')
-        .select(`*, episodes(*)`)
-        .order('order', { ascending: true });
+  const { data: sectionData, isLoading } = useSection(8);
 
-      if (timeSlotError) {
-        console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
-        setIsLoading(false);
-        return;
-      }
-      setTimeSlots(timeSlotData);
-      setIsLoading(false);
-    }
-    fetchTimeSlotData();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchTimeSlotData() {
+  //     const { data: timeSlotData, error: timeSlotError } = await supabase
+  //       .from('time_slots')
+  //       .select(`*, episodes(*)`)
+  //       .order('order', { ascending: true });
+
+  //     if (timeSlotError) {
+  //       console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
+  //       setIsLoading(false);
+  //       return;
+  //     }
+  //     setTimeSlots(timeSlotData);
+  //     setIsLoading(false);
+  //   }
+  //   fetchTimeSlotData();
+  // }, []);
 
   return (
     <div>
@@ -37,14 +37,14 @@ function TimeSlot() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />
             ))
-          : timeSlots.map((item, index) => (
+          : sectionData.map((item, index) => (
               <CircleViewItem
                 key={`${item.id}-${index}`}
                 title={item.title}
-                subTitle={item.time_slot}
+                subTitle={item.subtitle}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.episodes?.length) {
+                  if (item.has_episodes) {
                     navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
