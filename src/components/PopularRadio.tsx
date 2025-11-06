@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import type { RadioType } from '../types/radio';
-import type { ThemeType } from '../types/theme';
-import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
-import GridViewItem from './GridViewItem';
 import { toast } from 'react-toastify';
+import { supabase } from '../lib/supabaseClient';
+import type { ProgramType } from '../types/program';
+import type { ThemeType } from '../types/theme';
+import GridViewItem from './GridViewItem';
 
 interface PopularRadioInterface {
-  radios: RadioType;
+  programs: ProgramType;
   themes: ThemeType;
 }
 
@@ -17,15 +17,15 @@ function PopularRadio() {
 
   async function fetchPopularRadios() {
     const { data, error } = await supabase
-      .from('radio_themes')
+      .from('themes_programs')
       .select(
+        `*,
+        programs(*,broadcastings(*), episodes(*)),
+        themes!inner(*)
         `
-      radios(*, channels(*), episodes(*)),
-      themes!inner(*)
-      `
       )
-      .eq('theme_id', 1)
-      .order('title', { referencedTable: 'radios.episodes', ascending: false });
+      .eq('theme_id', 1);
+    // .order('title', { referencedTable: 'radios.episodes', ascending: false });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -56,19 +56,19 @@ function PopularRadio() {
             ))
           : popularRadios.map((item) => (
               <GridViewItem
-                key={item.radios.id}
-                title={item.radios.title}
-                subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel}`}
-                img={item.radios.img_url}
+                key={item.programs.id}
+                title={item.programs.title}
+                subTitle={`${item.programs.broadcastings?.title} ${item.programs.broadcastings?.channel}`}
+                img={item.programs.img_url}
                 onClick={() => {
-                  const firstEpisode = item.radios.episodes?.[0];
+                  const firstEpisode = item.programs.episodes?.[0];
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
                     navigate(`/player/${firstEpisode.id}`, {
-                      state: { playlist: item.radios },
+                      state: { playlist: item.programs },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.radios.id });
+                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
                   }
                 }}
               />

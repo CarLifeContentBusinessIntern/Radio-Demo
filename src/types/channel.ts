@@ -1,9 +1,9 @@
 export type ChannelType = {
   id: number;
-  broadcasting: string;
+  title: string;
   channel: string;
   frequency: string;
   img_url: string;
   order: number;
-  radios: { count: number }[];
+  programs: { count: number }[];
 };

@@ -13,8 +13,9 @@ function Category({ title }: { title: boolean }) {
   //카테고리 조회
   async function fetchCategories() {
     const { data, error } = await supabase
-      .from('pickle_categories')
-      .select('*, pickle_podcasts(*)')
+      .from('categories')
+      .select('*, programs(*)')
+      .eq('type', 'podcast')
       .order('order', { ascending: true });
 
     if (error) {
@@ -44,7 +45,7 @@ function Category({ title }: { title: boolean }) {
                 title={item.title}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.pickle_podcasts?.length > 0) {
+                  if (item.programs?.length > 0) {
                     navigate(`/pickle/curation/${item.id}`, {
                       state: { title: item.title },
                     });

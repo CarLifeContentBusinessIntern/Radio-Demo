@@ -1,9 +1,10 @@
-import type { PodcastType } from './podcast';
+import type { ProgramType } from './program';
 
 export type CategoryType = {
   id: number;
   title: string;
   order: string;
   img_url: string;
-  pickle_podcasts: PodcastType[];
+  type: 'radio' | 'podcast';
+  programs: ProgramType[];
 };
