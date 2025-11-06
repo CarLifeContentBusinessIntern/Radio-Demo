@@ -11,7 +11,7 @@ const VersionContext = createContext<VersionContext | undefined>(undefined);
 
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
   const [isLiveVersion, setIsLiveVersion] = useState(false);
-  const [isRadioVersion, setIsRadioVersion] = useState(false);
+  const [isRadioVersion, setIsRadioVersion] = useState(true);
 
   const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
   const toggleRadioVersion = () => setIsRadioVersion((prev) => !prev);

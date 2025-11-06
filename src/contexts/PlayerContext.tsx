@@ -71,9 +71,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchEpisodes() {
-      const { data, error } = await supabase
-        .from('episodes')
-        .select('*, radios!episodes_radio_id_fkey(*, channels(*))');
+      const { data, error } = await supabase.from('episodes').select('*, programs(*)');
 
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
@@ -90,21 +88,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const currentEpisodeData = useMemo<EpisodeType | undefined>(() => {
     if (state.currentEpisodeId === null) {
       return episodes.find((item) => item.id === DEFAULT_EPISODE_ID);
-    }
-
-    if (state.currentEpisodeType === 'podcast') {
-      const podcastEp = pickleEpisodes.find((item) => item.id === state.currentEpisodeId);
-
-      if (!podcastEp) return undefined;
-
-      return {
-        id: podcastEp.id,
-        title: podcastEp.title,
-        audio_file: podcastEp.audio_file,
-        imgUrl: podcastEp.src,
-        date: podcastEp.uploadAt,
-        pickle_podcasts: podcastEp.pickle_podcasts,
-      } as Episode;
     }
 
     return episodes.find((item) => item.id === state.currentEpisodeId);
@@ -183,11 +166,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (id: number, liveStatus = false, isPickle = false) => {
-      const type = isPickle ? 'podcast' : 'radio';
-      const episode = isPickle
-        ? pickleEpisodes.find((item) => item.id === id)
-        : episodes.find((item) => item.id === id);
+    (id: number, liveStatus = false, isPodcast = false) => {
+      const type = isPodcast ? 'podcast' : 'radio';
+      const episode = episodes.find((item) => item.id === id);
 
       if (episode?.audio_file === null) return;
 
