@@ -1,38 +1,11 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import { type ThemeType } from '../types/theme';
-import CircleViewItem from './CircleViewItem';
 import { toast } from 'react-toastify';
+import { useSection } from '../hooks/useSection';
+import CircleViewItem from './CircleViewItem';
 
 function RadioMix() {
   const navigate = useNavigate();
-  const [radioMixTheme, setRadioMixTheme] = useState<ThemeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    async function fetchRadioMixTheme() {
-      const { data: mixThemeData, error: mixThemeError } = await supabase
-        .from('themes')
-        .select('*, radio_themes(*, radios(*, channels(*), episodes(*)))')
-        .eq('section', '라디오 믹스')
-        .order('id', { ascending: true });
-
-      if (mixThemeError) {
-        console.log('❌ Error fetching radio mix data:', mixThemeError.message);
-        setIsLoading(false);
-
-        return;
-      }
-      if (!mixThemeData) {
-        setIsLoading(false);
-        return;
-      }
-      setRadioMixTheme(mixThemeData);
-      setIsLoading(false);
-    }
-    fetchRadioMixTheme();
-  }, []);
+  const { data: sectionData, isLoading } = useSection(6);
 
   return (
     <div>
@@ -47,14 +20,14 @@ function RadioMix() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />
             ))
-          : radioMixTheme.map((item) => (
+          : sectionData?.map((item) => (
               <CircleViewItem
                 key={item.id}
                 title={item.title}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.episode_ids) {
-                    navigate(`/player/${item.episode_ids[0]}`, {
+                  if (item.has_episodes) {
+                    navigate(`/player/${item.first_episode_id}`, {
                       state: { isLive: false, playlist: item, playlistType: 'ThemeType' },
                     });
                   } else {

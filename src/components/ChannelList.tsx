@@ -13,8 +13,8 @@ function ChannelList() {
   //채널 조회
   async function fetchChannels() {
     const { data, error } = await supabase
-      .from('channels')
-      .select('*,radios(count)')
+      .from('broadcastings')
+      .select('*,programs(count)')
       .not('"order"', 'is', null) // order가 null인 애들 제외
       .order('order', { ascending: true });
 
@@ -31,9 +31,9 @@ function ChannelList() {
   }, []);
 
   const handleOnClick = (item: ChannelType) => {
-    if (item.radios[0].count !== 0) {
+    if (item.programs[0].count !== 0) {
       navigate(`/curation/${item.id}`, {
-        state: { title: `${item.broadcasting} ${item.channel || ''}`, type: 'channel' },
+        state: { title: `${item.title} ${item.channel || ''}`, type: 'channel' },
       });
     } else {
       toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
@@ -51,7 +51,7 @@ function ChannelList() {
           : channels.map((item) => (
               <CircleViewItem
                 key={item.id}
-                title={`${item.broadcasting} ${item.channel ? item.channel : ''}`}
+                title={`${item.title} ${item.channel ? item.channel : ''}`}
                 subTitle={item.frequency}
                 img={item.img_url}
                 onClick={() => handleOnClick(item)}

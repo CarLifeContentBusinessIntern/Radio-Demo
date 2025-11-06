@@ -1,4 +1,5 @@
 import type { BroadcastingType } from './broadcasting';
+import type { EpisodeType } from './episode';
 
 export type ProgramType = {
   id: number;
@@ -9,4 +10,5 @@ export type ProgramType = {
   broadcasting_id: number;
   subtitle: string;
   broadcastings?: BroadcastingType;
+  episodes?: EpisodeType[];
 };
