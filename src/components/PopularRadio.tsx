@@ -18,7 +18,6 @@ function PopularRadio() {
   async function fetchPopularRadios() {
     const { data, error } = await supabase
       .from('themes_programs')
-      .select('*, programs(*)')
       .select(
         `*,
         programs(*,broadcastings(*), episodes(*)),
