@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
+import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
-import type { Episode, PickleEpisode } from '../types/episode';
+import type { SeriesEpisodesType } from '../types/episode';
 
 type ListViewPageProps = {
   type: 'channel' | 'timeslot' | 'series' | 'podcast';
@@ -10,12 +11,11 @@ type ListViewPageProps = {
 
 function ListViewPage({ type }: ListViewPageProps) {
   const location = useLocation();
-  const isPickle = location.state?.isPickle;
   const isRound = location.state?.isRound;
 
   const { id } = useParams();
-  const [episodes, setEpisodes] = useState<Episode[]>([]);
-  const [pickleEpisodes, setPickleEpisodes] = useState<PickleEpisode[]>([]);
+  const { setPlaylist } = usePlayer();
+  const [episodes, setEpisodes] = useState<SeriesEpisodesType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const typeToIdMap = {
@@ -28,41 +28,24 @@ function ListViewPage({ type }: ListViewPageProps) {
 
   useEffect(() => {
     async function fetchEpisodesData() {
+      setIsLoading(true);
+
       const { data, error } = await supabase
-        .from('episodes')
-        .select('*, radios(*, channels(*), episodes(*))')
-        .eq(eqId, id)
-        .order('audio_file', { ascending: true })
-        .order('date', { ascending: false })
-        .order('title', { ascending: false });
+        .from('series_episodes')
+        .select('*, episodes(*, programs(*, broadcastings(*)))')
+        .eq('series_id', id);
+
       if (error) {
-        console.log('❌ Error fetching episodes data:', error.message);
-        setIsLoading(false);
-        return;
+        console.log('❌ 에피소드 조회 실패 : ', error);
       }
-      setEpisodes(data);
+
+      setEpisodes(data || []);
+      setPlaylist(data ? data.map((item) => item.episodes) : []);
       setIsLoading(false);
     }
 
-    async function fetchPickleEpisodeData() {
-      const { data, error } = await supabase
-        .from('pickle_episodes')
-        .select('*, pickle_podcasts(*)')
-        .eq(eqId, id)
-        .order('id', { ascending: true });
-      if (error) {
-        console.log('❌ 피클 에피소드 데이터 조회 실패', error);
-      }
-      setPickleEpisodes(data ?? []);
-      setIsLoading(false);
-    }
-
-    if (isPickle) {
-      fetchPickleEpisodeData();
-    } else {
-      fetchEpisodesData();
-    }
-  }, [eqId, id, isPickle]);
+    fetchEpisodesData();
+  }, [eqId, id, setPlaylist]);
 
   if (isLoading) {
     return (
@@ -73,48 +56,6 @@ function ListViewPage({ type }: ListViewPageProps) {
       </div>
     );
   }
-
-  if (isPickle) {
-    if (pickleEpisodes.length > 0) {
-      return (
-        <div className="flex flex-col gap-y-1">
-          {pickleEpisodes &&
-            pickleEpisodes.map((item) => {
-              const subTitleText =
-                item.pickle_podcasts?.title && type === 'podcast'
-                  ? ''
-                  : item.pickle_podcasts?.title;
-              const imgUrl = item.src ?? item.pickle_podcasts?.img_url;
-
-              return (
-                <ListViewItem
-                  key={item.id}
-                  id={item.id}
-                  imgUrl={imgUrl}
-                  title={item.title}
-                  subTitle={subTitleText}
-                  // playTime={item.play_time}
-                  totalTime={item.total_time}
-                  date={item.uploadAt}
-                  hasAudio={!!item.audio_file}
-                  playlist={pickleEpisodes}
-                  playlistType={'PickleEpisodeType'}
-                  isPickle={isPickle}
-                  isRound={isRound ?? true}
-                />
-              );
-            })}
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex items-center justify-center h-[calc(100vh-220px)]">
-          <p>콘텐츠가 없습니다</p>
-        </div>
-      );
-    }
-  }
-
   return (
     <div className="flex flex-col gap-y-1">
       {isLoading
@@ -123,24 +64,23 @@ function ListViewPage({ type }: ListViewPageProps) {
           ))
         : episodes &&
           episodes.map((item) => {
-            const broadcasting = item.radios?.channels?.broadcasting;
-            const channel = item.radios?.channels?.channel;
+            const broadcasting = item.episodes?.programs?.broadcastings?.title;
+            const channel = item.episodes?.programs?.broadcastings?.channel;
 
             const subTitleText =
-              broadcasting && channel ? `${broadcasting} ${channel}` : '채널 정보 없음';
+              item.episodes?.type === 'podcast'
+                ? `${item.episodes?.programs?.title}`
+                : `${broadcasting} ${channel}`;
             return (
               <ListViewItem
                 key={item.id}
-                id={item.id}
-                imgUrl={item.radios?.img_url}
-                title={item.title}
+                id={item.episode_id}
+                imgUrl={item.episodes?.img_url || item.episodes?.programs?.img_url}
+                title={item.episodes?.title}
                 subTitle={subTitleText}
-                playTime={item.play_time}
-                totalTime={item.total_time}
-                date={item.date}
-                hasAudio={!!item.audio_file}
-                playlist={type === 'timeslot' ? episodes : item.radios}
-                playlistType={type === 'timeslot' ? 'EpisodeType' : 'RadioType'}
+                totalTime={item.episodes?.duration}
+                date={item.episodes?.date}
+                hasAudio={!!item.episodes?.audio_file}
                 isRound={isRound ?? true}
               />
             );

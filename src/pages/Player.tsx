@@ -14,19 +14,15 @@ import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
-import type { Episode } from '../types/episode';
-import type { RadioType } from '../types/radio';
-import type { MixThemeType } from '../types/theme';
+import type { EpisodeType } from '../types/episode';
 
 function Player() {
   const { id } = useParams();
   const location = useLocation();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
-  const isPickle = location.state?.isPickle;
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-  const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
@@ -45,68 +41,21 @@ function Player() {
     handleSkip,
     formatTime,
     playEpisode,
-    setPlaylist,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
     if (episodeId !== null) {
-      if (isPickle) {
+      if (currentEpisodeData?.type === 'podcast') {
         playEpisode(episodeId, false, true);
       } else {
         playEpisode(episodeId, false, false);
       }
     }
-  }, [episodeId, playEpisode, isPickle]);
 
-  useEffect(() => {
-    if (!playlist) return;
-
-    switch (playlistType) {
-      case 'ThemeType':
-      case 'MixThemeType': {
-        const theme = playlist as MixThemeType;
-        const episodeIds = theme.episode_ids || [];
-        const allEpisodesMap = new Map<number, Episode>();
-
-        theme.radio_themes?.forEach((rt) => {
-          rt.radios.episodes?.forEach((episode) => {
-            allEpisodesMap.set(episode.id, { ...episode, radios: rt.radios });
-          });
-        });
-
-        const processedEpisodes = episodeIds
-          .map((id) => allEpisodesMap.get(id))
-          .filter(Boolean) as Episode[];
-        setFinalPlaylist(processedEpisodes);
-        break;
-      }
-
-      case 'PickleEpisodeType':
-      case 'EpisodeType': {
-        setFinalPlaylist(playlist as Episode[]);
-        break;
-      }
-
-      case 'RadioType':
-      default: {
-        const radio = playlist as RadioType;
-        const episodeWithRadio = (radio.episodes || []).map((ep) => ({
-          ...ep,
-          radios: radio,
-        }));
-        setFinalPlaylist(episodeWithRadio);
-        break;
-      }
-    }
-  }, [playlist, playlistType]);
-
-  useEffect(() => {
-    if (finalPlaylist.length > 0) {
-      setPlaylist(finalPlaylist);
-    }
-  }, [finalPlaylist, setPlaylist]);
+    console.log('cd:', currentEpisodeData);
+  }, [episodeId, playEpisode, currentEpisodeData]);
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
@@ -118,7 +67,7 @@ function Player() {
     [progressPercent, playedColor, unplayedColor]
   );
 
-  if (!currentEpisodeData || finalPlaylist.length === 0) {
+  if (!currentEpisodeData || !playlist) {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
@@ -156,10 +105,7 @@ function Player() {
     handleSeek(Number(e.target.value));
   };
 
-  const imgUrl =
-    currentEpisodeData.radios?.img_url ||
-    currentEpisodeData.imgUrl ||
-    currentEpisodeData.pickle_podcasts?.img_url;
+  const imgUrl = currentEpisodeData.img_url || currentEpisodeData.programs?.img_url;
 
   const isHourDisplay = duration >= 3600;
 
@@ -204,20 +150,20 @@ function Player() {
             className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
           >
             <ul className="flex flex-col gap-1">
-              {finalPlaylist.map((item: Episode) => {
+              {playlist.map((item: EpisodeType) => {
                 const isActive = currentEpisodeId === item.id;
                 // const isChannel = playlistType === 'RadioType';
-                const imageUrl = item.radios?.img_url || item.src || item.pickle_podcasts?.img_url;
-                const subTitle = item.radios?.title || item.pickle_podcasts?.title;
+                const imageUrl = item.img_url || item.programs?.img_url;
+                const subTitle = item.programs?.title;
 
                 return (
                   <li
                     key={item.id}
                     className={`rounded-md cursor-pointer p-3 flex items-center`}
-                    onClick={() => {
-                      playEpisode(item.id, false, currentEpisodeType === 'podcast' ? true : false);
-                      togglePlaylist();
-                    }}
+                    // onClick={() => {
+                    //   playEpisode(item.id, false, currentEpisodeType === 'podcast' ? true : false);
+                    //   togglePlaylist();
+                    // }}
                   >
                     <div className="w-full">
                       <ListViewItem
@@ -226,12 +172,11 @@ function Player() {
                         title={item.title}
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={isActive ? (item.total_time ?? '') : ''}
-                        date={isPickle ? item.uploadAt : item.date}
+                        totalTime={isActive ? (item.duration ?? '') : ''}
+                        date={item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}
-                        isPickle={isPickle}
                         isPlayer={true}
                       />
                     </div>
@@ -267,8 +212,8 @@ function Player() {
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast'
-                ? `${currentEpisodeData.pickle_podcasts?.title} · ${currentEpisodeData.date}`
-                : `${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
+                ? `${currentEpisodeData.programs?.title} · ${currentEpisodeData.date}`
+                : `${currentEpisodeData.programs?.broadcastings?.title} ${currentEpisodeData.programs?.broadcastings?.channel}`}
             </p>
             <p className="text-lg md:text-[32px] text-[#A6A6A9]">
               {isLive

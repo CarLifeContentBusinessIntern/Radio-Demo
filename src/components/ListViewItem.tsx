@@ -1,11 +1,10 @@
 import Skeleton from 'react-loading-skeleton';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '../contexts/PlayerContext';
-import type { RadioType } from '../types/radio';
-import type { Episode, PickleEpisode } from '../types/episode';
 import { toast } from 'react-toastify';
-import ImageWithSkeleton from './ImageWithSkeleton';
+import { usePlayer } from '../contexts/PlayerContext';
+import type { EpisodeType } from '../types/episode';
 import { formatTimeString } from '../utils/timeUtils';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -17,9 +16,8 @@ type ListViewItemProps = {
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
-  playlist?: RadioType | Episode[] | PickleEpisode[];
+  playlist?: EpisodeType[];
   playlistType?: string;
-  isPickle?: boolean;
   isRound?: boolean;
   isPlayer?: boolean;
 };
@@ -34,19 +32,25 @@ function ListViewItem({
   totalTime,
   date,
   hasAudio,
-  playlist,
-  playlistType,
-  isPickle,
   isRound,
   isPlayer = false,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { hasBeenActivated, currentTime, duration, currentEpisodeId, formatTime } = usePlayer();
+  const {
+    hasBeenActivated,
+    currentTime,
+    duration,
+    currentEpisodeData,
+    currentEpisodeId,
+    activePlaylist,
+    formatTime,
+  } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
   const isHourDisplay = duration >= 3600;
 
   const isPlayingEpisode = currentEpisodeId === id;
+  const isPodcast = currentEpisodeData?.type === 'podcast';
 
   if (isLoading) {
     return (
@@ -84,17 +88,16 @@ function ListViewItem({
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() =>
         hasAudio
-          ? isPickle
+          ? isPodcast
             ? navigate(`/player/podcasts/${id}`, {
+                replace: isPlayer ? true : false,
                 state: {
                   isLive: false,
-                  playlist: playlist,
-                  playlistType: playlistType,
-                  isPickle: true,
+                  playlist: activePlaylist,
                 },
               })
             : navigate(`/player/${id}`, {
-                state: { isLive: false, playlist: playlist, playlistType: playlistType },
+                state: { isLive: false, playlist: activePlaylist },
               })
           : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
       }
@@ -132,7 +135,7 @@ function ListViewItem({
       </div>
 
       <div className="hidden md:block">
-        {(!isPickle || isPlayer) && isPlayingEpisode && (
+        {(!isPodcast || isPlayer) && isPlayingEpisode && (
           <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
             {playTime || formatTime(currentTime, isHourDisplay)}
             {totalTime ? ` / ${totalTime}` : ``}
