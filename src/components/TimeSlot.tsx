@@ -5,28 +5,8 @@ import CircleViewItem from './CircleViewItem';
 
 function TimeSlot() {
   const navigate = useNavigate();
-  // const [timeSlots, setTimeSlots] = useState<TimeSlotType[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
 
   const { data: sectionData, isLoading } = useSection(8);
-
-  // useEffect(() => {
-  //   async function fetchTimeSlotData() {
-  //     const { data: timeSlotData, error: timeSlotError } = await supabase
-  //       .from('time_slots')
-  //       .select(`*, episodes(*)`)
-  //       .order('order', { ascending: true });
-
-  //     if (timeSlotError) {
-  //       console.log('❌ Error fetching timeSlot data:', timeSlotError.message);
-  //       setIsLoading(false);
-  //       return;
-  //     }
-  //     setTimeSlots(timeSlotData);
-  //     setIsLoading(false);
-  //   }
-  //   fetchTimeSlotData();
-  // }, []);
 
   return (
     <div>

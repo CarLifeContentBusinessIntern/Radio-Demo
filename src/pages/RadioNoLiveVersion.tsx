@@ -24,7 +24,7 @@ function RadioNoLiveVersion() {
       <DocumentaryList />
 
       {/* 카테고리 */}
-      {/* <RadioCategory /> */}
+      <RadioCategory />
     </div>
   );
 }
