@@ -21,6 +21,7 @@ type ListViewItemProps = {
   playlistType?: string;
   isPickle?: boolean;
   isRound?: boolean;
+  isPlayer?: boolean;
 };
 
 function ListViewItem({
@@ -37,11 +38,15 @@ function ListViewItem({
   playlistType,
   isPickle,
   isRound,
+  isPlayer = false,
 }: ListViewItemProps) {
   const navigate = useNavigate();
-  const { hasBeenActivated, currentTime, duration, currentEpisodeId, isPlaying } = usePlayer();
+  const { hasBeenActivated, currentTime, duration, currentEpisodeId, formatTime } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const isHourDisplay = duration >= 3600;
+
+  const isPlayingEpisode = currentEpisodeId === id;
 
   if (isLoading) {
     return (
@@ -73,6 +78,7 @@ function ListViewItem({
       </div>
     );
   }
+
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
@@ -80,7 +86,6 @@ function ListViewItem({
         hasAudio
           ? isPickle
             ? navigate(`/player/podcasts/${id}`, {
-                replace: true,
                 state: {
                   isLive: false,
                   playlist: playlist,
@@ -89,7 +94,6 @@ function ListViewItem({
                 },
               })
             : navigate(`/player/${id}`, {
-                replace: true,
                 state: { isLive: false, playlist: playlist, playlistType: playlistType },
               })
           : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
@@ -128,9 +132,9 @@ function ListViewItem({
       </div>
 
       <div className="hidden md:block">
-        {(!isPickle || isPlaying) && (
-          <p className="text-[28px] text-[#A6A6A9] w-[200px] text-right">
-            {playTime}
+        {(!isPickle || isPlayer) && isPlayingEpisode && (
+          <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+            {playTime || formatTime(currentTime, isHourDisplay)}
             {totalTime ? ` / ${totalTime}` : ``}
           </p>
         )}

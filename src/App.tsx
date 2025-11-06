@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
 import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
+import RecentPage from './pages/RecentPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -39,7 +40,7 @@ function AppRoutes() {
           <Route path="episodes/channel/:id" element={<ListViewPage type="channel" />} />
           <Route path="episodes/timeslot/:id" element={<ListViewPage type="timeslot" />} />
           <Route path="episodes/series/:id" element={<ListViewPage type="series" />} />
-          <Route path="episodes/podcasts/:id" element={<ListViewPage type="podcasts" />} />
+          <Route path="episodes/podcasts/:id" element={<ListViewPage type="podcast" />} />
         </Route>
       </Route>
 
@@ -94,6 +95,7 @@ function AppRoutes() {
       >
         <Route path="setting" element={<SettingPage />} />
       </Route>
+
       <Route
         element={<Layout defaultType="radio" scrollbar={true} paddingX={false} paddingB={true} />}
       >
@@ -101,6 +103,7 @@ function AppRoutes() {
           <Route path="radio" element={<Radio />} />
         </Route>
       </Route>
+
       <Route
         element={
           <Layout
@@ -115,6 +118,7 @@ function AppRoutes() {
           <Route path="category-radio" element={<CategoryAndRadioPage />} />
         </Route>
       </Route>
+
       <Route
         element={
           <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
@@ -122,6 +126,14 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
+        </Route>
+      </Route>
+
+      <Route
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="/episodes/recent" element={<RecentPage />} />
         </Route>
       </Route>
     </Routes>

@@ -26,8 +26,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     activePlaylist,
     hasBeenActivated,
     togglePlayPause,
-    handlePlayNext,
-    handlePlayPrev,
+    handlePlayBarNext,
+    handlePlayBarPrev,
   } = usePlayer();
 
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
@@ -37,7 +37,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
     if (currentEpisodeType === 'podcast') {
       navigate(`/player/podcasts/${id}`, {
-        replace: true,
+        replace: false,
         state: {
           isLive: false,
           playlist: activePlaylist,
@@ -68,10 +68,12 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
-      <div
-        className="absolute top-0 left-0 h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
-        style={{ width: `${progress}%` }}
-      />
+      <div className="absolute top-0 left-0 w-full h-[4px] bg-gray-600">
+        <div
+          className="h-full bg-[#B76EEF] transition-width duration-100 ease-linear"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
 
       <div className="flex-shrink-0">
         {imageUrl ? (
@@ -91,7 +93,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       </div>
 
       <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={30} onClick={handlePlayPrev} />
+        <TbPlayerSkipBackFilled size={30} onClick={handlePlayBarPrev} />
 
         <div className="relative w-6 h-6" onClick={togglePlayPause}>
           <TbPlayerPlayFilled
@@ -108,7 +110,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           />
         </div>
 
-        <TbPlayerSkipForwardFilled size={30} onClick={handlePlayNext} />
+        <TbPlayerSkipForwardFilled size={30} onClick={handlePlayBarNext} />
       </div>
     </div>
   );
