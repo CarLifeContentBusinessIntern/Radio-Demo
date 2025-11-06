@@ -16,10 +16,10 @@ export function useSection(sectionId: number) {
 
       if (error) {
         console.log('❌ 섹션 조회 실패 : ', error);
-        return;
+      } else {
+        setData(data);
       }
 
-      setData(data);
       setIsLoading(false);
     }
 

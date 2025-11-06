@@ -3,7 +3,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
-import type { SeriesEpisodesType } from '../types/episode';
+import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
 
 type ListViewPageProps = {
   type: 'channel' | 'timeslot' | 'series' | 'podcast';
@@ -40,7 +40,9 @@ function ListViewPage({ type }: ListViewPageProps) {
       }
 
       setEpisodes(data || []);
-      setPlaylist(data ? data.map((item) => item.episodes) : []);
+      setPlaylist(
+        data ? data.map((item) => item.episodes).filter((ep): ep is EpisodeType => !!ep) : []
+      );
       setIsLoading(false);
     }
 

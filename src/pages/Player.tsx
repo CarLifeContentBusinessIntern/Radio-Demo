@@ -53,8 +53,6 @@ function Player() {
         playEpisode(episodeId, false, false);
       }
     }
-
-    console.log('cd:', currentEpisodeData);
   }, [episodeId, playEpisode, currentEpisodeData]);
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -157,14 +155,7 @@ function Player() {
                 const subTitle = item.programs?.title;
 
                 return (
-                  <li
-                    key={item.id}
-                    className={`rounded-md cursor-pointer p-3 flex items-center`}
-                    // onClick={() => {
-                    //   playEpisode(item.id, false, currentEpisodeType === 'podcast' ? true : false);
-                    //   togglePlaylist();
-                    // }}
-                  >
+                  <li key={item.id} className={`rounded-md cursor-pointer p-3 flex items-center`}>
                     <div className="w-full">
                       <ListViewItem
                         id={item.id}
