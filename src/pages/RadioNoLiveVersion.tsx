@@ -15,7 +15,7 @@ function RadioNoLiveVersion() {
       <RadioMix />
 
       {/* 방송사별 라디오 */}
-      {/* <ChannelList /> */}
+      <ChannelList />
 
       {/* 시간별 몰아보기 */}
       {/* <TimeSlot /> */}
