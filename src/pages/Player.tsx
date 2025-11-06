@@ -34,7 +34,6 @@ function Player() {
     isLive,
     isPlaylsitOpen,
     togglePlayPause,
-    togglePlaylist,
     handlePlayNext,
     handlePlayPrev,
     handleSeek,
