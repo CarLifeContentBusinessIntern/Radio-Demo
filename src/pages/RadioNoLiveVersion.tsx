@@ -21,7 +21,7 @@ function RadioNoLiveVersion() {
       <TimeSlot />
 
       {/* 라디오 다큐 */}
-      {/* <DocumentaryList /> */}
+      <DocumentaryList />
 
       {/* 카테고리 */}
       {/* <RadioCategory /> */}
