@@ -6,15 +6,10 @@ import GridViewItem from './GridViewItem';
 
 export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemType) => {
   if (item.has_episodes) {
-    if (item.type === 'series') {
-      navigate(`/episodes/series/${item.id}`, {
-        state: { isPodcast: true, isRound: false, title: item.title },
-      });
-    } else {
-      navigate(`/episodes/themes/${item.id}`, {
-        state: { isPodcast: true, isRound: false, title: item.title },
-      });
-    }
+    const pathSegment = item.type === 'series' ? 'series' : 'themes';
+    navigate(`/episodes/${pathSegment}/${item.id}`, {
+      state: { isPodcast: true, isRound: false, title: item.title },
+    });
   } else {
     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
   }

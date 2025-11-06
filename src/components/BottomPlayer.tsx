@@ -58,10 +58,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   if (!hasBeenActivated) return null;
 
-  const imageUrl =
-    currentEpisodeData?.radios?.img_url ||
-    currentEpisodeData?.imgUrl ||
-    currentEpisodeData?.pickle_podcasts?.img_url;
+  const imageUrl = currentEpisodeData?.img_url || currentEpisodeData?.programs?.img_url;
 
   return (
     <div
@@ -87,8 +84,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
         <p className="text-[28px] truncate">
           {currentEpisodeType === 'podcast'
-            ? `${currentEpisodeData?.pickle_podcasts?.title} ${currentEpisodeData?.date}`
-            : `${currentEpisodeData?.radios?.channels?.broadcasting} ${currentEpisodeData?.radios?.channels?.channel}`}
+            ? `${currentEpisodeData?.programs?.title} ${currentEpisodeData?.date}`
+            : `${currentEpisodeData?.programs?.broadcastings?.title} ${currentEpisodeData?.programs?.broadcastings?.channel}`}
         </p>
       </div>
 

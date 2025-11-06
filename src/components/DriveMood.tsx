@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { usePickleSeries } from '../hooks/usePickleSeries';
+import { useSection } from '../hooks/useSection';
 import GridViewItem from './GridViewItem';
 import { handleClickSeries } from './PicklePick';
 
 function DriveMood() {
   const navigate = useNavigate();
-  const { data: themes, isLoading } = usePickleSeries(3, 'DriveMood');
+  const { data: sectionData, isLoading } = useSection(3);
 
   return (
     <>
@@ -21,12 +21,12 @@ function DriveMood() {
           ? Array.from({ length: 4 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
             ))
-          : themes.map((item) => (
+          : sectionData.map((item) => (
               <GridViewItem
                 key={item.id}
-                title={item.series_name}
+                title={item.title}
                 subTitle={item.subtitle}
-                img={item.img_src ?? ''}
+                img={item.img_url}
                 onClick={() => handleClickSeries(navigate, item)}
               />
             ))}

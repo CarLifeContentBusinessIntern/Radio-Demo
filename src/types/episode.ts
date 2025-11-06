@@ -13,3 +13,12 @@ export type EpisodeType = {
   order_recent: number;
   programs?: ProgramType;
 };
+
+export type SeriesEpisodesType = {
+  id: number;
+  series_id: number;
+  episode_id: number;
+  order: number;
+  created_at: string;
+  episodes?: EpisodeType;
+};
