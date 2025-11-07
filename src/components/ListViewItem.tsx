@@ -101,6 +101,7 @@ function ListViewItem({
             });
           } else {
             navigate(`/player/${id}`, {
+              replace: isPlayer ? true : false,
               state: { isLive: false, playlist: playlist },
             });
           }

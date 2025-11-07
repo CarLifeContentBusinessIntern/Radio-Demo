@@ -149,7 +149,6 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {playlist.map((item: EpisodeType) => {
                 const isActive = currentEpisodeId === item.id;
-                // const isChannel = playlistType === 'RadioType';
                 const imageUrl = item.img_url || item.programs?.img_url;
                 const subTitle = item.programs?.title;
 
