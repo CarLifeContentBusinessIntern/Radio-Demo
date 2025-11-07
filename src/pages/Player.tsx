@@ -164,7 +164,7 @@ function Player() {
                         title={isLive ? item.programs?.title : item.title}
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={isLive ? (isActive ? (item.duration ?? '') : '') : ''}
+                        totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
                         date={isLive ? '' : item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}

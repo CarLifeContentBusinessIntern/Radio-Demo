@@ -33,7 +33,19 @@ function LiveRadio() {
           if (program.episodes && program.episodes.length > 0) {
             acc.push(program.episodes[0]);
           } else {
-            acc.push({ audio_file: null, programs: program });
+            acc.push({
+              id: null,
+              title: null,
+              img_url: null,
+              audio_file: null,
+              date: null,
+              duration: null,
+              type: 'radio',
+              created_at: null,
+              program_id: null,
+              order_recent: null,
+              programs: program,
+            });
           }
           return acc;
         }, []);
