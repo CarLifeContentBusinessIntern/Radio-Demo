@@ -63,7 +63,7 @@ function Layout({
     <main
       ref={contentRef}
       className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${
-        paddingB ? 'pb-[126px]' : ''
+        paddingB ? 'pb-[160px]' : ''
       } ${paddingX ? 'px-[33px]' : ''} `}
     >
       <Outlet />
