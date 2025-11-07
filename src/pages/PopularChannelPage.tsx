@@ -38,7 +38,7 @@ function PopularChannelPage() {
       if (error) {
         console.error('Supabase 연결 실패:', error);
       } else {
-        setPopularPrograms(data);
+        setPopularPrograms(data || []);
       }
       setIsLoading(false);
     };
@@ -53,29 +53,35 @@ function PopularChannelPage() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
             ))
-          : popularPrograms.map((item) => (
-              <GridViewItem
-                key={item.programs.id}
-                isLoading={false}
-                title={item.programs.title}
-                subTitle={`${item.programs.type === 'podcast' ? item.programs.subtitle : `${item.programs.broadcastings?.title} ${item.programs.broadcastings?.channel}`}`}
-                img={item.programs.img_url}
-                isRounded={true}
-                onClick={() => {
-                  const firstEpisodeId = item.programs.episodes?.[0]?.id;
-                  if (
-                    firstEpisodeId !== undefined &&
-                    item.programs.episodes?.[0]?.audio_file !== null
-                  ) {
-                    navigate(`/player/${firstEpisodeId}`, {
-                      state: { isLive: false, playlist: item.programs.episodes },
-                    });
-                  } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
-                  }
-                }}
-              />
-            ))}
+          : popularPrograms.map((item) => {
+              const subTitle =
+                item.programs.type === 'podcast'
+                  ? item.programs.subtitle
+                  : `${item.programs.broadcastings?.title} ${item.programs.broadcastings?.channel}`;
+              return (
+                <GridViewItem
+                  key={item.programs.id}
+                  isLoading={false}
+                  title={item.programs.title}
+                  subTitle={subTitle}
+                  img={item.programs.img_url}
+                  isRounded={true}
+                  onClick={() => {
+                    const firstEpisodeId = item.programs.episodes?.[0]?.id;
+                    if (
+                      firstEpisodeId !== undefined &&
+                      item.programs.episodes?.[0]?.audio_file !== null
+                    ) {
+                      navigate(`/player/${firstEpisodeId}`, {
+                        state: { isLive: false, playlist: item.programs.episodes },
+                      });
+                    } else {
+                      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
+                    }
+                  }}
+                />
+              );
+            })}
       </div>
     </div>
   );
