@@ -120,16 +120,6 @@ function AppRoutes() {
       </Route>
 
       <Route
-        element={
-          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
-        }
-      >
-        <Route element={<PlayerLayout />}>
-          <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
-        </Route>
-      </Route>
-
-      <Route
         element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
