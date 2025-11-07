@@ -56,7 +56,7 @@ function GridViewPage() {
                 onClick={() => {
                   const firstEpisodeId = item.episodes?.[0]?.id;
                   if (firstEpisodeId !== undefined && item.episodes?.[0]?.audio_file !== null) {
-                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item } });
+                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item.episodes } });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }

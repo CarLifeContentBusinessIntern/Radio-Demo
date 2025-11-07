@@ -25,7 +25,6 @@ function PopularRadio() {
         `
       )
       .eq('theme_id', 1);
-    // .order('title', { referencedTable: 'radios.episodes', ascending: false });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -64,8 +63,9 @@ function PopularRadio() {
                   const firstEpisode = item.programs.episodes?.[0];
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
+                    console.log(item.programs.episodes);
                     navigate(`/player/${firstEpisode.id}`, {
-                      state: { playlist: item.programs },
+                      state: { playlist: item.programs.episodes },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
