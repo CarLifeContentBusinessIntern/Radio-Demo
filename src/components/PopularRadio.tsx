@@ -39,10 +39,6 @@ function PopularRadio() {
     fetchPopularRadios();
   }, []);
 
-  // useEffect(() => {
-  //   console.log('dta', popularRadios);
-  // });
-
   const navigate = useNavigate();
 
   return (
