@@ -130,15 +130,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setState((prev) => ({ ...prev, isLoading: false }));
     };
 
-    const handlePlaying = () => {
-      setState((prev) => ({ ...prev, isLoading: false }));
-    };
-
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
-    audio.addEventListener('playing', handlePlaying);
+    audio.addEventListener('playing', handleCanPlay);
 
     return () => {
       audio.pause();
@@ -146,7 +142,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
-      audio.removeEventListener('playing', handlePlaying);
+      audio.removeEventListener('playing', handleCanPlay);
 
       audio.src = '';
     };
@@ -201,7 +197,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         const newDuration = getEpisodeDuration(episode);
 
         setState((prevState) => {
-          if (prevState.currentEpisodeId !== id) {
+          const isNewEpisode = prevState.currentEpisodeId !== id;
+
+          if (isNewEpisode) {
             return {
               ...prevState,
               currentEpisodeId: id,

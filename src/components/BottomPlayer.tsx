@@ -76,11 +76,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
       <div className="flex-shrink-0">
         {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={title}
-            className={`w-24 h-24 ${currentEpisodeData?.type === 'radio' ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
-          />
+          <img src={imageUrl} alt={title} className={`w-24 h-24 rounded-[11px] object-cover`} />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>
         )}
@@ -100,7 +96,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
         <TbPlayerSkipBackFilled size={30} onClick={handlePlayBarPrev} />
 
-        <div className="relative w-6 h-6" onClick={togglePlayPause}>
+        <button
+          className="relative w-6 h-6 disabled:cursor-not-allowed"
+          onClick={togglePlayPause}
+          disabled={isLoading}
+        >
           {isLoading ? (
             <AiOutlineLoading size={30} className="animate-spin" />
           ) : isPlaying ? (
@@ -108,7 +108,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           ) : (
             <TbPlayerPlayFilled size={30} />
           )}
-        </div>
+        </button>
 
         <TbPlayerSkipForwardFilled size={30} onClick={handlePlayBarNext} />
       </div>
