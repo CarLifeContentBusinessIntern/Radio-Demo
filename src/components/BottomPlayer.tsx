@@ -77,7 +77,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           <img
             src={imageUrl}
             alt={title}
-            className={`w-24 h-24 ${currentEpisodeData.type === 'radio' ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
+            className={`w-24 h-24 ${currentEpisodeData?.type === 'radio' ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
           />
         ) : (
           <div className="w-24 h-24 rounded-md bg-gray-400"></div>

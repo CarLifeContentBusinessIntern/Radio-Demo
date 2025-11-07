@@ -21,7 +21,6 @@ function RecentPage() {
         return;
       }
 
-      console.log(data);
       const extractedEpisodes: EpisodeType[] = data
         .map((item: SeriesEpisodesType) => item.episodes)
         .filter((episode): episode is EpisodeType => episode !== null && episode !== undefined);
