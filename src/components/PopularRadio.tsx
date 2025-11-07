@@ -64,7 +64,6 @@ function PopularRadio() {
                   const firstEpisode = item.programs.episodes?.[0];
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
-                    console.log(item.programs.episodes);
                     navigate(`/player/${firstEpisode.id}`, {
                       state: { playlist: item.programs.episodes },
                     });
