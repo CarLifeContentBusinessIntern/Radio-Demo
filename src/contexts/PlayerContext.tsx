@@ -229,7 +229,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else {
               navigate(`/player/${nextEpisode.id}`, {
                 replace: true,
-                state: { isLive: false, playlist: activePlaylist },
+                state: { isLive: state.isLive, playlist: activePlaylist },
               });
             }
           } else {

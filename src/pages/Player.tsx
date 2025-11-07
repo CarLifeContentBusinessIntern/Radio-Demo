@@ -21,6 +21,7 @@ function Player() {
   const location = useLocation();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
+  const liveStatus = location.state?.isLive;
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
 
@@ -49,12 +50,12 @@ function Player() {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
       const isPodcast = episodeToPlay?.type === 'podcast';
-      playEpisode(episodeId, false, isPodcast);
+      playEpisode(episodeId, liveStatus, isPodcast);
       setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, playlist, isLive, setPlaylist]);
+  }, [episodeId, playEpisode, playlist, isLive, setPlaylist, liveStatus]);
 
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progressPercent = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
   const unplayedColor = '#ffffff';
   const sliderStyle = useMemo(
@@ -149,9 +150,10 @@ function Player() {
             <ul className="flex flex-col gap-1">
               {playlist.map((item: EpisodeType) => {
                 const isActive = currentEpisodeId === item.id;
-                // const isChannel = playlistType === 'RadioType';
                 const imageUrl = item.img_url || item.programs?.img_url;
-                const subTitle = item.programs?.title;
+                const subTitle = isLive
+                  ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
+                  : item.programs?.title;
 
                 return (
                   <li key={item.id} className={`rounded-md cursor-pointer p-3 flex items-center`}>
@@ -159,11 +161,11 @@ function Player() {
                       <ListViewItem
                         id={item.id}
                         imgUrl={imageUrl}
-                        title={item.title}
+                        title={isLive ? item.programs?.title : item.title}
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={isActive ? (item.duration ?? '') : ''}
-                        date={item.date}
+                        totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
+                        date={isLive ? '' : item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}
@@ -198,7 +200,7 @@ function Player() {
 
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
             <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
-              {currentEpisodeData.title}
+              {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast'
@@ -239,6 +241,7 @@ function Player() {
               </button>
             </div>
           </div>
+
           <div className="flex items-center justify-between gap-16 z-20">
             <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
               <img src={speedIcon} />

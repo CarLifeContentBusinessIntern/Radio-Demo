@@ -43,14 +43,13 @@ function ListViewItem({
     duration,
     currentEpisodeData,
     currentEpisodeId,
-    // activePlaylist,
+    isLive,
     formatTime,
     setPlaylist,
   } = usePlayer();
 
-  const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const isHourDisplay = duration >= 3600;
-
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
 
@@ -102,7 +101,7 @@ function ListViewItem({
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: false, playlist: playlist },
+              state: { isLive: isLive, playlist: playlist },
             });
           }
         } else {
@@ -129,7 +128,9 @@ function ListViewItem({
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">
-            {[subTitle, date, formatTimeString(totalTime)].filter(Boolean).join(' · ')}
+            {[subTitle, date, formatTimeString(isLive ? '' : totalTime)]
+              .filter(Boolean)
+              .join(' · ')}
           </div>
         </div>
         {hasBeenActivated && currentEpisodeId === id && (
@@ -143,7 +144,7 @@ function ListViewItem({
       </div>
 
       <div className="hidden md:block">
-        {(!isPodcast || isPlayer) && isPlayingEpisode && (
+        {(!isPodcast || isPlayer) && isPlayingEpisode && !isLive && (
           <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
             {playTime || formatTime(currentTime, isHourDisplay)}
             {totalTime ? ` / ${totalTime}` : ``}

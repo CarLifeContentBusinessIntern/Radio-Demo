@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import GridViewItem from '../components/GridViewItem';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
+import { usePlayer } from '../contexts/PlayerContext';
 
 function GridViewPage() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ function GridViewPage() {
   const { id } = useParams();
   const [programs, setPrograms] = useState<ProgramType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isLive } = usePlayer();
 
   // 라디오 조회
   useEffect(() => {
@@ -23,7 +25,7 @@ function GridViewPage() {
 
       const { data, error } = await supabase
         .from('programs')
-        .select('*, broadcastings(*), episodes(*)')
+        .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
         .order(filterProgramsOrder, { ascending: true })
         .eq(filterColumn, id);
 
@@ -56,7 +58,9 @@ function GridViewPage() {
                 onClick={() => {
                   const firstEpisodeId = item.episodes?.[0]?.id;
                   if (firstEpisodeId !== undefined && item.episodes?.[0]?.audio_file !== null) {
-                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item.episodes } });
+                    navigate(`/player/${firstEpisodeId}`, {
+                      state: { isLive: isLive, playlist: item.episodes },
+                    });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }

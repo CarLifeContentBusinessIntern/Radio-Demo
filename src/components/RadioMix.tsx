@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useSection } from '../hooks/useSection';
-import CircleViewItem from './CircleViewItem';
 import { supabase } from '../lib/supabaseClient';
 import type { SectionItemType } from '../types/section';
+import CircleViewItem from './CircleViewItem';
 
 function RadioMix() {
   const navigate = useNavigate();
