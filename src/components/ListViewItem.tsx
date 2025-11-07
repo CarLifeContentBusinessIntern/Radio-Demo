@@ -32,6 +32,7 @@ function ListViewItem({
   totalTime,
   date,
   hasAudio,
+  playlist,
   isRound,
   isPlayer = false,
 }: ListViewItemProps) {
@@ -42,8 +43,9 @@ function ListViewItem({
     duration,
     currentEpisodeData,
     currentEpisodeId,
-    activePlaylist,
+    // activePlaylist,
     formatTime,
+    setPlaylist,
   } = usePlayer();
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -86,21 +88,26 @@ function ListViewItem({
   return (
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
-      onClick={() =>
-        hasAudio
-          ? isPodcast
-            ? navigate(`/player/podcasts/${id}`, {
-                replace: isPlayer ? true : false,
-                state: {
-                  isLive: false,
-                  playlist: activePlaylist,
-                },
-              })
-            : navigate(`/player/${id}`, {
-                state: { isLive: false, playlist: activePlaylist },
-              })
-          : toast.error(`콘텐츠 준비 중입니다`, { toastId: id })
-      }
+      onClick={() => {
+        setPlaylist(playlist ?? []);
+        if (hasAudio) {
+          if (isPodcast) {
+            navigate(`/player/podcasts/${id}`, {
+              replace: isPlayer ? true : false,
+              state: {
+                isLive: false,
+                playlist: playlist,
+              },
+            });
+          } else {
+            navigate(`/player/${id}`, {
+              state: { isLive: false, playlist: playlist },
+            });
+          }
+        } else {
+          toast.error(`콘텐츠 준비 중입니다`, { toastId: id });
+        }
+      }}
     >
       <div className="flex-shrink-0">
         {imgUrl ? (

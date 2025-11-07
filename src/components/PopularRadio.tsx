@@ -20,7 +20,7 @@ function PopularRadio() {
       .from('themes_programs')
       .select(
         `*,
-        programs(*,broadcastings(*), episodes(*)),
+        programs(*,broadcastings(*), episodes(*, programs(*, broadcastings(*)))),
         themes!inner(*)
         `
       )

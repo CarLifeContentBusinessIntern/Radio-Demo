@@ -23,7 +23,7 @@ function MonthlyPickle() {
             ))
           : sectionData.map((item) => (
               <CircleViewItem
-                key={item.id}
+                key={`${item.type} - ${item.id}`}
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}

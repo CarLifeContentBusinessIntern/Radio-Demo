@@ -34,26 +34,25 @@ function Player() {
     isLive,
     isPlaylsitOpen,
     togglePlayPause,
-    togglePlaylist,
     handlePlayNext,
     handlePlayPrev,
     handleSeek,
     handleSkip,
     formatTime,
     playEpisode,
+    setPlaylist,
   } = usePlayer();
 
   const episodeId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
-    if (episodeId !== null) {
-      if (currentEpisodeData?.type === 'podcast') {
-        playEpisode(episodeId, false, true);
-      } else {
-        playEpisode(episodeId, false, false);
-      }
+    if (episodeId !== null && playlist) {
+      const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
+      const isPodcast = episodeToPlay?.type === 'podcast';
+      playEpisode(episodeId, false, isPodcast);
+      setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, currentEpisodeData]);
+  }, [episodeId, playEpisode, playlist, isLive, setPlaylist]);
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
@@ -204,7 +203,9 @@ function Player() {
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast'
                 ? `${currentEpisodeData.programs?.title} · ${currentEpisodeData.date}`
-                : `${currentEpisodeData.programs?.broadcastings?.title} ${currentEpisodeData.programs?.broadcastings?.channel}`}
+                : `${currentEpisodeData.programs?.broadcastings?.title} ${
+                    currentEpisodeData.programs?.broadcastings?.channel
+                  }`}
             </p>
             <p className="text-lg md:text-[32px] text-[#A6A6A9]">
               {isLive
