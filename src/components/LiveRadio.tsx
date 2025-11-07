@@ -1,22 +1,22 @@
 import { useEffect, useState } from 'react';
-import type { LiveRadioType } from '../types/radio';
 import GridViewItem from './GridViewItem';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabaseClient';
 import { toast } from 'react-toastify';
+import type { ProgramType } from '../types/program';
 
 function LiveRadio() {
   const navigate = useNavigate();
-  const [liveData, setLiveData] = useState<LiveRadioType[]>([]);
+  const [liveData, setLiveData] = useState<ProgramType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchLiveData() {
       const { data: liveRadioData, error: liveError } = await supabase
-        .from('radios')
-        .select('*, channels(*)')
-        .eq('is_live', true)
-        .order('live_no', { ascending: true });
+        .from('programs')
+        .select('*, broadcastings(*)')
+        .eq('is_live', true);
+      // .order('live_no', { ascending: true });
 
       if (liveError) {
         console.log('❌ Error fetching live data:', liveError.message);
@@ -47,11 +47,11 @@ function LiveRadio() {
             ))
           : liveData.map((item, index) => (
               <GridViewItem
-                key={`${item.live_episode_id}-${index}`}
+                key={`${item.id}-${index}`}
                 title={item.title}
-                subTitle={`${item.channels.broadcasting} ${item.channels.channel}`}
+                subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => handleLiveClick(item.live_episode_id)}
+                onClick={() => handleLiveClick(item.id)}
               />
             ))}
         {/* <GridViewItem title="더보기" subTitle="더보기" /> */}

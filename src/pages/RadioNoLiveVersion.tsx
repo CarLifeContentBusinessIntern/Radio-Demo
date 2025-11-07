@@ -1,4 +1,4 @@
-import RadioCategory from '../components/RadioCategory';
+import Category from '../components/Category';
 import ChannelList from '../components/ChannelList';
 import DocumentaryList from '../components/DocumentaryList';
 import PopularRadio from '../components/PopularRadio';
@@ -18,13 +18,13 @@ function RadioNoLiveVersion() {
       <ChannelList />
 
       {/* 시간별 몰아보기 */}
-      {/* <TimeSlot /> */}
+      <TimeSlot />
 
       {/* 라디오 다큐 */}
-      {/* <DocumentaryList /> */}
+      <DocumentaryList />
 
       {/* 카테고리 */}
-      {/* <RadioCategory /> */}
+      <Category title={true} type="radio" />
     </div>
   );
 }
