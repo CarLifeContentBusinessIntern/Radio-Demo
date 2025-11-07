@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { PlayerProvider } from './contexts/PlayerContext.tsx';
+import { PlayerProvider, usePlayer } from './contexts/PlayerContext.tsx';
 import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
@@ -17,7 +17,20 @@ import SettingPage from './pages/SettingPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
-  const { isRadioVersion } = useVersion();
+  const { isRadioVersion, isLiveVersion } = useVersion();
+  const { resetPlayer } = usePlayer();
+
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    resetPlayer();
+  }, [isRadioVersion, isLiveVersion, resetPlayer]);
+
   useEffect(() => {
     toast.dismiss();
   }, [location.pathname]);

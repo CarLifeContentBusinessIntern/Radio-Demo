@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
-import type { EpisodeType } from '../types/episode';
+import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
 
 function RecentPage() {
   const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
@@ -10,16 +10,22 @@ function RecentPage() {
   useEffect(() => {
     async function fetchRecentData() {
       const { data, error } = await supabase
-        .from('episodes')
-        .select('*, programs(*)')
-        .not('order_recent', 'is', null)
-        .order('order_recent', { ascending: true });
+        .from('series_episodes')
+        .select('*, episodes(*, programs(*, broadcastings(*)))')
+        .eq('series_id', 21)
+        .order('order', { ascending: true });
 
       if (error) {
         console.log('❌ 최근 청취 조회 실패 :', error);
+        setIsLoading(false);
+        return;
       }
 
-      setRecentEpisodes(data ?? []);
+      const extractedEpisodes: EpisodeType[] = data
+        .map((item: SeriesEpisodesType) => item.episodes)
+        .filter((episode): episode is EpisodeType => episode !== null && episode !== undefined);
+
+      setRecentEpisodes(extractedEpisodes);
       setIsLoading(false);
     }
 
@@ -37,7 +43,7 @@ function RecentPage() {
   }
 
   return (
-    <div className="flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-1 pr-11 pt-7">
       {recentEpisodes?.map((item) => {
         const subTitleText = item.programs?.title;
         const imgUrl = item.img_url ?? item.programs?.img_url;
@@ -53,7 +59,7 @@ function RecentPage() {
             date={item.date}
             hasAudio={!!item.audio_file}
             playlist={recentEpisodes}
-            isRound={false}
+            isRound={item.type === 'radio'}
           />
         );
       })}

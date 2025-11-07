@@ -27,6 +27,7 @@ interface PlayerState {
 interface PlayerContextType extends PlayerState {
   currentEpisodeData: EpisodeType | undefined;
   currentAudioUrl: string | null;
+  activePlaylist: EpisodeType[];
   togglePlayPause: () => void;
   togglePlaylist: () => void;
   playEpisode: (id: number, liveStatus?: boolean, isPodcast?: boolean) => void;
@@ -38,10 +39,10 @@ interface PlayerContextType extends PlayerState {
   handlePlayPrev: () => void;
   handlePlayBarNext: () => void;
   handlePlayBarPrev: () => void;
-  activePlaylist: EpisodeType[];
+  resetPlayer: () => void;
 }
 
-const initialPlayerStae: PlayerState = {
+const initialPlayerState: PlayerState = {
   currentEpisodeId: null,
   isPlaying: false,
   currentTime: 0,
@@ -63,7 +64,7 @@ export const usePlayer = () => {
 };
 
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
-  const [state, setState] = useState<PlayerState>(initialPlayerStae);
+  const [state, setState] = useState<PlayerState>(initialPlayerState);
   const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -318,6 +319,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  const resetPlayer = useCallback(() => {
+    setState(initialPlayerState);
+    setActivePlaylist([]);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.src = '';
+    }
+  }, []);
+
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
@@ -334,6 +344,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayPrev,
     handlePlayBarNext,
     handlePlayBarPrev,
+    resetPlayer,
   };
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
