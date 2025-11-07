@@ -71,7 +71,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchEpisodes() {
-      const { data, error } = await supabase.from('episodes').select('*, programs(*)');
+      const { data, error } = await supabase
+        .from('episodes')
+        .select('*, programs(*, broadcastings(*))');
 
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
@@ -136,10 +138,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (state.isPlaying) {
-          audioRef.current.play().catch((e) => {
-            console.error('Audio play failed', e);
-            setState((prev) => ({ ...prev, isPlaying: false }));
-          });
+          audioRef.current.play();
+          // .catch((e) => {
+          //   console.error('Audio play failed', e);
+          //   setState((prev) => ({ ...prev, isPlaying: false }));
+          // });
         } else {
           audioRef.current.pause();
         }
@@ -213,7 +216,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
-          playEpisode(nextEpisode.id, state.isLive, isPodcast);
 
           if (!isPlayBar) {
             if (isPodcast) {
@@ -230,6 +232,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                 state: { isLive: false, playlist: activePlaylist },
               });
             }
+          } else {
+            playEpisode(nextEpisode.id, state.isLive, isPodcast);
           }
           return;
         }

@@ -16,6 +16,7 @@ function ListViewPage({ type }: ListViewPageProps) {
   const { id } = useParams();
   const { setPlaylist } = usePlayer();
   const [episodes, setEpisodes] = useState<SeriesEpisodesType[]>([]);
+  const [currentPlaylist, setCurrentPlaylist] = useState<EpisodeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const typeToIdMap = {
@@ -41,6 +42,9 @@ function ListViewPage({ type }: ListViewPageProps) {
 
       setEpisodes(data || []);
       setPlaylist(
+        data ? data.map((item) => item.episodes).filter((ep): ep is EpisodeType => !!ep) : []
+      );
+      setCurrentPlaylist(
         data ? data.map((item) => item.episodes).filter((ep): ep is EpisodeType => !!ep) : []
       );
       setIsLoading(false);
@@ -83,6 +87,7 @@ function ListViewPage({ type }: ListViewPageProps) {
                 totalTime={item.episodes?.duration}
                 date={item.episodes?.date}
                 hasAudio={!!item.episodes?.audio_file}
+                playlist={currentPlaylist}
                 isRound={isRound ?? true}
               />
             );
