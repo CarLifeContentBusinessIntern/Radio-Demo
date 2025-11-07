@@ -1,20 +1,19 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { PlayerProvider } from './contexts/PlayerContext.tsx';
 import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
+import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
+import HomePage from './pages/HomePage.tsx';
 import ListViewPage from './pages/ListViewPage.tsx';
 import Player from './pages/Player.tsx';
+import Radio from './pages/Radio.tsx';
+import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
-import HomePage from './pages/HomePage.tsx';
-import Radio from './pages/Radio.tsx';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
-import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
-import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
-import RecentPage from './pages/RecentPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -116,16 +115,6 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="category-radio" element={<CategoryAndRadioPage />} />
-        </Route>
-      </Route>
-
-      <Route
-        element={
-          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
-        }
-      >
-        <Route element={<PlayerLayout />}>
-          <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
         </Route>
       </Route>
 
