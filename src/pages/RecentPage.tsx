@@ -67,7 +67,7 @@ function RecentPage() {
             date={item.date}
             hasAudio={!!item.audio_file}
             playlist={recentEpisodes}
-            isRound={item.type === 'radio'}
+            isRound={true}
           />
         );
       })}

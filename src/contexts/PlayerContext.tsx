@@ -22,6 +22,7 @@ interface PlayerState {
   isLive: boolean;
   isPlaylsitOpen: boolean;
   currentEpisodeType: 'radio' | 'podcast' | null;
+  isLoading: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -51,6 +52,7 @@ const initialPlayerState: PlayerState = {
   isLive: false,
   isPlaylsitOpen: false,
   currentEpisodeType: 'radio',
+  isLoading: false,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -120,13 +122,28 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setState((prev) => ({ ...prev, duration: audio.duration }));
     };
 
+    const handleWaiting = () => {
+      setState((prev) => ({ ...prev, isLoading: true }));
+    };
+
+    const handleCanPlay = () => {
+      setState((prev) => ({ ...prev, isLoading: false }));
+    };
+
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('waiting', handleWaiting);
+    audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('playing', handleCanPlay);
 
     return () => {
       audio.pause();
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('waiting', handleWaiting);
+      audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('playing', handleCanPlay);
+
       audio.src = '';
     };
   }, []);
@@ -179,17 +196,38 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (episode) {
         const newDuration = getEpisodeDuration(episode);
 
-        setState((prevState) => ({
-          ...prevState,
-          currentEpisodeId: id,
-          isPlaying: true,
-          currentTime: 0,
-          duration: newDuration,
-          hasBeenActivated: true,
-          isLive: liveStatus,
-          isPlaylsitOpen: false,
-          currentEpisodeType: type,
-        }));
+        setState((prevState) => {
+          const isNewEpisode = prevState.currentEpisodeId !== id;
+
+          if (isNewEpisode) {
+            return {
+              ...prevState,
+              currentEpisodeId: id,
+              isPlaying: true,
+              currentTime: 0,
+              duration: newDuration,
+              hasBeenActivated: true,
+              isLive: liveStatus,
+              isPlaylsitOpen: false,
+              currentEpisodeType: type,
+              isLoading: true,
+            };
+          }
+
+          if (prevState.isPlaying) {
+            return {
+              ...prevState,
+              isPlaylsitOpen: false,
+            };
+          }
+
+          return {
+            ...prevState,
+            isPlaying: true,
+            isPlaylsitOpen: false,
+            isLoading: true,
+          };
+        });
       }
     },
     [episodes]

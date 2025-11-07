@@ -15,6 +15,7 @@ import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 function Player() {
   const { id } = useParams();
@@ -33,6 +34,7 @@ function Player() {
     duration,
     isPlaying,
     isLive,
+    isLoading,
     isPlaylsitOpen,
     togglePlayPause,
     handlePlayNext,
@@ -209,7 +211,7 @@ function Player() {
                     currentEpisodeData.programs?.broadcastings?.channel
                   }`}
             </p>
-            <p className="text-lg md:text-[32px] text-[#A6A6A9]">
+            <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
               {isLive
                 ? 'LIVE'
                 : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
@@ -225,8 +227,8 @@ function Player() {
               max={duration}
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
-              disabled={isLive}
-              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600"
+              disabled={isLive || isLoading}
+              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLive ? 'invisible' : ''}`}
               style={sliderStyle}
             />
 
@@ -251,8 +253,14 @@ function Player() {
             <button onClick={handlePlayPrev}>
               <TbPlayerSkipBackFilled size={30} />
             </button>
-            <button onClick={togglePlayPause}>
-              {isPlaying ? <TbPlayerPauseFilled size={30} /> : <TbPlayerPlayFilled size={30} />}
+            <button onClick={togglePlayPause} disabled={isLoading}>
+              {isLoading ? (
+                <AiOutlineLoading size={30} className="animate-spin" />
+              ) : isPlaying ? (
+                <TbPlayerPauseFilled size={30} />
+              ) : (
+                <TbPlayerPlayFilled size={30} />
+              )}
             </button>
             <button onClick={handlePlayNext}>
               <TbPlayerSkipForwardFilled size={30} />
