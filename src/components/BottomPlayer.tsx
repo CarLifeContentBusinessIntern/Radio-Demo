@@ -81,7 +81,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       </div>
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        <p className="font-semibold truncate text-[32px]">{currentEpisodeData?.title}</p>
+        <p className="font-semibold truncate text-[32px]">
+          {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
+        </p>
         <p className="text-[28px] truncate">
           {currentEpisodeType === 'podcast'
             ? `${currentEpisodeData?.programs?.title} ${currentEpisodeData?.date}`
