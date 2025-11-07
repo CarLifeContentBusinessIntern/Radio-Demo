@@ -71,7 +71,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     async function fetchEpisodes() {
-      const { data, error } = await supabase.from('episodes').select('*, programs(*)');
+      const { data, error } = await supabase
+        .from('episodes')
+        .select('*, programs(*, broadcastings(*))');
 
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);

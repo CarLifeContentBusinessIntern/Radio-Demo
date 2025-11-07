@@ -20,12 +20,12 @@ function PopularRadio() {
       .from('themes_programs')
       .select(
         `*,
-        programs(*,broadcastings(*), episodes(*)),
+        programs(*,broadcastings(*), episodes(*, programs(*, broadcastings(*)))),
         themes!inner(*)
         `
       )
-      .eq('theme_id', 1);
-    // .order('title', { referencedTable: 'radios.episodes', ascending: false });
+      .eq('theme_id', 1)
+      .order('title', { referencedTable: 'programs.episodes', ascending: false });
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -38,6 +38,10 @@ function PopularRadio() {
   useEffect(() => {
     fetchPopularRadios();
   }, []);
+
+  // useEffect(() => {
+  //   console.log('dta', popularRadios);
+  // });
 
   const navigate = useNavigate();
 
@@ -65,7 +69,7 @@ function PopularRadio() {
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
                     navigate(`/player/${firstEpisode.id}`, {
-                      state: { playlist: item.programs },
+                      state: { playlist: item.programs.episodes },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
