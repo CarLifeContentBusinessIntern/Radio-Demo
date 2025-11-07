@@ -29,8 +29,8 @@ const HomeHeader = () => {
         : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
       {
         name: '인기채널',
-        path: '/curation/1',
-        state: { type: 'channel', title: '인기 채널' },
+        path: '/popular',
+        state: { title: '인기 채널' },
         icon: PopularIcon,
       },
       {

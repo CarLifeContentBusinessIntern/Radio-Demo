@@ -14,6 +14,7 @@ import Radio from './pages/Radio.tsx';
 import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
+import PopularChannelPage from './pages/PopularChannelPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -136,6 +137,14 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="/episodes/recent" element={<RecentPage />} />
+        </Route>
+      </Route>
+
+      <Route
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="/popular" element={<PopularChannelPage />} />
         </Route>
       </Route>
     </Routes>
