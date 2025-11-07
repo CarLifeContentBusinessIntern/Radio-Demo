@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import ListViewItem from '../components/ListViewItem';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
+import { useVersion } from '../contexts/VersionContext';
 
 function RecentPage() {
   const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { isRadioVersion } = useVersion();
 
   useEffect(() => {
     async function fetchRecentData() {
@@ -21,16 +24,21 @@ function RecentPage() {
         return;
       }
 
-      const extractedEpisodes: EpisodeType[] = data
+      const allEpisodes: EpisodeType[] = data
         .map((item: SeriesEpisodesType) => item.episodes)
         .filter((episode): episode is EpisodeType => episode !== null && episode !== undefined);
 
-      setRecentEpisodes(extractedEpisodes);
+      const finalEpisodes = isRadioVersion
+        ? allEpisodes
+        : allEpisodes.filter((episode) => episode.type === 'podcast');
+
+      setRecentEpisodes(finalEpisodes);
+
       setIsLoading(false);
     }
 
     fetchRecentData();
-  }, []);
+  }, [isRadioVersion]);
 
   if (isLoading) {
     return (
