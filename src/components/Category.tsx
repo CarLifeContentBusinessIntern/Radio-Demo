@@ -4,8 +4,14 @@ import { supabase } from '../lib/supabaseClient';
 import GridViewItem from './GridViewItem';
 import { toast } from 'react-toastify';
 import type { CategoryType } from '../types/category';
+import CircleViewItem from './CircleViewItem';
 
-function Category({ title }: { title: boolean }) {
+interface CategoryInterface {
+  title: boolean;
+  type: 'podcast' | 'radio';
+}
+
+function Category({ title, type }: CategoryInterface) {
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -13,8 +19,9 @@ function Category({ title }: { title: boolean }) {
   //카테고리 조회
   async function fetchCategories() {
     const { data, error } = await supabase
-      .from('pickle_categories')
-      .select('*, pickle_podcasts(*)')
+      .from('categories')
+      .select('*, programs(*)')
+      .eq('type', type)
       .order('order', { ascending: true });
 
     if (error) {
@@ -27,7 +34,9 @@ function Category({ title }: { title: boolean }) {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [type]);
+
+  const ItemComponent = type === 'radio' ? CircleViewItem : GridViewItem;
 
   return (
     <>
@@ -35,18 +44,18 @@ function Category({ title }: { title: boolean }) {
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
-              <GridViewItem isLoading={true} key={index} />
+              <ItemComponent isLoading={true} key={index} />
             ))
           : categories.map((item) => (
-              <GridViewItem
+              <ItemComponent
                 key={item.id}
                 isLoading={false}
                 title={item.title}
                 img={item.img_url}
                 onClick={() => {
-                  if (item.pickle_podcasts?.length > 0) {
-                    navigate(`/pickle/curation/${item.id}`, {
-                      state: { title: item.title },
+                  if (item.programs?.length > 0) {
+                    navigate(`/curation/${item.id}`, {
+                      state: { title: item.title, type: `${type}_category` },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import GridViewItem from './GridViewItem';
-import type { RadioType } from '../types/radio';
-import type { ThemeType } from '../types/theme';
 import { toast } from 'react-toastify';
+import { supabase } from '../lib/supabaseClient';
+import type { ProgramType } from '../types/program';
+import type { ThemeType } from '../types/theme';
+import GridViewItem from './GridViewItem';
 
 interface DocumentaryInterface {
-  radios: RadioType;
+  programs: ProgramType;
   themes: ThemeType;
 }
 
@@ -17,14 +17,9 @@ function DocumentaryList() {
   //인기 라디오 조회
   async function fetchDoucumentaries() {
     const { data, error } = await supabase
-      .from('radio_themes')
-      .select(
-        `
-      radios(*, channels(*)),
-      themes!inner(*)
-    `
-      )
-      .eq('themes.id', 6);
+      .from('themes_programs')
+      .select('programs(*, broadcastings(*)),themes!inner(*)')
+      .eq('theme_id', 7);
 
     if (error) {
       console.error('Supabase 연결 실패:', error);
@@ -48,11 +43,11 @@ function DocumentaryList() {
             ))
           : documentaries.map((item) => (
               <GridViewItem
-                key={item.radios.id}
-                title={item.radios.title}
-                subTitle={`${item.radios.channels?.broadcasting} ${item.radios.channels?.channel ? item.radios.channels?.channel : ''}`}
-                img={item.radios.img_url}
-                onClick={() => toast.error(`콘텐츠 준비 중입니다`, { toastId: item.radios.id })}
+                key={item.programs.id}
+                title={item.programs.title}
+                subTitle={`${item.programs.broadcastings?.title} ${item.programs.broadcastings?.channel ? item.programs.broadcastings?.channel : ''}`}
+                img={item.programs.img_url}
+                onClick={() => toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id })}
               />
             ))}
       </div>

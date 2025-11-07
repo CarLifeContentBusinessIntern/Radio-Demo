@@ -1,42 +1,43 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import GridViewItem from '../components/GridViewItem';
 import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import type { RadioType } from '../types/radio';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import GridViewItem from '../components/GridViewItem';
+import { supabase } from '../lib/supabaseClient';
+import type { ProgramType } from '../types/program';
+import { usePlayer } from '../contexts/PlayerContext';
 
 function GridViewPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { type } = location.state || {};
   const { id } = useParams();
-  const [radios, setRadios] = useState<RadioType[]>([]);
+  const [programs, setPrograms] = useState<ProgramType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { isLive } = usePlayer();
 
-  // 라디오 조회
+  // 프로그램 조회
   useEffect(() => {
-    const fetchRadios = async () => {
+    const fetchPrograms = async () => {
       if (!id || !type) return;
 
-      const filterColumn = type === 'channel' ? 'channel_id' : 'category_id';
-      const filterRadiosOrder = type === 'channel' ? 'order_broadcasting' : 'order_category';
+      const filterColumn = type === 'channel' ? 'broadcasting_id' : 'category_id';
+      const filterProgramsOrder = type === 'channel' ? 'order_broadcasting' : 'order_category';
 
       const { data, error } = await supabase
-        .from('radios')
-        .select('*, channels(*), episodes(*)')
-        .order(filterRadiosOrder, { ascending: true })
-        .order('title', { referencedTable: 'episodes', ascending: false })
+        .from('programs')
+        .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
+        .order(filterProgramsOrder, { ascending: true })
         .eq(filterColumn, id);
 
       if (error) {
         console.error('Supabase 연결 실패:', error);
       } else {
-        setRadios(data);
+        setPrograms(data);
       }
       setIsLoading(false);
     };
 
-    fetchRadios();
+    fetchPrograms();
   }, [id, type]);
 
   return (
@@ -46,21 +47,20 @@ function GridViewPage() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
             ))
-          : radios.map((item) => (
+          : programs.map((item) => (
               <GridViewItem
                 key={item.id}
                 isLoading={false}
                 title={item.title}
-                subTitle={
-                  type === 'channel' || !item.channels
-                    ? item.time_slot
-                    : `${item.channels.broadcasting} ${item.channels.channel}`
-                }
+                subTitle={item.subtitle}
                 img={item.img_url}
+                isRounded={type !== 'podcast_category'}
                 onClick={() => {
                   const firstEpisodeId = item.episodes?.[0]?.id;
                   if (firstEpisodeId !== undefined && item.episodes?.[0]?.audio_file !== null) {
-                    navigate(`/player/${firstEpisodeId}`, { state: { playlist: item } });
+                    navigate(`/player/${firstEpisodeId}`, {
+                      state: { isLive: isLive, playlist: item.episodes },
+                    });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }

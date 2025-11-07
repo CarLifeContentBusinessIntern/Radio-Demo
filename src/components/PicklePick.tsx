@@ -1,13 +1,14 @@
 import { useNavigate, type NavigateFunction } from 'react-router-dom';
-import { usePickleSeries } from '../hooks/usePickleSeries';
-import GridViewItem from './GridViewItem';
 import { toast } from 'react-toastify';
-import type { PickleSeries } from '../types/pickle';
+import { useSection } from '../hooks/useSection';
+import type { SectionItemType } from '../types/section';
+import GridViewItem from './GridViewItem';
 
-export const handleClickSeries = (navigate: NavigateFunction, item: PickleSeries) => {
-  if (item.pickle_episodes?.length) {
-    navigate(`/episodes/series/${item.id}`, {
-      state: { isPickle: true, isRound: false, title: item.series_name },
+export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemType) => {
+  if (item.has_episodes) {
+    const pathSegment = item.type === 'series' ? 'series' : 'themes';
+    navigate(`/episodes/${pathSegment}/${item.id}`, {
+      state: { isPodcast: true, isRound: false, title: item.title },
     });
   } else {
     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
@@ -16,7 +17,7 @@ export const handleClickSeries = (navigate: NavigateFunction, item: PickleSeries
 
 function PicklePick() {
   const navigate = useNavigate();
-  const { data: themes, isLoading } = usePickleSeries(1, 'Pickle Pick');
+  const { data: sectionData, isLoading } = useSection(1);
 
   return (
     <>
@@ -32,12 +33,12 @@ function PicklePick() {
           ? Array.from({ length: 4 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
             ))
-          : themes.map((item) => (
+          : sectionData.map((item) => (
               <GridViewItem
-                key={item.id}
-                title={item.series_name}
+                key={`${item.type} - ${item.id}`}
+                title={item.title}
                 subTitle={item.subtitle}
-                img={item.img_src ?? ''}
+                img={item.img_url}
                 onClick={() => handleClickSeries(navigate, item)}
               />
             ))}

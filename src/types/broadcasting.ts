@@ -1,9 +1,9 @@
-export type ChannelType = {
+export type BroadcastingType = {
   id: number;
   title: string;
   channel: string;
   frequency: string;
   img_url: string;
   order: number;
-  programs: { count: number }[];
+  created_at: string;
 };

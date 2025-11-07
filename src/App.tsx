@@ -1,24 +1,37 @@
+import { useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
-import { PlayerProvider } from './contexts/PlayerContext.tsx';
+import { toast } from 'react-toastify';
+import { PlayerProvider, usePlayer } from './contexts/PlayerContext.tsx';
 import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
+import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
+import HomePage from './pages/HomePage.tsx';
 import ListViewPage from './pages/ListViewPage.tsx';
 import Player from './pages/Player.tsx';
+import Radio from './pages/Radio.tsx';
+import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
-import HomePage from './pages/HomePage.tsx';
-import Radio from './pages/Radio.tsx';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
-import PickleGridViewPage from './pages/PickleGridViewPage.tsx';
-import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
-import RecentPage from './pages/RecentPage.tsx';
+import PopularChannelPage from './pages/PopularChannelPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
-  const { isRadioVersion } = useVersion();
+  const { isRadioVersion, isLiveVersion } = useVersion();
+  const { resetPlayer } = usePlayer();
+
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    resetPlayer();
+  }, [isRadioVersion, isLiveVersion, resetPlayer]);
+
   useEffect(() => {
     toast.dismiss();
   }, [location.pathname]);
@@ -120,12 +133,10 @@ function AppRoutes() {
       </Route>
 
       <Route
-        element={
-          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
-        }
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="pickle/curation/:id" element={<PickleGridViewPage />} />
+          <Route path="/episodes/recent" element={<RecentPage />} />
         </Route>
       </Route>
 
@@ -133,7 +144,7 @@ function AppRoutes() {
         element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="/episodes/recent" element={<RecentPage />} />
+          <Route path="/popular" element={<PopularChannelPage />} />
         </Route>
       </Route>
     </Routes>

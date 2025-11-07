@@ -14,19 +14,17 @@ import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import ListViewItem from '../components/ListViewItem';
 import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
-import type { Episode } from '../types/episode';
-import type { RadioType } from '../types/radio';
-import type { MixThemeType } from '../types/theme';
+import type { EpisodeType } from '../types/episode';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 function Player() {
   const { id } = useParams();
   const location = useLocation();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
-  const isPickle = location.state?.isPickle;
+  const liveStatus = location.state?.isLive;
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-  const [finalPlaylist, setFinalPlaylist] = useState<Episode[]>([]);
 
   const {
     currentEpisodeId,
@@ -36,9 +34,9 @@ function Player() {
     duration,
     isPlaying,
     isLive,
+    isLoading,
     isPlaylsitOpen,
     togglePlayPause,
-    togglePlaylist,
     handlePlayNext,
     handlePlayPrev,
     handleSeek,
@@ -51,64 +49,15 @@ function Player() {
   const episodeId = id ? parseInt(id, 10) : null;
 
   useEffect(() => {
-    if (episodeId !== null) {
-      if (isPickle) {
-        playEpisode(episodeId, false, true);
-      } else {
-        playEpisode(episodeId, false, false);
-      }
+    if (episodeId !== null && playlist) {
+      const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
+      const isPodcast = episodeToPlay?.type === 'podcast';
+      playEpisode(episodeId, liveStatus, isPodcast);
+      setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, isPickle]);
+  }, [episodeId, playEpisode, playlist, isLive, setPlaylist, liveStatus]);
 
-  useEffect(() => {
-    if (!playlist) return;
-
-    switch (playlistType) {
-      case 'ThemeType':
-      case 'MixThemeType': {
-        const theme = playlist as MixThemeType;
-        const episodeIds = theme.episode_ids || [];
-        const allEpisodesMap = new Map<number, Episode>();
-
-        theme.radio_themes?.forEach((rt) => {
-          rt.radios.episodes?.forEach((episode) => {
-            allEpisodesMap.set(episode.id, { ...episode, radios: rt.radios });
-          });
-        });
-
-        const processedEpisodes = episodeIds
-          .map((id) => allEpisodesMap.get(id))
-          .filter(Boolean) as Episode[];
-        setFinalPlaylist(processedEpisodes);
-        break;
-      }
-
-      case 'PickleEpisodeType':
-      case 'EpisodeType': {
-        setFinalPlaylist(playlist as Episode[]);
-        break;
-      }
-
-      case 'RadioType':
-      default: {
-        const radio = playlist as RadioType;
-        const episodeWithRadio = (radio.episodes || []).map((ep) => ({
-          ...ep,
-          radios: radio,
-        }));
-        setFinalPlaylist(episodeWithRadio);
-        break;
-      }
-    }
-  }, [playlist, playlistType]);
-
-  useEffect(() => {
-    if (finalPlaylist.length > 0) {
-      setPlaylist(finalPlaylist);
-    }
-  }, [finalPlaylist, setPlaylist]);
-
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progressPercent = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
   const unplayedColor = '#ffffff';
   const sliderStyle = useMemo(
@@ -118,7 +67,7 @@ function Player() {
     [progressPercent, playedColor, unplayedColor]
   );
 
-  if (!currentEpisodeData || finalPlaylist.length === 0) {
+  if (!currentEpisodeData || !playlist) {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
@@ -156,10 +105,7 @@ function Player() {
     handleSeek(Number(e.target.value));
   };
 
-  const imgUrl =
-    currentEpisodeData.radios?.img_url ||
-    currentEpisodeData.imgUrl ||
-    currentEpisodeData.pickle_podcasts?.img_url;
+  const imgUrl = currentEpisodeData.img_url || currentEpisodeData.programs?.img_url;
 
   const isHourDisplay = duration >= 3600;
 
@@ -204,34 +150,27 @@ function Player() {
             className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
           >
             <ul className="flex flex-col gap-1">
-              {finalPlaylist.map((item: Episode) => {
+              {playlist.map((item: EpisodeType) => {
                 const isActive = currentEpisodeId === item.id;
-                // const isChannel = playlistType === 'RadioType';
-                const imageUrl = item.radios?.img_url || item.src || item.pickle_podcasts?.img_url;
-                const subTitle = item.radios?.title || item.pickle_podcasts?.title;
+                const imageUrl = item.img_url || item.programs?.img_url;
+                const subTitle = isLive
+                  ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
+                  : item.programs?.title;
 
                 return (
-                  <li
-                    key={item.id}
-                    className={`rounded-md cursor-pointer p-3 flex items-center`}
-                    onClick={() => {
-                      playEpisode(item.id, false, currentEpisodeType === 'podcast' ? true : false);
-                      togglePlaylist();
-                    }}
-                  >
+                  <li key={item.id} className={`rounded-md cursor-pointer p-3 flex items-center`}>
                     <div className="w-full">
                       <ListViewItem
                         id={item.id}
                         imgUrl={imageUrl}
-                        title={item.title}
+                        title={isLive ? item.programs?.title : item.title}
                         subTitle={subTitle}
                         playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={isActive ? (item.total_time ?? '') : ''}
-                        date={isPickle ? item.uploadAt : item.date}
+                        totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
+                        date={isLive ? '' : item.date}
                         hasAudio={item.audio_file ? true : false}
                         playlist={playlist}
                         playlistType={playlistType}
-                        isPickle={isPickle}
                         isPlayer={true}
                       />
                     </div>
@@ -263,14 +202,16 @@ function Player() {
 
           <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
             <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
-              {currentEpisodeData.title}
+              {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast'
-                ? `${currentEpisodeData.pickle_podcasts?.title} · ${currentEpisodeData.date}`
-                : `${currentEpisodeData.radios?.channels?.broadcasting} ${currentEpisodeData.radios?.channels?.channel}`}
+                ? `${currentEpisodeData.programs?.title} · ${currentEpisodeData.date}`
+                : `${currentEpisodeData.programs?.broadcastings?.title} ${
+                    currentEpisodeData.programs?.broadcastings?.channel
+                  }`}
             </p>
-            <p className="text-lg md:text-[32px] text-[#A6A6A9]">
+            <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
               {isLive
                 ? 'LIVE'
                 : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
@@ -286,8 +227,8 @@ function Player() {
               max={duration}
               value={isLive ? duration : currentTime}
               onChange={onHandleSeek}
-              disabled={isLive}
-              className="custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600"
+              disabled={isLive || isLoading}
+              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLive ? 'invisible' : ''}`}
               style={sliderStyle}
             />
 
@@ -302,6 +243,7 @@ function Player() {
               </button>
             </div>
           </div>
+
           <div className="flex items-center justify-between gap-16 z-20">
             <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
               <img src={speedIcon} />
@@ -311,8 +253,14 @@ function Player() {
             <button onClick={handlePlayPrev}>
               <TbPlayerSkipBackFilled size={30} />
             </button>
-            <button onClick={togglePlayPause}>
-              {isPlaying ? <TbPlayerPauseFilled size={30} /> : <TbPlayerPlayFilled size={30} />}
+            <button onClick={togglePlayPause} disabled={isLoading}>
+              {isLoading ? (
+                <AiOutlineLoading size={30} className="animate-spin" />
+              ) : isPlaying ? (
+                <TbPlayerPauseFilled size={30} />
+              ) : (
+                <TbPlayerPlayFilled size={30} />
+              )}
             </button>
             <button onClick={handlePlayNext}>
               <TbPlayerSkipForwardFilled size={30} />

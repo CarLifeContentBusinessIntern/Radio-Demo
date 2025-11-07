@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
-import { usePickleSeries } from '../hooks/usePickleSeries';
+import { useSection } from '../hooks/useSection';
 import CircleViewItem from './CircleViewItem';
 import { handleClickSeries } from './PicklePick';
 
 function MonthlyPickle() {
   const navigate = useNavigate();
-  const { data: themes, isLoading } = usePickleSeries(2, 'MonthlyPickle');
+  const { data: sectionData, isLoading } = useSection(2);
 
   return (
     <>
@@ -21,12 +21,12 @@ function MonthlyPickle() {
           ? Array.from({ length: 4 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />
             ))
-          : themes.map((item) => (
+          : sectionData.map((item) => (
               <CircleViewItem
-                key={item.id}
-                title={item.series_name}
+                key={`${item.type} - ${item.id}`}
+                title={item.title}
                 subTitle={item.subtitle}
-                img={item.img_src ?? ''}
+                img={item.img_url}
                 onClick={() => handleClickSeries(navigate, item)}
               />
             ))}

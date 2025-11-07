@@ -1,38 +1,50 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import { type ThemeType } from '../types/theme';
-import CircleViewItem from './CircleViewItem';
 import { toast } from 'react-toastify';
+import { useSection } from '../hooks/useSection';
+import { supabase } from '../lib/supabaseClient';
+import type { SectionItemType } from '../types/section';
+import CircleViewItem from './CircleViewItem';
 
 function RadioMix() {
   const navigate = useNavigate();
-  const [radioMixTheme, setRadioMixTheme] = useState<ThemeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { data: sectionData, isLoading } = useSection(6);
 
-  useEffect(() => {
-    async function fetchRadioMixTheme() {
-      const { data: mixThemeData, error: mixThemeError } = await supabase
-        .from('themes')
-        .select('*, radio_themes(*, radios(*, channels(*), episodes(*)))')
-        .eq('section', '라디오 믹스')
-        .order('id', { ascending: true });
+  const handleItemClick = async (item: SectionItemType) => {
+    if (item.has_episodes) {
+      try {
+        const table = 'series_episodes';
+        const column = 'series_id';
 
-      if (mixThemeError) {
-        console.log('❌ Error fetching radio mix data:', mixThemeError.message);
-        setIsLoading(false);
+        const { data, error } = await supabase
+          .from(table)
+          .select('*, episodes(*, programs(*, broadcastings(*)))')
+          .eq(column, item.id)
+          .order('order', { ascending: true });
 
-        return;
+        if (error) {
+          throw error;
+        }
+
+        const playlist = data ? data.map((joinEntry) => joinEntry.episodes) : [];
+
+        if (playlist.length === 0) {
+          toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+          return;
+        }
+
+        navigate(`/player/${item.first_episode_id}`, {
+          state: { isLive: false, playlist: playlist },
+        });
+      } catch (error) {
+        console.error('플레이리스트 조회 실패:', error);
+        toast.error(`플레이리스트를 불러오는 데 실패했습니다.`, {
+          toastId: 'playlist-fetch-error',
+        });
       }
-      if (!mixThemeData) {
-        setIsLoading(false);
-        return;
-      }
-      setRadioMixTheme(mixThemeData);
-      setIsLoading(false);
+    } else {
+      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
     }
-    fetchRadioMixTheme();
-  }, []);
+  };
 
   return (
     <div>
@@ -47,20 +59,12 @@ function RadioMix() {
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />
             ))
-          : radioMixTheme.map((item) => (
+          : sectionData?.map((item) => (
               <CircleViewItem
                 key={item.id}
                 title={item.title}
                 img={item.img_url}
-                onClick={() => {
-                  if (item.episode_ids) {
-                    navigate(`/player/${item.episode_ids[0]}`, {
-                      state: { isLive: false, playlist: item, playlistType: 'ThemeType' },
-                    });
-                  } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
-                  }
-                }}
+                onClick={() => handleItemClick(item)}
               />
             ))}
       </div>
