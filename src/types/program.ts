@@ -10,5 +10,6 @@ export type ProgramType = {
   broadcasting_id: number;
   subtitle: string;
   broadcastings?: BroadcastingType;
+  type: 'podcast' | 'radio';
   episodes?: EpisodeType[];
 };

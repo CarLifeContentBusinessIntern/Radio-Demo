@@ -29,8 +29,7 @@ const HomeHeader = () => {
         : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
       {
         name: '인기채널',
-        path: '/curation/1',
-        state: { type: 'channel', title: '인기 채널' },
+        path: '/popular',
         icon: PopularIcon,
       },
       {
@@ -61,7 +60,7 @@ const HomeHeader = () => {
               className={`flex flex-col items-center gap-1 transition-opacity pt-2 group ${
                 isActive ? 'opacity-100' : 'opacity-60'
               }`}
-              onClick={() => navigate(link.path, { state: link.state })}
+              onClick={() => navigate(link.path)}
             >
               {link.icon ? (
                 <img

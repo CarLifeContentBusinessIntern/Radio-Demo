@@ -15,9 +15,9 @@ function GridViewPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { isLive } = usePlayer();
 
-  // 라디오 조회
+  // 프로그램 조회
   useEffect(() => {
-    const fetchRadios = async () => {
+    const fetchPrograms = async () => {
       if (!id || !type) return;
 
       const filterColumn = type === 'channel' ? 'broadcasting_id' : 'category_id';
@@ -37,7 +37,7 @@ function GridViewPage() {
       setIsLoading(false);
     };
 
-    fetchRadios();
+    fetchPrograms();
   }, [id, type]);
 
   return (
