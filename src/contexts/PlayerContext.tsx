@@ -191,6 +191,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       const type = isPodcast ? 'podcast' : 'radio';
       const episode = episodes.find((item) => item.id === id);
 
+      // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
+      if (state.currentEpisodeId && audioRef.current) {
+        saveListeningHistory(state.currentEpisodeId, audioRef.current.currentTime);
+      }
+
       if (episode?.audio_file === null) return;
 
       if (episode) {
@@ -230,7 +235,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [episodes]
+    [episodes, state.currentEpisodeId]
   );
 
   const setPlaylist = useCallback((playlist: EpisodeType[]) => {
@@ -309,8 +314,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
+
+    // 멈추기 직전 재생 시간 DB에 시간 기록
+    if (state.isPlaying) {
+      saveListeningHistory(state.currentEpisodeId, state.currentTime);
+    }
+
     setState((prevState) => ({ ...prevState, isPlaying: !prevState.isPlaying }));
-  }, [state.currentEpisodeId]);
+  }, [state.currentEpisodeId, state.isPlaying, state.currentTime]);
 
   const togglePlaylist = useCallback(() => {
     setState((prevState) => ({ ...prevState, isPlaylsitOpen: !prevState.isPlaylsitOpen }));
@@ -384,6 +395,24 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarPrev,
     resetPlayer,
   };
+
+  //최근 들은 시점 저장
+  async function saveListeningHistory(episodeId: number, currentTime: number) {
+    if (!episodeId) return;
+    console.log('최근 들은 시간 저장');
+    console.log(currentTime);
+    const { error } = await supabase
+      .from('episodes')
+      .update({
+        listened_duration: currentTime,
+        listened_at: new Date().toISOString(),
+      })
+      .eq('id', episodeId);
+
+    if (error) {
+      console.error('❌ Failed to save listening history:', error.message);
+    }
+  }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
 };
