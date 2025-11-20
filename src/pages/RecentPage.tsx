@@ -12,7 +12,7 @@ function RecentPage() {
   const { isRadioVersion } = useVersion();
 
   const { data: allEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
-    queryKey: ['allEpisodes'],
+    queryKey: ['recentEpisodes'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('series_episodes')

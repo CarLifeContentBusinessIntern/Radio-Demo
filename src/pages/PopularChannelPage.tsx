@@ -6,7 +6,6 @@ import { useVersion } from '../contexts/VersionContext';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
-import { useMemo } from 'react';
 
 interface PopularRadioInterface {
   programs: ProgramType;
@@ -43,9 +42,7 @@ function PopularChannelPage() {
     },
   });
 
-  const popularPrograms = useMemo(() => {
-    return allPrograms;
-  }, [allPrograms]);
+  const popularPrograms = allPrograms;
 
   return (
     <div className="pr-28 pt-3">

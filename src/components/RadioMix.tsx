@@ -22,7 +22,7 @@ const fetchPlaylist = async (seriesId: number) => {
   }
 
   const playlist: EpisodeType[] = data
-    ? data.map((joinEntry) => joinEntry.episodes as EpisodeType)
+    ? data.map((joinEntry) => joinEntry.episodes).filter((ep): ep is EpisodeType => !!ep)
     : [];
 
   return playlist;

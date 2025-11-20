@@ -55,8 +55,7 @@ function SettingPage() {
 
           <div className="relative w-60 h-16">
             <select
-              className="w-full h-full bg-black text-gray-200 text-[32px] 
-                     rounded-md p-1 pr-10 appearance-none pl-5"
+              className="w-full h-full bg-black text-gray-200 text-[32px] rounded-md p-1 pr-10 appearance-none pl-5"
               value={selectedCountry}
               onChange={handleCountryChange}
             >
@@ -79,8 +78,7 @@ function SettingPage() {
 
           <div className="relative w-60 h-16">
             <select
-              className="w-full h-full bg-black text-gray-200 text-[32px] 
-                     rounded-md p-1 pr-10 appearance-none pl-5"
+              className="w-full h-full bg-black text-gray-200 text-[32px] rounded-md p-1 pr-10 appearance-none pl-5"
               value={selectedOEM}
               onChange={handleOEMChange}
             >

@@ -21,7 +21,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 10, // 10분 동안 캐시 데이터 재사용
-      gcTime: 1000 * 60 * 20, // 10분 동안 메모리에 유지
+      gcTime: 1000 * 60 * 20, // 20분 동안 메모리에 유지
       retry: 1, // 실패 시 1번 재시도
     },
   },

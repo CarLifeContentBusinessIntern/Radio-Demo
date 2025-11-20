@@ -7,5 +7,5 @@ export type CategoryType = {
   order: string;
   created_at: string;
   type: 'radio' | 'podcast';
-  programs: ProgramType[] | [];
+  programs: ProgramType[];
 };

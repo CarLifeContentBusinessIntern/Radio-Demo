@@ -13,7 +13,7 @@ interface PopularRadioInterface {
 
 function PopularRadio() {
   const { data: popularRadios = [], isLoading } = useQuery<PopularRadioInterface[]>({
-    queryKey: [],
+    queryKey: ['popularRadios'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('themes_programs')

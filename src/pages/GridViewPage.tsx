@@ -28,12 +28,6 @@ function GridViewPage() {
       const filterColumn = type === 'channel' ? 'broadcasting_id' : 'category_id';
       const filterProgramsOrder = type === 'channel' ? 'order_broadcasting' : 'order_category';
 
-      console.log('🔍 필터 설정:', {
-        filterColumn,
-        filterProgramsOrder,
-        id,
-      });
-
       const { data, error } = await supabase
         .from('programs')
         .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
@@ -76,8 +70,9 @@ function GridViewPage() {
               onClick={() => {
                 const firstEpisodeWithAudio = item.episodes?.find((ep) => ep.audio_file !== null);
                 if (firstEpisodeWithAudio?.id) {
+                  const validPlaylist = item.episodes?.filter((ep) => ep.audio_file !== null) || [];
                   navigate(`/player/${firstEpisodeWithAudio.id}`, {
-                    state: { isLive: isLive, playlist: item.episodes },
+                    state: { isLive: isLive, playlist: validPlaylist },
                   });
                 } else {
                   toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
