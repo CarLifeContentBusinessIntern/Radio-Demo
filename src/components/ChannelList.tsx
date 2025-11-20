@@ -1,34 +1,29 @@
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import type { ChannelType } from '../types/channel';
-import { useEffect, useState } from 'react';
-import CircleViewItem from './CircleViewItem';
-import { supabase } from '../lib/supabaseClient';
 import { toast } from 'react-toastify';
+import { supabase } from '../lib/supabaseClient';
+import type { ChannelType } from '../types/channel';
+import CircleViewItem from './CircleViewItem';
 
 function ChannelList() {
   const navigate = useNavigate();
-  const [channels, setChannels] = useState<ChannelType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  //채널 조회
-  async function fetchChannels() {
-    const { data, error } = await supabase
-      .from('broadcastings')
-      .select('*,programs(count)')
-      .not('"order"', 'is', null) // order가 null인 애들 제외
-      .order('order', { ascending: true });
+  const { data: channels = [], isLoading } = useQuery<ChannelType[]>({
+    queryKey: ['channels'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('broadcastings')
+        .select('*,programs(count)')
+        .not('"order"', 'is', null) // order가 null인 애들 제외
+        .order('order', { ascending: true });
 
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setChannels(data);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchChannels();
-  }, []);
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+        throw error;
+      }
+      return data as ChannelType[];
+    },
+  });
 
   const handleOnClick = (item: ChannelType) => {
     if (item.programs[0].count !== 0) {

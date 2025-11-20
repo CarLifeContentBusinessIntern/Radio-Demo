@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
-import GridViewItem from './GridViewItem';
 import { toast } from 'react-toastify';
+import { supabase } from '../lib/supabaseClient';
 import type { CategoryType } from '../types/category';
 import CircleViewItem from './CircleViewItem';
+import GridViewItem from './GridViewItem';
 
 interface CategoryInterface {
   title: boolean;
@@ -13,28 +13,24 @@ interface CategoryInterface {
 
 function Category({ title, type }: CategoryInterface) {
   const navigate = useNavigate();
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
-  //카테고리 조회
-  async function fetchCategories() {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*, programs(*)')
-      .eq('type', type)
-      .order('order', { ascending: true });
+  const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
+    queryKey: ['categories', type],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*, programs(*)')
+        .eq('type', type)
+        .order('order', { ascending: true });
 
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setCategories(data);
-    }
-    setIsLoading(false);
-  }
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+        throw error;
+      }
 
-  useEffect(() => {
-    fetchCategories();
-  }, [type]);
+      return data as unknown as CategoryType[];
+    },
+  });
 
   const ItemComponent = type === 'radio' ? CircleViewItem : GridViewItem;
 

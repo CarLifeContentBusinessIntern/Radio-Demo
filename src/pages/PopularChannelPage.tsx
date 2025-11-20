@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
-import type { ProgramType } from '../types/program';
-import { useVersion } from '../contexts/VersionContext';
-import { supabase } from '../lib/supabaseClient';
-import GridViewItem from '../components/GridViewItem';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import GridViewItem from '../components/GridViewItem';
+import { useVersion } from '../contexts/VersionContext';
+import { supabase } from '../lib/supabaseClient';
+import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
+import { useMemo } from 'react';
 
 interface PopularRadioInterface {
   programs: ProgramType;
@@ -13,14 +14,12 @@ interface PopularRadioInterface {
 }
 
 function PopularChannelPage() {
-  const [popularPrograms, setPopularPrograms] = useState<PopularRadioInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const { isRadioVersion } = useVersion();
   const navigate = useNavigate();
 
-  // 프로그램 조회
-  useEffect(() => {
-    const fetchPrograms = async () => {
+  const { data: allPrograms = [], isLoading } = useQuery<PopularRadioInterface[]>({
+    queryKey: ['popularPrograms', isRadioVersion],
+    queryFn: async () => {
       let query = supabase
         .from('themes_programs')
         .select(
@@ -37,14 +36,16 @@ function PopularChannelPage() {
       const { data, error } = await query;
       if (error) {
         console.error('Supabase 연결 실패:', error);
-      } else {
-        setPopularPrograms(data || []);
+        throw error;
       }
-      setIsLoading(false);
-    };
 
-    fetchPrograms();
-  }, [isRadioVersion]);
+      return data as PopularRadioInterface[];
+    },
+  });
+
+  const popularPrograms = useMemo(() => {
+    return allPrograms;
+  }, [allPrograms]);
 
   return (
     <div className="pr-28 pt-3">
