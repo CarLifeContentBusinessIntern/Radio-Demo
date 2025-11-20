@@ -15,7 +15,6 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { AiOutlineLoading } from 'react-icons/ai';
 import PlayList from '../components/player/PlayList';
-import { useFetchChannel } from '../hooks/useFetchChannel';
 
 function Player() {
   const { id } = useParams();
@@ -34,9 +33,7 @@ function Player() {
     isLive,
     isLoading,
     isPlaylistOpen,
-    isOpenChannelList,
     togglePlayPause,
-    toggleChannelList,
     handlePlayNext,
     handlePlayPrev,
     handleSeek,
@@ -45,11 +42,6 @@ function Player() {
     playEpisode,
     setPlaylist,
   } = usePlayer();
-  const {
-    data: channelEpisodeData,
-    isLoading: isChannelDataLoading,
-    error,
-  } = useFetchChannel(currentEpisodeData?.program_id ?? 0);
 
   const episodeId = id ? parseInt(id, 10) : null;
 
@@ -115,17 +107,14 @@ function Player() {
   const isHourDisplay = duration >= 3600;
 
   const handleToggleChannelList = (title: string) => {
-    if (!isChannelDataLoading && !error) {
-      toggleChannelList();
-      navigate(location.pathname, {
-        replace: true,
-        state: {
-          ...location.state,
-          title: title,
-          program_id: currentEpisodeData.program_id,
-        },
-      });
-    }
+    navigate(`/like/${currentEpisodeData.program_id}`, {
+      replace: true,
+      state: {
+        ...location.state,
+        title: title,
+        program_id: currentEpisodeData.program_id,
+      },
+    });
   };
 
   return (
@@ -162,15 +151,6 @@ function Player() {
         isOpenList={isPlaylistOpen}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
-      />
-
-      {/* 채널 에피소드 목록 */}
-      <PlayList
-        playlist={channelEpisodeData}
-        isOpenList={isOpenChannelList}
-        isHourDisplay={isHourDisplay}
-        playlistType={playlistType}
-        onClose={toggleChannelList}
       />
 
       {/* 플레이 화면 */}

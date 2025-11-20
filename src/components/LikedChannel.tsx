@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GridViewItem from './GridViewItem';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 
 function LikedChannel() {
+  const location = useLocation();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [likedChannel, setLikedChannel] = useState<ProgramType[]>([]);
@@ -27,6 +28,17 @@ function LikedChannel() {
     fetchLikedChannel();
   }, []);
 
+  const handleNavigate = (item: ProgramType) => {
+    navigate(`/like/${item.id}`, {
+      replace: true,
+      state: {
+        ...location.state,
+        title: item.title,
+        program_id: item.id,
+      },
+    });
+  };
+
   return (
     <>
       <div className="text-2xl font-bold mb-4">회원님이 좋아요 한 채널</div>
@@ -42,7 +54,7 @@ function LikedChannel() {
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => navigate(`/like/${item.id}`)}
+                onClick={() => handleNavigate(item)}
               />
             ))}
       </div>
