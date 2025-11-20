@@ -199,7 +199,9 @@ function Player() {
               {currentEpisodeType === 'podcast' ? (
                 <>
                   <button
-                    onClick={() => handleToggleChannelList(currentEpisodeData.programs?.title ?? '')}
+                    onClick={() =>
+                      handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                    }
                   >
                     {currentEpisodeData.programs?.title}
                   </button>
@@ -210,7 +212,9 @@ function Player() {
                   {currentEpisodeData.programs?.broadcastings?.title}
                   <button
                     onClick={() =>
-                      handleToggleChannelList(currentEpisodeData.programs?.broadcastings?.channel ?? '')
+                      handleToggleChannelList(
+                        currentEpisodeData.programs?.broadcastings?.channel ?? ''
+                      )
                     }
                   >
                     {currentEpisodeData.programs?.broadcastings?.channel}
