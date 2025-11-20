@@ -8,7 +8,7 @@ import {
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
 import Skeleton from 'react-loading-skeleton';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { usePlayer } from '../contexts/PlayerContext';
@@ -20,6 +20,7 @@ import { useFetchChannel } from '../hooks/useFetchChannel';
 function Player() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
@@ -112,9 +113,16 @@ function Player() {
 
   const isHourDisplay = duration >= 3600;
 
-  const toggleChannelList = () => {
+  const toggleChannelList = (title: string) => {
     if (!isChannelDataLoading && !error) {
       setIsOpenList(!isOpenList);
+      navigate(location.pathname, {
+        replace: true,
+        state: {
+          ...location.state,
+          title: title,
+        },
+      });
     }
   };
 
@@ -188,13 +196,24 @@ function Player() {
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast' ? (
                 <>
-                  <button onClick={toggleChannelList}>{currentEpisodeData.programs?.title}</button>·{' '}
-                  {currentEpisodeData.date}
+                  <button
+                    onClick={() => toggleChannelList(currentEpisodeData.programs?.title ?? '')}
+                  >
+                    {currentEpisodeData.programs?.title}
+                  </button>
+                  · {currentEpisodeData.date}
                 </>
               ) : (
-                `${currentEpisodeData.programs?.broadcastings?.title} ${
-                  currentEpisodeData.programs?.broadcastings?.channel
-                }`
+                <>
+                  {currentEpisodeData.programs?.broadcastings?.title}
+                  <button
+                    onClick={() =>
+                      toggleChannelList(currentEpisodeData.programs?.broadcastings?.channel ?? '')
+                    }
+                  >
+                    {currentEpisodeData.programs?.broadcastings?.channel}
+                  </button>
+                </>
               )}
             </p>
             <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
