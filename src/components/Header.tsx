@@ -15,6 +15,7 @@ import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useVersion } from '../contexts/VersionContext';
+import { supabase } from '../lib/supabaseClient';
 import type { HeaderType } from '../types';
 
 // 홈 헤더
@@ -127,7 +128,27 @@ const SearchHeader = () => {
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
 const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
-  const { togglePlaylist, isPlaylsitOpen } = usePlayer();
+  const { togglePlaylist, isPlaylistOpen, isOpenChannelList, currentEpisodeData } = usePlayer();
+  const [isLiked, setIsLiked] = useState(currentEpisodeData?.programs?.is_liked ?? false);
+
+  const handleClickLike = async () => {
+    if (!currentEpisodeData?.programs?.id) return;
+
+    const programId = currentEpisodeData.programs.id;
+    const newIsLiked = !isLiked;
+
+    setIsLiked(newIsLiked);
+
+    const { error } = await supabase
+      .from('programs')
+      .update({ is_liked: newIsLiked })
+      .eq('id', programId);
+
+    if (error) {
+      console.error('좋아요 업데이트 실패:', error);
+      setIsLiked(!newIsLiked);
+    }
+  };
 
   return (
     <div className="flex flex-row justify-between items-center w-full z-30">
@@ -136,14 +157,25 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
           {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
-        <p className="text-[32px] whitespace-pre">{title}</p>
+        <p className="text-[32px] whitespace-pre mr-6">{title}</p>
+        {isPlayer && isOpenChannelList && (
+          <button
+            className={`rounded-full px-4 py-3 flex gap-4 items-center border text-lg font-normal transition-colors ${
+              isLiked ? 'border-red-500 bg-red-500/10' : 'border-[#8C8C8C]'
+            }`}
+            onClick={handleClickLike}
+          >
+            <img src="/favorite.png" alt="좋아요" className="w-8 h-8" />
+            {isLiked ? '좋아요 취소' : '좋아요'}
+          </button>
+        )}
       </div>
       {isPlayer ? (
         <button className="cursor-pointer" onClick={togglePlaylist}>
           <div
-            className={`w-12 h-12 flex items-center justify-center ${isPlaylsitOpen ? 'rounded-full bg-white' : ''}`}
+            className={`w-12 h-12 flex items-center justify-center ${isPlaylistOpen ? 'rounded-full bg-white' : ''}`}
           >
-            <RiPlayListFill size={30} color={isPlaylsitOpen ? 'black' : 'white'} />
+            <RiPlayListFill size={30} color={isPlaylistOpen ? 'black' : 'white'} />
           </div>
         </button>
       ) : (

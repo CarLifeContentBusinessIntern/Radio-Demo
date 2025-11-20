@@ -25,7 +25,6 @@ function Player() {
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-  const [isOpenList, setIsOpenList] = useState(false);
   const {
     currentEpisodeData,
     currentEpisodeType,
@@ -34,8 +33,10 @@ function Player() {
     isPlaying,
     isLive,
     isLoading,
-    isPlaylsitOpen,
+    isPlaylistOpen,
+    isOpenChannelList,
     togglePlayPause,
+    toggleChannelList,
     handlePlayNext,
     handlePlayPrev,
     handleSeek,
@@ -113,14 +114,15 @@ function Player() {
 
   const isHourDisplay = duration >= 3600;
 
-  const toggleChannelList = (title: string) => {
+  const handleToggleChannelList = (title: string) => {
     if (!isChannelDataLoading && !error) {
-      setIsOpenList(!isOpenList);
+      toggleChannelList();
       navigate(location.pathname, {
         replace: true,
         state: {
           ...location.state,
           title: title,
+          program_id: currentEpisodeData.program_id,
         },
       });
     }
@@ -157,7 +159,7 @@ function Player() {
       {/* 에피소드 목록 */}
       <PlayList
         playlist={playlist}
-        isOpenList={isPlaylsitOpen}
+        isOpenList={isPlaylistOpen}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
       />
@@ -165,10 +167,10 @@ function Player() {
       {/* 채널 에피소드 목록 */}
       <PlayList
         playlist={channelEpisodeData}
-        isOpenList={isOpenList}
+        isOpenList={isOpenChannelList}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
-        onClose={() => setIsOpenList(false)}
+        onClose={toggleChannelList}
       />
 
       {/* 플레이 화면 */}
@@ -197,7 +199,7 @@ function Player() {
               {currentEpisodeType === 'podcast' ? (
                 <>
                   <button
-                    onClick={() => toggleChannelList(currentEpisodeData.programs?.title ?? '')}
+                    onClick={() => handleToggleChannelList(currentEpisodeData.programs?.title ?? '')}
                   >
                     {currentEpisodeData.programs?.title}
                   </button>
@@ -208,7 +210,7 @@ function Player() {
                   {currentEpisodeData.programs?.broadcastings?.title}
                   <button
                     onClick={() =>
-                      toggleChannelList(currentEpisodeData.programs?.broadcastings?.channel ?? '')
+                      handleToggleChannelList(currentEpisodeData.programs?.broadcastings?.channel ?? '')
                     }
                   >
                     {currentEpisodeData.programs?.broadcastings?.channel}
