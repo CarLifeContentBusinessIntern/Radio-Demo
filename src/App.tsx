@@ -15,6 +15,17 @@ import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import PopularChannelPage from './pages/PopularChannelPage.tsx';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 10, // 10분 동안 캐시 데이터 재사용
+      gcTime: 1000 * 60 * 20, // 20분 동안 메모리에 유지
+      retry: 1, // 실패 시 1번 재시도
+    },
+  },
+});
 
 function AppRoutes() {
   const location = useLocation();
@@ -50,10 +61,7 @@ function AppRoutes() {
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="episodes/channel/:id" element={<ListViewPage type="channel" />} />
-          <Route path="episodes/timeslot/:id" element={<ListViewPage type="timeslot" />} />
-          <Route path="episodes/series/:id" element={<ListViewPage type="series" />} />
-          <Route path="episodes/podcasts/:id" element={<ListViewPage type="podcast" />} />
+          <Route path="episodes/:type/:id" element={<ListViewPage />} />
         </Route>
       </Route>
 
@@ -153,13 +161,15 @@ function AppRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <VersionProvider>
-        <PlayerProvider>
-          <AppRoutes />
-        </PlayerProvider>
-      </VersionProvider>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <VersionProvider>
+          <PlayerProvider>
+            <AppRoutes />
+          </PlayerProvider>
+        </VersionProvider>
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { supabase } from '../lib/supabaseClient';
@@ -12,32 +12,28 @@ interface PopularRadioInterface {
 }
 
 function PopularRadio() {
-  const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  async function fetchPopularRadios() {
-    const { data, error } = await supabase
-      .from('themes_programs')
-      .select(
-        `*,
+  const { data: popularRadios = [], isLoading } = useQuery<PopularRadioInterface[]>({
+    queryKey: ['popularRadios'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('themes_programs')
+        .select(
+          `*,
         programs(*,broadcastings(*), episodes(*, programs(*, broadcastings(*)))),
         themes!inner(*)
         `
-      )
-      .eq('theme_id', 1)
-      .order('title', { referencedTable: 'programs.episodes', ascending: false });
+        )
+        .eq('theme_id', 1)
+        .order('title', { referencedTable: 'programs.episodes', ascending: false });
 
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setPopularRadios(data as unknown as PopularRadioInterface[]);
-    }
-    setIsLoading(false);
-  }
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+        throw error;
+      }
 
-  useEffect(() => {
-    fetchPopularRadios();
-  }, []);
+      return data as PopularRadioInterface[];
+    },
+  });
 
   const navigate = useNavigate();
 

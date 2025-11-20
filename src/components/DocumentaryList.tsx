@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
@@ -11,27 +11,27 @@ interface DocumentaryInterface {
 }
 
 function DocumentaryList() {
-  const [documentaries, setDocumentaries] = useState<DocumentaryInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: documentaries = [],
+    isLoading,
+    error,
+  } = useQuery<DocumentaryInterface[]>({
+    queryKey: ['documentaries'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('themes_programs')
+        .select('programs(*, broadcastings(*)),themes!inner(*)')
+        .eq('theme_id', 7);
 
-  //인기 라디오 조회
-  async function fetchDoucumentaries() {
-    const { data, error } = await supabase
-      .from('themes_programs')
-      .select('programs(*, broadcastings(*)),themes!inner(*)')
-      .eq('theme_id', 7);
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+        throw error;
+      }
+      return data as unknown as DocumentaryInterface[];
+    },
+  });
 
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setDocumentaries(data as unknown as DocumentaryInterface[]);
-    }
-    setIsLoading(false);
-  }
-
-  useEffect(() => {
-    fetchDoucumentaries();
-  }, []);
+  if (error) console.error('React Query Error fetching documentaries:', error);
 
   return (
     <>
