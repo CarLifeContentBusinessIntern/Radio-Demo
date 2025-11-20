@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -11,11 +11,11 @@ import Skeleton from 'react-loading-skeleton';
 import { useLocation, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
-import ListViewItem from '../components/ListViewItem';
-import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { AiOutlineLoading } from 'react-icons/ai';
+import PlayList from '../components/player/PlayList';
+import { useFetchChannel } from '../hooks/useFetchChannel';
 
 function Player() {
   const { id } = useParams();
@@ -23,11 +23,9 @@ function Player() {
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
-  const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-
+  const [isOpenList, setIsOpenList] = useState(false);
   const {
-    currentEpisodeId,
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
@@ -45,6 +43,11 @@ function Player() {
     playEpisode,
     setPlaylist,
   } = usePlayer();
+  const {
+    data: channelEpisodeData,
+    isLoading: isChannelDataLoading,
+    error,
+  } = useFetchChannel(currentEpisodeData?.program_id ?? 0);
 
   const episodeId = id ? parseInt(id, 10) : null;
 
@@ -109,6 +112,12 @@ function Player() {
 
   const isHourDisplay = duration >= 3600;
 
+  const toggleChannelList = () => {
+    if (!isChannelDataLoading && !error) {
+      setIsOpenList(!isOpenList);
+    }
+  };
+
   return (
     <div className="relative h-full overflow-hidden">
       {/* 플레이어 배경 */}
@@ -138,49 +147,21 @@ function Player() {
       />
 
       {/* 에피소드 목록 */}
-      <div
-        className={`bg-black fixed inset-0 z-10 pt-20 transition-opacity duration-300 ease-in-out
-          ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
-      >
-        <div className="flex relative overflow-hidden w-full">
-          <Scrollbar scrollableRef={contentRef} />
+      <PlayList
+        playlist={playlist}
+        isOpenList={isPlaylsitOpen}
+        isHourDisplay={isHourDisplay}
+        playlistType={playlistType}
+      />
 
-          <div
-            ref={contentRef}
-            className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
-          >
-            <ul className="flex flex-col gap-1">
-              {playlist.map((item: EpisodeType) => {
-                const isActive = currentEpisodeId === item.id;
-                const imageUrl = item.img_url || item.programs?.img_url;
-                const subTitle = isLive
-                  ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
-                  : item.programs?.title;
-
-                return (
-                  <li key={item.id} className={`rounded-md cursor-pointer p-3 flex items-center`}>
-                    <div className="w-full">
-                      <ListViewItem
-                        id={item.id}
-                        imgUrl={imageUrl}
-                        title={isLive ? item.programs?.title : item.title}
-                        subTitle={subTitle}
-                        playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
-                        date={isLive ? '' : item.date}
-                        hasAudio={item.audio_file ? true : false}
-                        playlist={playlist}
-                        playlistType={playlistType}
-                        isPlayer={true}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </div>
+      {/* 채널 에피소드 목록 */}
+      <PlayList
+        playlist={channelEpisodeData}
+        isOpenList={isOpenList}
+        isHourDisplay={isHourDisplay}
+        playlistType={playlistType}
+        onClose={() => setIsOpenList(false)}
+      />
 
       {/* 플레이 화면 */}
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
@@ -205,11 +186,16 @@ function Player() {
               {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
-              {currentEpisodeType === 'podcast'
-                ? `${currentEpisodeData.programs?.title} · ${currentEpisodeData.date}`
-                : `${currentEpisodeData.programs?.broadcastings?.title} ${
-                    currentEpisodeData.programs?.broadcastings?.channel
-                  }`}
+              {currentEpisodeType === 'podcast' ? (
+                <>
+                  <button onClick={toggleChannelList}>{currentEpisodeData.programs?.title}</button>·{' '}
+                  {currentEpisodeData.date}
+                </>
+              ) : (
+                `${currentEpisodeData.programs?.broadcastings?.title} ${
+                  currentEpisodeData.programs?.broadcastings?.channel
+                }`
+              )}
             </p>
             <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
               {isLive

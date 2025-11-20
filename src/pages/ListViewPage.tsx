@@ -12,7 +12,6 @@ type ListViewPageProps = {
 function ListViewPage({ type }: ListViewPageProps) {
   const location = useLocation();
   const isRound = location.state?.isRound;
-
   const { id } = useParams();
   const { setPlaylist } = usePlayer();
   const [episodes, setEpisodes] = useState<SeriesEpisodesType[]>([]);
