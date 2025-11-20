@@ -368,7 +368,34 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // 현재 재생 중 에피소드 ID Ref
+  const currentEpisodeRef = useRef<number | null>(state.currentEpisodeId);
+
+  useEffect(() => {
+    currentEpisodeRef.current = state.currentEpisodeId;
+  }, [state.currentEpisodeId]);
+
+  // 브라우저 새로고침, 탭 종료 시 DB에 시간 기록
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (audioRef.current && state.currentEpisodeId) {
+        saveListeningHistory(state.currentEpisodeId, audioRef.current.currentTime);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [state.currentEpisodeId]);
+
   const resetPlayer = useCallback(() => {
+    //플레이어 완전 종료 / 버전 변경 시 DB에 시간 기록
+    if (currentEpisodeRef.current && audioRef.current) {
+      saveListeningHistory(currentEpisodeRef.current, audioRef.current.currentTime);
+    }
+
     setState(initialPlayerState);
     setActivePlaylist([]);
     if (audioRef.current) {
@@ -399,12 +426,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   //최근 들은 시점 저장
   async function saveListeningHistory(episodeId: number, currentTime: number) {
     if (!episodeId) return;
-    console.log('최근 들은 시간 저장');
-    console.log(currentTime);
     const { error } = await supabase
       .from('episodes')
       .update({
-        listened_duration: currentTime,
+        listened_duration: Math.floor(currentTime),
         listened_at: new Date().toISOString(),
       })
       .eq('id', episodeId);
