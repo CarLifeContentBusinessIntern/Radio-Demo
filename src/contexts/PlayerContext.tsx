@@ -51,6 +51,7 @@ interface PlayerContextType extends PlayerState {
   handlePlayBarNext: () => void;
   handlePlayBarPrev: () => void;
   resetPlayer: () => void;
+  saveCurrentEpisodeProgress: () => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -238,7 +239,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           if (prevState.isPlaying) {
             return {
               ...prevState,
-              isPlaylsitOpen: false,
+              isPlaylistOpen: false,
               originType,
               recentSeriesId,
             };
@@ -255,7 +256,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     },
-    [episodes, state.currentEpisodeId]
+    [episodes]
   );
 
   const setPlaylist = useCallback((playlist: EpisodeType[]) => {
@@ -445,7 +446,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [state.currentEpisodeId]);
+  }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
 
   const resetPlayer = useCallback(() => {
     //플레이어 완전 종료 / 버전 변경 시 DB에 시간 기록
@@ -466,6 +467,18 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // 재생 중인 에피소드의 현재 시간 DB에 저장
+  const saveCurrentEpisodeProgress = useCallback(() => {
+    if (state.currentEpisodeId && audioRef.current) {
+      saveListeningHistory(
+        state.currentEpisodeId,
+        audioRef.current.currentTime,
+        state.originType,
+        state.recentSeriesId
+      );
+    }
+  }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
+
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
@@ -484,6 +497,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarNext,
     handlePlayBarPrev,
     resetPlayer,
+    saveCurrentEpisodeProgress,
   };
 
   //최근 들은 시점 저장

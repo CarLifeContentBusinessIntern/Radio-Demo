@@ -52,6 +52,7 @@ function ListViewItem({
     formatTime,
     setPlaylist,
     toggleChannelList,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
 
   const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -97,6 +98,9 @@ function ListViewItem({
         if (isOpenChannelList) {
           toggleChannelList();
         }
+
+        // 기존 재생 중인 에피소드 저장
+        saveCurrentEpisodeProgress();
 
         setPlaylist(playlist ?? []);
         if (hasAudio) {
