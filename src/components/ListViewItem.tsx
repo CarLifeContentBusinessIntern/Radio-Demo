@@ -48,8 +48,10 @@ function ListViewItem({
     currentEpisodeData,
     currentEpisodeId,
     isLive,
+    isOpenChannelList,
     formatTime,
     setPlaylist,
+    toggleChannelList,
   } = usePlayer();
 
   const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -92,6 +94,10 @@ function ListViewItem({
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() => {
+        if (isOpenChannelList) {
+          toggleChannelList();
+        }
+
         setPlaylist(playlist ?? []);
         if (hasAudio) {
           if (isPodcast) {

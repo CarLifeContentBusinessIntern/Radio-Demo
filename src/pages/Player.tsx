@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -8,18 +8,18 @@ import {
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
 import Skeleton from 'react-loading-skeleton';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
-import ListViewItem from '../components/ListViewItem';
-import Scrollbar from '../components/Scrollbar';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { AiOutlineLoading } from 'react-icons/ai';
+import PlayList from '../components/player/PlayList';
 
 function Player() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
@@ -27,9 +27,7 @@ function Player() {
   const recentSeriesId = location.state?.recentSeriesId;
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-
   const {
-    currentEpisodeId,
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
@@ -37,7 +35,7 @@ function Player() {
     isPlaying,
     isLive,
     isLoading,
-    isPlaylsitOpen,
+    isPlaylistOpen,
     togglePlayPause,
     handlePlayNext,
     handlePlayPrev,
@@ -120,6 +118,17 @@ function Player() {
 
   const isHourDisplay = duration >= 3600;
 
+  const handleToggleChannelList = (title: string) => {
+    navigate(`/like/${currentEpisodeData.program_id}`, {
+      replace: true,
+      state: {
+        ...location.state,
+        title: title,
+        program_id: currentEpisodeData.program_id,
+      },
+    });
+  };
+
   return (
     <div className="relative h-full overflow-hidden">
       {/* 플레이어 배경 */}
@@ -149,51 +158,14 @@ function Player() {
       />
 
       {/* 에피소드 목록 */}
-      <div
-        className={`bg-black fixed inset-0 z-10 pt-20 transition-opacity duration-300 ease-in-out
-          ${isPlaylsitOpen ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
-      >
-        <div className="flex relative overflow-hidden w-full">
-          <Scrollbar scrollableRef={contentRef} />
-
-          <div
-            ref={contentRef}
-            className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
-          >
-            <ul className="flex flex-col gap-1">
-              {playlist.map((item: EpisodeType) => {
-                const isActive = currentEpisodeId === item.id;
-                const imageUrl = item.img_url || item.programs?.img_url;
-                const subTitle = isLive
-                  ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
-                  : item.programs?.title;
-
-                return (
-                  <li key={item.id} className={`rounded-md cursor-pointer p-3 flex items-center`}>
-                    <div className="w-full">
-                      <ListViewItem
-                        id={item.id}
-                        imgUrl={imageUrl}
-                        title={isLive ? item.programs?.title : item.title}
-                        subTitle={subTitle}
-                        playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                        totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
-                        date={isLive ? '' : item.date}
-                        hasAudio={item.audio_file ? true : false}
-                        playlist={playlist}
-                        playlistType={playlistType}
-                        isPlayer={true}
-                        originType={originType}
-                        recentSeriesId={recentSeriesId}
-                      />
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </div>
+      <PlayList
+        playlist={playlist}
+        isOpenList={isPlaylistOpen}
+        isHourDisplay={isHourDisplay}
+        playlistType={playlistType}
+        originType={originType}
+        recentSeriesId={recentSeriesId}
+      />
 
       {/* 플레이 화면 */}
       <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
@@ -218,11 +190,31 @@ function Player() {
               {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
-              {currentEpisodeType === 'podcast'
-                ? `${currentEpisodeData.programs?.title} · ${currentEpisodeData.date}`
-                : `${currentEpisodeData.programs?.broadcastings?.title} ${
-                    currentEpisodeData.programs?.broadcastings?.channel
-                  }`}
+              {currentEpisodeType === 'podcast' ? (
+                <>
+                  <button
+                    onClick={() =>
+                      handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                    }
+                  >
+                    {currentEpisodeData.programs?.title}
+                  </button>
+                  · {currentEpisodeData.date}
+                </>
+              ) : (
+                <>
+                  {currentEpisodeData.programs?.broadcastings?.title}
+                  <button
+                    onClick={() =>
+                      handleToggleChannelList(
+                        currentEpisodeData.programs?.broadcastings?.channel ?? ''
+                      )
+                    }
+                  >
+                    {currentEpisodeData.programs?.broadcastings?.channel}
+                  </button>
+                </>
+              )}
             </p>
             <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
               {isLive

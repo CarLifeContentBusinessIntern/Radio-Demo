@@ -20,7 +20,8 @@ interface PlayerState {
   duration: number;
   hasBeenActivated: boolean;
   isLive: boolean;
-  isPlaylsitOpen: boolean;
+  isPlaylistOpen: boolean;
+  isOpenChannelList: boolean;
   currentEpisodeType: 'radio' | 'podcast' | null;
   isLoading: boolean;
   originType: 'program' | 'series' | null;
@@ -33,6 +34,7 @@ interface PlayerContextType extends PlayerState {
   activePlaylist: EpisodeType[];
   togglePlayPause: () => void;
   togglePlaylist: () => void;
+  toggleChannelList: () => void;
   playEpisode: (
     id: number,
     liveStatus?: boolean,
@@ -58,7 +60,8 @@ const initialPlayerState: PlayerState = {
   duration: 0,
   hasBeenActivated: false,
   isLive: false,
-  isPlaylsitOpen: false,
+  isPlaylistOpen: false,
+  isOpenChannelList: false,
   currentEpisodeType: 'radio',
   isLoading: false,
   originType: null,
@@ -233,7 +236,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               duration: newDuration,
               hasBeenActivated: true,
               isLive: liveStatus,
-              isPlaylsitOpen: false,
+              isPlaylistOpen: false,
               currentEpisodeType: type,
               isLoading: true,
               originType,
@@ -253,7 +256,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           return {
             ...prevState,
             isPlaying: true,
-            isPlaylsitOpen: false,
+            isPlaylistOpen: false,
             isLoading: true,
             originType,
             recentSeriesId,
@@ -368,7 +371,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, state.isPlaying, state.currentTime]);
 
   const togglePlaylist = useCallback(() => {
-    setState((prevState) => ({ ...prevState, isPlaylsitOpen: !prevState.isPlaylsitOpen }));
+    setState((prevState) => ({ ...prevState, isPlaylistOpen: !prevState.isPlaylistOpen }));
+  }, []);
+
+  const toggleChannelList = useCallback(() => {
+    setState((prevState) => ({ ...prevState, isOpenChannelList: !prevState.isOpenChannelList }));
   }, []);
 
   const handleSeek = useCallback(
@@ -465,6 +472,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     activePlaylist,
     togglePlayPause,
     togglePlaylist,
+    toggleChannelList,
     playEpisode,
     handleSeek,
     handleSkip,

@@ -4,6 +4,7 @@ import PicklePick from '../components/PicklePick';
 import Category from '../components/Category';
 import { useVersion } from '../contexts/VersionContext';
 import RecentEpisode from '../components/RecentEpisode';
+import LikedChannel from '../components/LikedChannel';
 
 function HomePage() {
   const { isRadioVersion } = useVersion();
@@ -12,6 +13,9 @@ function HomePage() {
     <div className="pr-28 pt-7">
       {/* 최근 들은 에피소드 */}
       <RecentEpisode />
+
+      {/* 좋아요한 채널 */}
+      <LikedChannel />
 
       {/* P!ckle P!ck */}
       <PicklePick />

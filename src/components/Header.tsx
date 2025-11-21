@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaAngleDown } from 'react-icons/fa6';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
@@ -15,6 +15,7 @@ import PickleLogo from '../assets/pickleLogo.svg';
 import SearchIcon from '../assets/searchIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useVersion } from '../contexts/VersionContext';
+import { supabase } from '../lib/supabaseClient';
 import type { HeaderType } from '../types';
 
 // 홈 헤더
@@ -127,7 +128,50 @@ const SearchHeader = () => {
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
 const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
-  const { togglePlaylist, isPlaylsitOpen } = usePlayer();
+  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
+  const { togglePlaylist, isPlaylistOpen } = usePlayer();
+  const [isLiked, setIsLiked] = useState(false);
+
+  const isLikePage = location.pathname.startsWith('/like/');
+  const programId = isLikePage && id ? parseInt(id, 10) : null;
+
+  useEffect(() => {
+    if (!programId) return;
+
+    async function fetchLikeStatus() {
+      const { data, error } = await supabase
+        .from('programs')
+        .select('is_liked')
+        .eq('id', programId)
+        .single();
+
+      if (error) {
+        console.error('좋아요 상태 조회 실패:', error);
+      } else if (data) {
+        setIsLiked(data.is_liked ?? false);
+      }
+    }
+
+    fetchLikeStatus();
+  }, [programId]);
+
+  const handleClickLike = async () => {
+    if (!programId) return;
+
+    const newIsLiked = !isLiked;
+    setIsLiked(newIsLiked);
+
+    const { error } = await supabase
+      .from('programs')
+      .update({ is_liked: newIsLiked })
+      .eq('id', programId);
+
+    if (error) {
+      console.error('좋아요 업데이트 실패:', error);
+      setIsLiked(!newIsLiked);
+    }
+  };
 
   return (
     <div className="flex flex-row justify-between items-center w-full z-30">
@@ -136,14 +180,29 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
           {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
-        <p className="text-[32px] whitespace-pre">{title}</p>
+        <p className="text-[32px] whitespace-pre mr-6">{title}</p>
+        {isLikePage && (
+          <button
+            className={`rounded-full px-4 py-3 flex gap-4 items-center border-2 text-lg font-normal transition-colors ${
+              isLiked ? 'border-red-500 bg-red-500/10' : 'border-[#8C8C8C]'
+            }`}
+            onClick={handleClickLike}
+          >
+            <img
+              src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
+              alt="좋아요"
+              className="w-8 h-8"
+            />
+            {isLiked ? '좋아요 취소' : '좋아요'}
+          </button>
+        )}
       </div>
       {isPlayer ? (
         <button className="cursor-pointer" onClick={togglePlaylist}>
           <div
-            className={`w-12 h-12 flex items-center justify-center ${isPlaylsitOpen ? 'rounded-full bg-white' : ''}`}
+            className={`w-12 h-12 flex items-center justify-center ${isPlaylistOpen ? 'rounded-full bg-white' : ''}`}
           >
-            <RiPlayListFill size={30} color={isPlaylsitOpen ? 'black' : 'white'} />
+            <RiPlayListFill size={30} color={isPlaylistOpen ? 'black' : 'white'} />
           </div>
         </button>
       ) : (
@@ -190,7 +249,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
     }
   };
 
-  return <div className="flex py-4 px-10 h-[80px] items-center">{renderHeader()}</div>;
+  return <div className="flex py-4 px-10 h-[100px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;
