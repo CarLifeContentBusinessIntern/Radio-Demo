@@ -61,6 +61,7 @@ function LikedChannelViewPage() {
                 hasAudio={!!episode.audio_file}
                 playlist={programData.episodes}
                 isRound={true}
+                originType="program"
               />
             );
           })}
