@@ -222,7 +222,7 @@ function Header({ type, title, isPlayer }: HeaderProps) {
     }
   };
 
-  return <div className="flex py-4 px-10 h-[80px] items-center">{renderHeader()}</div>;
+  return <div className="flex py-4 px-10 h-[100px] items-center">{renderHeader()}</div>;
 }
 
 export default Header;

@@ -1,17 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import ListViewItem from '../components/ListViewItem';
+import { useVersion } from '../contexts/VersionContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
-import { useVersion } from '../contexts/VersionContext';
 
 function RecentPage() {
-  const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
+  // const [isLoading, setIsLoading] = useState(true);
 
   const { isRadioVersion } = useVersion();
 
-  useEffect(() => {
-    async function fetchRecentData() {
+  const { data: allEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
+    queryKey: ['recentEpisodes'],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('series_episodes')
         .select('*, episodes(*, programs(*, broadcastings(*)))')
@@ -20,25 +22,22 @@ function RecentPage() {
 
       if (error) {
         console.log('❌ 최근 청취 조회 실패 :', error);
-        setIsLoading(false);
-        return;
+        throw error;
       }
 
-      const allEpisodes: EpisodeType[] = data
+      const episodes: EpisodeType[] = data
         .map((item: SeriesEpisodesType) => item.episodes)
-        .filter((episode): episode is EpisodeType => episode !== null && episode !== undefined);
+        .filter((episode): episode is EpisodeType => episode != null && episode !== undefined);
 
-      const finalEpisodes = isRadioVersion
-        ? allEpisodes
-        : allEpisodes.filter((episode) => episode.type === 'podcast');
+      return episodes;
+    },
+  });
 
-      setRecentEpisodes(finalEpisodes);
-
-      setIsLoading(false);
-    }
-
-    fetchRecentData();
-  }, [isRadioVersion]);
+  const recentEpisodes = useMemo(() => {
+    return isRadioVersion
+      ? allEpisodes
+      : allEpisodes.filter((episode) => episode.type === 'podcast');
+  }, [allEpisodes, isRadioVersion]);
 
   if (isLoading) {
     return (
