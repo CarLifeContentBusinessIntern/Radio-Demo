@@ -16,6 +16,7 @@ import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import PopularChannelPage from './pages/PopularChannelPage.tsx';
 import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
+import LikedChannelPage from './pages/LikedChannelPage.tsx';
 
 function AppRoutes() {
   const location = useLocation();
@@ -55,6 +56,12 @@ function AppRoutes() {
           <Route path="episodes/timeslot/:id" element={<ListViewPage type="timeslot" />} />
           <Route path="episodes/series/:id" element={<ListViewPage type="series" />} />
           <Route path="episodes/podcasts/:id" element={<ListViewPage type="podcast" />} />
+        </Route>
+      </Route>
+
+      <Route element={<Layout scrollbar={true} paddingX={true} paddingB={true} />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="liked-channels" element={<LikedChannelPage />} />
         </Route>
       </Route>
 
