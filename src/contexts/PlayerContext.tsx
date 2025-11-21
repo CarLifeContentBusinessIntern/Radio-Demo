@@ -209,15 +209,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     ) => {
       const type = isPodcast ? 'podcast' : 'radio';
       const episode = episodes.find((item) => item.id === id);
-      // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
-      if (state.currentEpisodeId && audioRef.current) {
-        saveListeningHistory(
-          state.currentEpisodeId,
-          audioRef.current.currentTime,
-          originType,
-          recentSeriesId
-        );
-      }
 
       if (episode?.audio_file === null) return;
 
@@ -274,6 +265,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const changeEpisode = useCallback(
     (direction: 1 | -1, isPlayBar: boolean) => {
       if (!activePlaylist.length || state.currentEpisodeId === null) return;
+
+      // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
+      if (state.currentEpisodeId && audioRef.current) {
+        saveListeningHistory(
+          state.currentEpisodeId,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
 
       const playlistLength = activePlaylist.length;
       let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
@@ -493,6 +494,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     recentSeriesId: number | null = null
   ) {
     if (!episodeId) return;
+
+    console.log(originType);
+    console.log(episodeId, currentTime);
+    console.log(recentSeriesId);
 
     const updateData: {
       listened_duration: number;

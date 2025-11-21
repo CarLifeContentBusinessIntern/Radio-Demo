@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AiOutlineLoading } from 'react-icons/ai';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -11,10 +12,9 @@ import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
+import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { AiOutlineLoading } from 'react-icons/ai';
-import PlayList from '../components/player/PlayList';
 
 function Player() {
   const { id } = useParams();
@@ -25,7 +25,6 @@ function Player() {
   const liveStatus = location.state?.isLive;
   const originType = location.state?.originType;
   const recentSeriesId = location.state?.recentSeriesId;
-  const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const {
     currentEpisodeData,
