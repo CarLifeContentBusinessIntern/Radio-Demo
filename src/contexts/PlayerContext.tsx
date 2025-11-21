@@ -495,10 +495,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   ) {
     if (!episodeId) return;
 
-    console.log(originType);
-    console.log(episodeId, currentTime);
-    console.log(recentSeriesId);
-
     const updateData: {
       listened_duration: number;
       listened_at: string;
