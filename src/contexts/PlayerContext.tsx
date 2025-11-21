@@ -314,8 +314,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               nextEpisode.id,
               state.isLive,
               isPodcast,
-              nextEpisode.origin_type ?? state.originType ?? null,
-              nextEpisode.recent_series_id ?? state.recentSeriesId ?? null
+              state.originType,
+              state.recentSeriesId
             );
           }
           return;

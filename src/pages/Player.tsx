@@ -183,6 +183,8 @@ function Player() {
                         playlist={playlist}
                         playlistType={playlistType}
                         isPlayer={true}
+                        originType={originType}
+                        recentSeriesId={recentSeriesId}
                       />
                     </div>
                   </li>
