@@ -12,6 +12,10 @@ export type EpisodeType = {
   program_id: number;
   order_recent: number;
   programs?: ProgramType;
+  origin_type?: 'program' | 'series' | null;
+  listened_at?: string;
+  listened_duration?: number;
+  recent_series_id?: number;
 };
 
 export type SeriesEpisodesType = {
