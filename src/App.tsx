@@ -15,6 +15,8 @@ import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import PopularChannelPage from './pages/PopularChannelPage.tsx';
+import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
+import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient({
@@ -65,6 +67,12 @@ function AppRoutes() {
         </Route>
       </Route>
 
+      <Route element={<Layout scrollbar={true} paddingX={true} paddingB={true} />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="liked-channels" element={<LikedChannelPage />} />
+        </Route>
+      </Route>
+
       <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="curation/:id" element={<GridViewPage />} />
@@ -101,6 +109,14 @@ function AppRoutes() {
       >
         <Route path="/player/:id" element={<Player />} />
         <Route path="/player/podcasts/:id" element={<Player />} />
+      </Route>
+
+      <Route
+        element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="/like/:id" element={<LikedChannelViewPage />} />
+        </Route>
       </Route>
 
       <Route

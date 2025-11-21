@@ -8,23 +8,22 @@ import {
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
 import Skeleton from 'react-loading-skeleton';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { AiOutlineLoading } from 'react-icons/ai';
 import PlayList from '../components/player/PlayList';
-import { useFetchChannel } from '../hooks/useFetchChannel';
 
 function Player() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-  const [isOpenList, setIsOpenList] = useState(false);
   const {
     currentEpisodeData,
     currentEpisodeType,
@@ -33,7 +32,7 @@ function Player() {
     isPlaying,
     isLive,
     isLoading,
-    isPlaylsitOpen,
+    isPlaylistOpen,
     togglePlayPause,
     handlePlayNext,
     handlePlayPrev,
@@ -43,11 +42,6 @@ function Player() {
     playEpisode,
     setPlaylist,
   } = usePlayer();
-  const {
-    data: channelEpisodeData,
-    isLoading: isChannelDataLoading,
-    error,
-  } = useFetchChannel(currentEpisodeData?.program_id ?? 0);
 
   const episodeId = id ? parseInt(id, 10) : null;
 
@@ -112,10 +106,15 @@ function Player() {
 
   const isHourDisplay = duration >= 3600;
 
-  const toggleChannelList = () => {
-    if (!isChannelDataLoading && !error) {
-      setIsOpenList(!isOpenList);
-    }
+  const handleToggleChannelList = (title: string) => {
+    navigate(`/like/${currentEpisodeData.program_id}`, {
+      replace: true,
+      state: {
+        ...location.state,
+        title: title,
+        program_id: currentEpisodeData.program_id,
+      },
+    });
   };
 
   return (
@@ -149,18 +148,9 @@ function Player() {
       {/* 에피소드 목록 */}
       <PlayList
         playlist={playlist}
-        isOpenList={isPlaylsitOpen}
+        isOpenList={isPlaylistOpen}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
-      />
-
-      {/* 채널 에피소드 목록 */}
-      <PlayList
-        playlist={channelEpisodeData}
-        isOpenList={isOpenList}
-        isHourDisplay={isHourDisplay}
-        playlistType={playlistType}
-        onClose={() => setIsOpenList(false)}
       />
 
       {/* 플레이 화면 */}
@@ -188,13 +178,28 @@ function Player() {
             <p className="text-xl md:text-[38px] text-[#A6A6A9]">
               {currentEpisodeType === 'podcast' ? (
                 <>
-                  <button onClick={toggleChannelList}>{currentEpisodeData.programs?.title}</button>·{' '}
-                  {currentEpisodeData.date}
+                  <button
+                    onClick={() =>
+                      handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                    }
+                  >
+                    {currentEpisodeData.programs?.title}
+                  </button>
+                  · {currentEpisodeData.date}
                 </>
               ) : (
-                `${currentEpisodeData.programs?.broadcastings?.title} ${
-                  currentEpisodeData.programs?.broadcastings?.channel
-                }`
+                <>
+                  {currentEpisodeData.programs?.broadcastings?.title}
+                  <button
+                    onClick={() =>
+                      handleToggleChannelList(
+                        currentEpisodeData.programs?.broadcastings?.channel ?? ''
+                      )
+                    }
+                  >
+                    {currentEpisodeData.programs?.broadcastings?.channel}
+                  </button>
+                </>
               )}
             </p>
             <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
