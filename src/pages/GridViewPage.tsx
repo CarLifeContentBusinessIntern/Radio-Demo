@@ -72,7 +72,7 @@ function GridViewPage() {
                 if (firstEpisodeWithAudio?.id) {
                   const validPlaylist = item.episodes?.filter((ep) => ep.audio_file !== null) || [];
                   navigate(`/player/${firstEpisodeWithAudio.id}`, {
-                    state: { isLive: isLive, playlist: validPlaylist },
+                    state: { isLive: isLive, playlist: validPlaylist, originType: 'program' },
                   });
                 } else {
                   toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });

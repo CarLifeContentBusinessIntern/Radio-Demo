@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AiOutlineLoading } from 'react-icons/ai';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -11,10 +12,9 @@ import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
+import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { AiOutlineLoading } from 'react-icons/ai';
-import PlayList from '../components/player/PlayList';
 
 function Player() {
   const { id } = useParams();
@@ -23,6 +23,8 @@ function Player() {
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
+  const originType = location.state?.originType;
+  const recentSeriesId = location.state?.recentSeriesId;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const {
     currentEpisodeData,
@@ -49,10 +51,19 @@ function Player() {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
       const isPodcast = episodeToPlay?.type === 'podcast';
-      playEpisode(episodeId, liveStatus, isPodcast);
+      playEpisode(episodeId, liveStatus, isPodcast, originType, recentSeriesId);
       setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, playlist, isLive, setPlaylist, liveStatus]);
+  }, [
+    episodeId,
+    playEpisode,
+    playlist,
+    isLive,
+    setPlaylist,
+    liveStatus,
+    originType,
+    recentSeriesId,
+  ]);
 
   const progressPercent = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
@@ -151,6 +162,8 @@ function Player() {
         isOpenList={isPlaylistOpen}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
+        originType={originType}
+        recentSeriesId={recentSeriesId}
       />
 
       {/* 플레이 화면 */}
