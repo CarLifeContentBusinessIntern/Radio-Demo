@@ -25,7 +25,9 @@ function TimeSlot() {
                 img={item.img_url}
                 onClick={() => {
                   if (item.has_episodes) {
-                    navigate(`/episodes/timeslot/${item.id}`, { state: { title: item.title } });
+                    navigate(`/episodes/timeslot/${item.id}`, {
+                      state: { title: item.title, originType: 'series' },
+                    });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
                   }

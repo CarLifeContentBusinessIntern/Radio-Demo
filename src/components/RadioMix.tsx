@@ -33,7 +33,12 @@ function RadioMix() {
         }
 
         navigate(`/player/${item.first_episode_id}`, {
-          state: { isLive: false, playlist: playlist },
+          state: {
+            isLive: false,
+            playlist: playlist,
+            originType: 'series',
+            recentSeriesId: item.id,
+          },
         });
       } catch (error) {
         console.error('플레이리스트 조회 실패:', error);

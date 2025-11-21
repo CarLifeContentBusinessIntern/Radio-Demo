@@ -12,13 +12,13 @@ type ListViewPageProps = {
 function ListViewPage({ type }: ListViewPageProps) {
   const location = useLocation();
   const isRound = location.state?.isRound;
+  const originType = location.state?.originType;
 
   const { id } = useParams();
   const { setPlaylist } = usePlayer();
   const [episodes, setEpisodes] = useState<SeriesEpisodesType[]>([]);
   const [currentPlaylist, setCurrentPlaylist] = useState<EpisodeType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
   const typeToIdMap = {
     channel: 'radio_id',
     timeslot: 'time_slot_id',
@@ -89,6 +89,8 @@ function ListViewPage({ type }: ListViewPageProps) {
                 hasAudio={!!item.episodes?.audio_file}
                 playlist={currentPlaylist}
                 isRound={isRound ?? true}
+                originType={originType}
+                recentSeriesId={item.series_id}
               />
             );
           })}

@@ -65,7 +65,7 @@ function PopularRadio() {
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
                     navigate(`/player/${firstEpisode.id}`, {
-                      state: { playlist: item.programs.episodes },
+                      state: { playlist: item.programs.episodes, originType: 'program' },
                     });
                   } else {
                     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });

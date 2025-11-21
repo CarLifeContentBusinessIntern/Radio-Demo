@@ -23,6 +23,8 @@ function Player() {
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
+  const originType = location.state?.originType;
+  const recentSeriesId = location.state?.recentSeriesId;
   const contentRef = useRef<HTMLDivElement>(null);
   const [isMoreBtn, setIsMoreBtn] = useState(false);
 
@@ -52,10 +54,19 @@ function Player() {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
       const isPodcast = episodeToPlay?.type === 'podcast';
-      playEpisode(episodeId, liveStatus, isPodcast);
+      playEpisode(episodeId, liveStatus, isPodcast, originType, recentSeriesId);
       setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, playlist, isLive, setPlaylist, liveStatus]);
+  }, [
+    episodeId,
+    playEpisode,
+    playlist,
+    isLive,
+    setPlaylist,
+    liveStatus,
+    originType,
+    recentSeriesId,
+  ]);
 
   const progressPercent = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';

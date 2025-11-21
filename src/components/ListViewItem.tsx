@@ -20,6 +20,8 @@ type ListViewItemProps = {
   playlistType?: string;
   isRound?: boolean;
   isPlayer?: boolean;
+  originType?: 'program' | 'series';
+  recentSeriesId?: number;
 };
 
 function ListViewItem({
@@ -35,6 +37,8 @@ function ListViewItem({
   playlist,
   isRound,
   isPlayer = false,
+  originType,
+  recentSeriesId,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
@@ -96,12 +100,19 @@ function ListViewItem({
               state: {
                 isLive: false,
                 playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
               },
             });
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: isLive, playlist: playlist },
+              state: {
+                isLive: isLive,
+                playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
+              },
             });
           }
         } else {
