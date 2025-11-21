@@ -1,5 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
@@ -43,10 +43,12 @@ function ListViewItem({
     duration,
     currentEpisodeData,
     currentEpisodeId,
-    isLive,
     formatTime,
     setPlaylist,
   } = usePlayer();
+
+  const location = useLocation();
+  const isLive = location.state?.isLive ?? false;
 
   const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const isHourDisplay = duration >= 3600;
@@ -98,10 +100,15 @@ function ListViewItem({
                 playlist: playlist,
               },
             });
+          } else if (isLive) {
+            navigate(`/player/${id}/live`, {
+              replace: isPlayer ? true : false,
+              state: { isLive: true, playlist: playlist },
+            });
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: isLive, playlist: playlist },
+              state: { isLive: false, playlist: playlist },
             });
           }
         } else {

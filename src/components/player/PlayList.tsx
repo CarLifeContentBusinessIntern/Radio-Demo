@@ -38,7 +38,7 @@ function PlayList({ playlist, isOpenList, isHourDisplay, playlistType, onClose }
 
               return (
                 <li
-                  key={item.id}
+                  key={item.id || item.programs?.id}
                   className={`rounded-md cursor-pointer p-3 flex items-center`}
                   onClick={onClose}
                 >

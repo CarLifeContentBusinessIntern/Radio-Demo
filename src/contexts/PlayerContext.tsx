@@ -188,7 +188,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const playEpisode = useCallback(
     (id: number, liveStatus = false, isPodcast = false) => {
-      const type = isPodcast ? 'podcast' : 'radio';
+      const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
       const episode = episodes.find((item) => item.id === id);
 
       if (episode?.audio_file === null) return;
@@ -199,33 +199,43 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setState((prevState) => {
           const isNewEpisode = prevState.currentEpisodeId !== id;
 
+          const changes = {
+            isLive: liveStatus,
+            currentEpisodeType: type,
+            isPlaylsitOpen: false,
+            isLoading: liveStatus ? false : prevState.isLoading,
+          };
+
           if (isNewEpisode) {
             return {
               ...prevState,
+              ...changes,
               currentEpisodeId: id,
               isPlaying: true,
               currentTime: 0,
               duration: newDuration,
               hasBeenActivated: true,
-              isLive: liveStatus,
-              isPlaylsitOpen: false,
-              currentEpisodeType: type,
-              isLoading: true,
+              isLoading: liveStatus ? false : true,
             };
           }
 
           if (prevState.isPlaying) {
             return {
               ...prevState,
-              isPlaylsitOpen: false,
+              isLive: changes.isLive,
+              currentEpisodeType: changes.currentEpisodeType,
+              isPlaylsitOpen: changes.isPlaylsitOpen,
+              isLoading: changes.isLoading,
             };
           }
 
           return {
             ...prevState,
+            isLive: changes.isLive,
+            isPlaylsitOpen: changes.isPlaylsitOpen,
+            currentEpisodeType: changes.currentEpisodeType,
             isPlaying: true,
-            isPlaylsitOpen: false,
-            isLoading: true,
+            isLoading: liveStatus ? false : true,
           };
         });
       }
@@ -264,6 +274,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                   isLive: false,
                   playlist: activePlaylist,
                 },
+              });
+            } else if (state.isLive) {
+              navigate(`/player/${nextEpisode.id}/live`, {
+                replace: true,
+                state: { isLive: state.isLive, playlist: activePlaylist },
               });
             } else {
               navigate(`/player/${nextEpisode.id}`, {
@@ -352,7 +367,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (hours > 0 || forceHourFormat) {
       return `${hStr}:${mStr}:${sStr}`;
     } else {
-      // 그 외에는 MM:SS 형식
       return `${mStr}:${sStr}`;
     }
   }, []);
