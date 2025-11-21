@@ -1,26 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import GridViewItem from './GridViewItem';
-import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
-import { useQuery } from '@tanstack/react-query';
+import { useLikedChannels } from '../hooks/useLikedChannels';
 
 function LikedChannel() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { data: likedChannel = [], isLoading } = useQuery<ProgramType[]>({
-    queryKey: ['likedChannels'],
-    queryFn: async () => {
-      const { data, error } = await supabase.from('programs').select('*').eq('is_liked', true);
-
-      if (error) {
-        console.error('좋아요 채널 조회 실패:', error);
-        throw error;
-      }
-
-      return data as ProgramType[];
-    },
-  });
+  const { data: likedChannel = [], isLoading } = useLikedChannels();
 
   const handleNavigate = (item: ProgramType) => {
     navigate(`/like/${item.id}`, {
