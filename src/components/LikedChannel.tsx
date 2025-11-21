@@ -62,7 +62,6 @@ function LikedChannel() {
               img="/더보기.png"
               onClick={() =>
                 navigate('/liked-channels', {
-                  replace: true,
                   state: { ...location.state, title: '회원님이 좋아요한 채널' },
                 })
               }

@@ -22,7 +22,7 @@ function LikedChannelViewPage() {
 
       const { data, error } = await supabase
         .from('programs')
-        .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
+        .select('*, broadcastings(*), episodes(*)')
         .eq('id', id)
         .single();
 

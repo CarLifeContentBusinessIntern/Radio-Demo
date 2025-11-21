@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FaAngleDown } from 'react-icons/fa6';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BackArrowIcon from '../assets/backArrowIcon.svg';
 import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
@@ -128,15 +128,38 @@ const SearchHeader = () => {
 // 서브 페이지 헤더 (뒤로가기, 타이틀)
 const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean }) => {
   const navigate = useNavigate();
-  const { togglePlaylist, isPlaylistOpen, isOpenChannelList, currentEpisodeData } = usePlayer();
-  const [isLiked, setIsLiked] = useState(currentEpisodeData?.programs?.is_liked ?? false);
+  const location = useLocation();
+  const { id } = useParams<{ id: string }>();
+  const { togglePlaylist, isPlaylistOpen } = usePlayer();
+  const [isLiked, setIsLiked] = useState(false);
+
+  const isLikePage = location.pathname.startsWith('/like/');
+  const programId = isLikePage && id ? parseInt(id, 10) : null;
+
+  useEffect(() => {
+    if (!programId) return;
+
+    async function fetchLikeStatus() {
+      const { data, error } = await supabase
+        .from('programs')
+        .select('is_liked')
+        .eq('id', programId)
+        .single();
+
+      if (error) {
+        console.error('좋아요 상태 조회 실패:', error);
+      } else if (data) {
+        setIsLiked(data.is_liked ?? false);
+      }
+    }
+
+    fetchLikeStatus();
+  }, [programId]);
 
   const handleClickLike = async () => {
-    if (!currentEpisodeData?.programs?.id) return;
+    if (!programId) return;
 
-    const programId = currentEpisodeData.programs.id;
     const newIsLiked = !isLiked;
-
     setIsLiked(newIsLiked);
 
     const { error } = await supabase
@@ -158,14 +181,18 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         </button>
         <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
         <p className="text-[32px] whitespace-pre mr-6">{title}</p>
-        {isPlayer && isOpenChannelList && (
+        {isLikePage && (
           <button
-            className={`rounded-full px-4 py-3 flex gap-4 items-center border text-lg font-normal transition-colors ${
+            className={`rounded-full px-4 py-3 flex gap-4 items-center border-2 text-lg font-normal transition-colors ${
               isLiked ? 'border-red-500 bg-red-500/10' : 'border-[#8C8C8C]'
             }`}
             onClick={handleClickLike}
           >
-            <img src="/favorite.png" alt="좋아요" className="w-8 h-8" />
+            <img
+              src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
+              alt="좋아요"
+              className="w-8 h-8"
+            />
             {isLiked ? '좋아요 취소' : '좋아요'}
           </button>
         )}
