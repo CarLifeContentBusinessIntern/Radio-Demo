@@ -163,26 +163,17 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (currentAudioUrl) {
-        if (audioRef.current.src !== currentAudioUrl) {
-          audioRef.current.src = currentAudioUrl;
-        }
+    const audio = audioRef.current;
+    if (!audio || !currentAudioUrl) return;
 
-        if (state.isPlaying) {
-          audioRef.current.play();
-          // .catch((e) => {
-          //   console.error('Audio play failed', e);
-          //   setState((prev) => ({ ...prev, isPlaying: false }));
-          // });
-        } else {
-          audioRef.current.pause();
-        }
-      } else {
-        audioRef.current.pause();
-      }
+    if (audio.src !== currentAudioUrl) {
+      audio.src = currentAudioUrl;
+      audio.currentTime = state.currentTime; // 여기서 한 번만 startTime 반영
     }
-  }, [currentAudioUrl, state.isPlaying]);
+
+    if (state.isPlaying) audio.play();
+    else audio.pause();
+  }, [currentAudioUrl, state.isPlaying, state.currentTime]);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
@@ -201,7 +192,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (
+    async (
       id: number,
       liveStatus = false,
       isPodcast = false,
@@ -209,7 +200,19 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       recentSeriesId: number | null = null
     ) => {
       const type = isPodcast ? 'podcast' : 'radio';
-      const episode = episodes.find((item) => item.id === id);
+
+      // 최신 데이터 가져오기 (최신 재생 시점을 위해)
+      const { data: freshEpisode } = await supabase
+        .from('episodes')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      const episode = freshEpisode ?? episodes.find((item) => item.id === id);
+      if (!episode) return;
+
+      // 마지막 재생 시점 가져오기
+      const startTime = Number(episode?.listened_duration) || 0;
 
       if (episode?.audio_file === null) return;
 
@@ -224,7 +227,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               ...prevState,
               currentEpisodeId: id,
               isPlaying: true,
-              currentTime: 0,
+              currentTime: startTime,
               duration: newDuration,
               hasBeenActivated: true,
               isLive: liveStatus,
