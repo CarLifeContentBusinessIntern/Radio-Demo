@@ -21,7 +21,6 @@ interface PlayerState {
   hasBeenActivated: boolean;
   isLive: boolean;
   isPlaylistOpen: boolean;
-  isOpenChannelList: boolean;
   currentEpisodeType: 'radio' | 'podcast' | null;
   isLoading: boolean;
   originType: 'program' | 'series' | null;
@@ -35,7 +34,6 @@ interface PlayerContextType extends PlayerState {
   togglePlayPause: () => void;
   togglePlaylist: () => void;
   closePlaylist: () => void;
-  toggleChannelList: () => void;
   playEpisode: (
     id: number,
     liveStatus?: boolean,
@@ -63,7 +61,6 @@ const initialPlayerState: PlayerState = {
   hasBeenActivated: false,
   isLive: false,
   isPlaylistOpen: false,
-  isOpenChannelList: false,
   currentEpisodeType: 'radio',
   isLoading: false,
   originType: null,
@@ -396,10 +393,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setState((prevState) => ({ ...prevState, isPlaylistOpen: false }));
   }, []);
 
-  const toggleChannelList = useCallback(() => {
-    setState((prevState) => ({ ...prevState, isOpenChannelList: !prevState.isOpenChannelList }));
-  }, []);
-
   const handleSeek = useCallback(
     (time: number) => {
       if (audioRef.current) {
@@ -506,7 +499,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     togglePlayPause,
     togglePlaylist,
     closePlaylist,
-    toggleChannelList,
     playEpisode,
     handleSeek,
     handleSkip,

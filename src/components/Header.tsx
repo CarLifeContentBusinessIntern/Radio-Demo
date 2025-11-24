@@ -183,17 +183,17 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <p className="text-[32px] whitespace-pre mr-6">{title}</p>
         {isLikePage && (
           <button
-            className={`rounded-full px-4 py-3 flex gap-4 items-center border-2 text-lg font-normal transition-colors ${
-              isLiked ? 'border-red-500 bg-red-500/10' : 'border-[#8C8C8C]'
-            }`}
+            className="rounded-full p-[2px] bg-gradient-to-tr from-[#3B3B3B] to-[#8C8C8C]"
             onClick={handleClickLike}
           >
-            <img
-              src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
-              alt="좋아요"
-              className="w-8 h-8"
-            />
-            {isLiked ? '좋아요 취소' : '좋아요'}
+            <div className="rounded-full px-[16px] py-[9px] flex gap-[10px] items-center text-[22px] font-medium bg-[#1B1B1B]">
+              <img
+                src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
+                alt="좋아요"
+                className="w-10 h-10"
+              />
+              좋아요
+            </div>
           </button>
         )}
       </div>

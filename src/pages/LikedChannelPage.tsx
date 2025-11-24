@@ -1,32 +1,13 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import GridViewItem from '../components/GridViewItem';
+import { useLikedChannels } from '../hooks/useLikedChannels';
 
 function LikedChannelPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [likedChannel, setLikedChannel] = useState<ProgramType[]>([]);
 
-  useEffect(() => {
-    async function fetchLikedChannel() {
-      setIsLoading(true);
-
-      const { data, error } = await supabase.from('programs').select('*').eq('is_liked', true);
-
-      if (error) {
-        console.error('좋아요 채널 조회 실패:', error);
-      } else if (data) {
-        setLikedChannel(data);
-      }
-
-      setIsLoading(false);
-    }
-
-    fetchLikedChannel();
-  }, []);
+  const { data: likedChannel = [], isLoading } = useLikedChannels();
 
   const handleNavigate = (item: ProgramType) => {
     navigate(`/like/${item.id}`, {
