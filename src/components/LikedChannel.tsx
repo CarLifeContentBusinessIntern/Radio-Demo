@@ -30,7 +30,6 @@ function LikedChannel() {
 
   const handleNavigate = (item: ProgramType) => {
     navigate(`/like/${item.id}`, {
-      replace: true,
       state: {
         ...location.state,
         title: item.title,

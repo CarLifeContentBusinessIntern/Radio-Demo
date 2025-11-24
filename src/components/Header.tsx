@@ -100,7 +100,7 @@ const SearchHeader = () => {
       <button onClick={() => navigate(-1)} className="pr-11">
         <img src={BackArrowIcon} alt="Back" />
       </button>
-      <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
+      <img src={PickleLogo} alt="Pickle Logo" className="pr-5" height={70} width={70} />
       <div className="relative flex-grow h-[68px] border-4 border-white rounded-2xl flex items-center">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <IoSearch size={30} />
@@ -179,7 +179,7 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <button onClick={() => navigate(-1)} className="pr-11">
           {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
-        <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
+        <img src={PickleLogo} alt="Pickle Logo" className="pr-5" height={70} width={70} />
         <p className="text-[32px] whitespace-pre mr-6">{title}</p>
         {isLikePage && (
           <button
