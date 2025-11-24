@@ -49,6 +49,7 @@ function ListViewItem({
     currentEpisodeId,
     formatTime,
     setPlaylist,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
 
   const location = useLocation();
@@ -95,7 +96,7 @@ function ListViewItem({
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() => {
         // 기존 재생 중인 에피소드 저장
-        // saveCurrentEpisodeProgress();
+        saveCurrentEpisodeProgress();
 
         setPlaylist(playlist ?? []);
         if (hasAudio) {

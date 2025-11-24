@@ -248,6 +248,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               isLoading: changes.isLoading,
               originType,
               recentSeriesId,
+              isPlaylistOpen: false,
             };
           }
 
