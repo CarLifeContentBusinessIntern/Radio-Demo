@@ -48,11 +48,8 @@ function ListViewItem({
     currentEpisodeData,
     currentEpisodeId,
     isLive,
-    isOpenChannelList,
     formatTime,
     setPlaylist,
-    toggleChannelList,
-    saveCurrentEpisodeProgress,
   } = usePlayer();
 
   const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -95,10 +92,6 @@ function ListViewItem({
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() => {
-        if (isOpenChannelList) {
-          toggleChannelList();
-        }
-
         // 기존 재생 중인 에피소드 저장
         saveCurrentEpisodeProgress();
 
