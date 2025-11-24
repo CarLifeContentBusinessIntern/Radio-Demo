@@ -14,7 +14,7 @@ function ChannelList() {
       const { data, error } = await supabase
         .from('broadcastings')
         .select('*,programs(count)')
-        .not('"order"', 'is', null) // order가 null인 애들 제외
+        .not('"order"', 'is', null)
         .order('order', { ascending: true });
 
       if (error) {

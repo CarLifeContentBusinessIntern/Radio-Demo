@@ -1,5 +1,3 @@
-// import { useVersion } from '../contexts/VersionContext';
-
 import Skeleton from 'react-loading-skeleton';
 import ImageWithSkeleton from './ImageWithSkeleton';
 

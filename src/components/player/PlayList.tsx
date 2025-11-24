@@ -45,10 +45,11 @@ function PlayList({
               const subTitle = isLive
                 ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
                 : item.programs?.title;
+              const uniqueKey = `${item.id || 'program'}_${item.programs?.id || 'no-id'}`;
 
               return (
                 <li
-                  key={item.id}
+                  key={uniqueKey}
                   className={`rounded-md cursor-pointer p-3 flex items-center`}
                   onClick={onClose}
                 >

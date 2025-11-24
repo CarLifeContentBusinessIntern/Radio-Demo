@@ -33,6 +33,7 @@ interface PlayerContextType extends PlayerState {
   activePlaylist: EpisodeType[];
   togglePlayPause: () => void;
   togglePlaylist: () => void;
+  closePlaylist: () => void;
   playEpisode: (
     id: number,
     liveStatus?: boolean,
@@ -205,7 +206,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       originType: 'program' | 'series' | null = null,
       recentSeriesId: number | null = null
     ) => {
-      const type = isPodcast ? 'podcast' : 'radio';
+      const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
       const episode = episodes.find((item) => item.id === id);
 
       if (episode?.audio_file === null) return;
@@ -216,39 +217,50 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         setState((prevState) => {
           const isNewEpisode = prevState.currentEpisodeId !== id;
 
+          const changes = {
+            isLive: liveStatus,
+            currentEpisodeType: type,
+            isLoading: liveStatus ? false : prevState.isLoading,
+          };
+
           if (isNewEpisode) {
             return {
               ...prevState,
+              ...changes,
               currentEpisodeId: id,
               isPlaying: true,
               currentTime: 0,
               duration: newDuration,
               hasBeenActivated: true,
+              isLoading: liveStatus ? false : true,
               isLive: liveStatus,
-              isPlaylistOpen: false,
-              currentEpisodeType: type,
-              isLoading: true,
               originType,
               recentSeriesId,
+              isPlaylistOpen: false,
             };
           }
 
           if (prevState.isPlaying) {
             return {
               ...prevState,
-              isPlaylistOpen: false,
+              isLive: changes.isLive,
+              currentEpisodeType: changes.currentEpisodeType,
+              isLoading: changes.isLoading,
               originType,
               recentSeriesId,
+              isPlaylistOpen: false,
             };
           }
 
           return {
             ...prevState,
+            isLive: changes.isLive,
+            currentEpisodeType: changes.currentEpisodeType,
             isPlaying: true,
-            isPlaylistOpen: false,
-            isLoading: true,
+            isLoading: liveStatus ? false : true,
             originType,
             recentSeriesId,
+            isPlaylistOpen: false,
           };
         });
       }
@@ -299,6 +311,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
+              });
+            } else if (state.isLive) {
+              navigate(`/player/${nextEpisode.id}/live`, {
+                replace: true,
+                state: { isLive: state.isLive, playlist: activePlaylist },
               });
             } else {
               navigate(`/player/${nextEpisode.id}`, {
@@ -373,6 +390,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setState((prevState) => ({ ...prevState, isPlaylistOpen: !prevState.isPlaylistOpen }));
   }, []);
 
+  const closePlaylist = useCallback(() => {
+    setState((prevState) => ({ ...prevState, isPlaylistOpen: false }));
+  }, []);
+
   const handleSeek = useCallback(
     (time: number) => {
       if (audioRef.current) {
@@ -409,7 +430,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (hours > 0 || forceHourFormat) {
       return `${hStr}:${mStr}:${sStr}`;
     } else {
-      // 그 외에는 MM:SS 형식
       return `${mStr}:${sStr}`;
     }
   }, []);
@@ -479,6 +499,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     activePlaylist,
     togglePlayPause,
     togglePlaylist,
+    closePlaylist,
     playEpisode,
     handleSeek,
     handleSkip,

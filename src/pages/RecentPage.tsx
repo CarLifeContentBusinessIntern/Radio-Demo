@@ -6,9 +6,6 @@ import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
 
 function RecentPage() {
-  // const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
-  // const [isLoading, setIsLoading] = useState(true);
-
   const { isRadioVersion } = useVersion();
 
   const { data: allEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
