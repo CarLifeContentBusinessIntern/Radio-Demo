@@ -9,6 +9,7 @@ import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
 function ListViewPage() {
   const location = useLocation();
   const { isRound } = location.state || { isRound: true };
+  const originType = location.state?.originType;
 
   const { type, id } = useParams();
   const { setPlaylist } = usePlayer();
@@ -83,6 +84,8 @@ function ListViewPage() {
             hasAudio={!!item.episodes?.audio_file}
             playlist={currentPlaylist}
             isRound={isRound ?? true}
+            originType={originType}
+            recentSeriesId={item.series_id}
           />
         );
       })}

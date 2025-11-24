@@ -20,9 +20,12 @@ interface PlayerState {
   duration: number;
   hasBeenActivated: boolean;
   isLive: boolean;
-  isPlaylsitOpen: boolean;
+  isPlaylistOpen: boolean;
+  isOpenChannelList: boolean;
   currentEpisodeType: 'radio' | 'podcast' | null;
   isLoading: boolean;
+  originType: 'program' | 'series' | null;
+  recentSeriesId: number | null;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -31,7 +34,15 @@ interface PlayerContextType extends PlayerState {
   activePlaylist: EpisodeType[];
   togglePlayPause: () => void;
   togglePlaylist: () => void;
-  playEpisode: (id: number, liveStatus?: boolean, isPodcast?: boolean) => void;
+  closePlaylist: () => void;
+  toggleChannelList: () => void;
+  playEpisode: (
+    id: number,
+    liveStatus?: boolean,
+    isPodcast?: boolean,
+    originType?: 'program' | 'series' | null,
+    recentSeriesId?: number | null
+  ) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
   formatTime: (seconds: number, forceHourFormat: boolean) => string;
@@ -41,6 +52,7 @@ interface PlayerContextType extends PlayerState {
   handlePlayBarNext: () => void;
   handlePlayBarPrev: () => void;
   resetPlayer: () => void;
+  saveCurrentEpisodeProgress: () => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -50,9 +62,12 @@ const initialPlayerState: PlayerState = {
   duration: 0,
   hasBeenActivated: false,
   isLive: false,
-  isPlaylsitOpen: false,
+  isPlaylistOpen: false,
+  isOpenChannelList: false,
   currentEpisodeType: 'radio',
   isLoading: false,
+  originType: null,
+  recentSeriesId: null,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -187,7 +202,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (id: number, liveStatus = false, isPodcast = false) => {
+    (
+      id: number,
+      liveStatus = false,
+      isPodcast = false,
+      originType: 'program' | 'series' | null = null,
+      recentSeriesId: number | null = null
+    ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
       const episode = episodes.find((item) => item.id === id);
 
@@ -202,7 +223,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           const changes = {
             isLive: liveStatus,
             currentEpisodeType: type,
-            isPlaylsitOpen: false,
             isLoading: liveStatus ? false : prevState.isLoading,
           };
 
@@ -216,6 +236,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               duration: newDuration,
               hasBeenActivated: true,
               isLoading: liveStatus ? false : true,
+              isLive: liveStatus,
+              originType,
+              recentSeriesId,
+              isPlaylistOpen: false,
             };
           }
 
@@ -224,18 +248,21 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               ...prevState,
               isLive: changes.isLive,
               currentEpisodeType: changes.currentEpisodeType,
-              isPlaylsitOpen: changes.isPlaylsitOpen,
               isLoading: changes.isLoading,
+              originType,
+              recentSeriesId,
             };
           }
 
           return {
             ...prevState,
             isLive: changes.isLive,
-            isPlaylsitOpen: changes.isPlaylsitOpen,
             currentEpisodeType: changes.currentEpisodeType,
             isPlaying: true,
             isLoading: liveStatus ? false : true,
+            originType,
+            recentSeriesId,
+            isPlaylistOpen: false,
           };
         });
       }
@@ -250,6 +277,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const changeEpisode = useCallback(
     (direction: 1 | -1, isPlayBar: boolean) => {
       if (!activePlaylist.length || state.currentEpisodeId === null) return;
+
+      // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
+      if (state.currentEpisodeId && audioRef.current) {
+        saveListeningHistory(
+          state.currentEpisodeId,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
 
       const playlistLength = activePlaylist.length;
       let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
@@ -273,6 +310,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                 state: {
                   isLive: false,
                   playlist: activePlaylist,
+                  originType: state.originType,
+                  recentSeriesId: state.recentSeriesId,
                 },
               });
             } else if (state.isLive) {
@@ -283,11 +322,22 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else {
               navigate(`/player/${nextEpisode.id}`, {
                 replace: true,
-                state: { isLive: state.isLive, playlist: activePlaylist },
+                state: {
+                  isLive: state.isLive,
+                  playlist: activePlaylist,
+                  originType: state.originType,
+                  recentSeriesId: state.recentSeriesId,
+                },
               });
             }
           } else {
-            playEpisode(nextEpisode.id, state.isLive, isPodcast);
+            playEpisode(
+              nextEpisode.id,
+              state.isLive,
+              isPodcast,
+              state.originType,
+              state.recentSeriesId
+            );
           }
           return;
         }
@@ -324,11 +374,30 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
   const togglePlayPause = useCallback(() => {
     if (state.currentEpisodeId === null) return;
+
+    // 멈추기 직전 재생 시간 DB에 시간 기록
+    if (state.isPlaying) {
+      saveListeningHistory(
+        state.currentEpisodeId,
+        state.currentTime,
+        state.originType,
+        state.recentSeriesId
+      );
+    }
+
     setState((prevState) => ({ ...prevState, isPlaying: !prevState.isPlaying }));
-  }, [state.currentEpisodeId]);
+  }, [state.currentEpisodeId, state.isPlaying, state.currentTime]);
 
   const togglePlaylist = useCallback(() => {
-    setState((prevState) => ({ ...prevState, isPlaylsitOpen: !prevState.isPlaylsitOpen }));
+    setState((prevState) => ({ ...prevState, isPlaylistOpen: !prevState.isPlaylistOpen }));
+  }, []);
+
+  const closePlaylist = useCallback(() => {
+    setState((prevState) => ({ ...prevState, isPlaylistOpen: false }));
+  }, []);
+
+  const toggleChannelList = useCallback(() => {
+    setState((prevState) => ({ ...prevState, isOpenChannelList: !prevState.isOpenChannelList }));
   }, []);
 
   const handleSeek = useCallback(
@@ -371,7 +440,44 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // 현재 재생 중 에피소드 ID Ref
+  const currentEpisodeRef = useRef<number | null>(state.currentEpisodeId);
+
+  useEffect(() => {
+    currentEpisodeRef.current = state.currentEpisodeId;
+  }, [state.currentEpisodeId]);
+
+  // 브라우저 새로고침, 탭 종료 시 DB에 시간 기록
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (audioRef.current && state.currentEpisodeId) {
+        saveListeningHistory(
+          state.currentEpisodeId,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
+
   const resetPlayer = useCallback(() => {
+    //플레이어 완전 종료 / 버전 변경 시 DB에 시간 기록
+    if (currentEpisodeRef.current && audioRef.current) {
+      saveListeningHistory(
+        currentEpisodeRef.current,
+        audioRef.current.currentTime,
+        state.originType,
+        state.recentSeriesId
+      );
+    }
+
     setState(initialPlayerState);
     setActivePlaylist([]);
     if (audioRef.current) {
@@ -380,6 +486,18 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
+  // 재생 중인 에피소드의 현재 시간 DB에 저장
+  const saveCurrentEpisodeProgress = useCallback(() => {
+    if (state.currentEpisodeId && audioRef.current) {
+      saveListeningHistory(
+        state.currentEpisodeId,
+        audioRef.current.currentTime,
+        state.originType,
+        state.recentSeriesId
+      );
+    }
+  }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
+
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
@@ -387,6 +505,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     activePlaylist,
     togglePlayPause,
     togglePlaylist,
+    closePlaylist,
+    toggleChannelList,
     playEpisode,
     handleSeek,
     handleSkip,
@@ -397,7 +517,40 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarNext,
     handlePlayBarPrev,
     resetPlayer,
+    saveCurrentEpisodeProgress,
   };
+
+  //최근 들은 시점 저장
+  async function saveListeningHistory(
+    episodeId: number,
+    currentTime: number,
+    originType: 'program' | 'series' | null = null,
+    recentSeriesId: number | null = null
+  ) {
+    if (!episodeId) return;
+
+    const updateData: {
+      listened_duration: number;
+      listened_at: string;
+      origin_type?: 'program' | 'series';
+      recent_series_id?: number | null;
+    } = {
+      listened_duration: Math.floor(currentTime),
+      listened_at: new Date().toISOString(),
+      recent_series_id: recentSeriesId,
+    };
+
+    //originType이 null일 때는 DB 업데이트 하지 않음
+    if (originType !== null) {
+      updateData.origin_type = originType;
+    }
+
+    const { error } = await supabase.from('episodes').update(updateData).eq('id', episodeId);
+
+    if (error) {
+      console.error('❌ Failed to save listening history:', error.message);
+    }
+  }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
 };

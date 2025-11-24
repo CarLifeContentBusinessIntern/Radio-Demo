@@ -71,7 +71,11 @@ function PopularChannelPage() {
                       item.programs.episodes?.[0]?.audio_file !== null
                     ) {
                       navigate(`/player/${firstEpisodeId}`, {
-                        state: { isLive: false, playlist: item.programs.episodes },
+                        state: {
+                          isLive: false,
+                          playlist: item.programs.episodes,
+                          originType: 'program',
+                        },
                       });
                     } else {
                       toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });

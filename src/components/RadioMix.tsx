@@ -42,7 +42,7 @@ function RadioMix() {
       }
 
       navigate(`/player/${item.first_episode_id}`, {
-        state: { isLive: false, playlist: playlist },
+        state: { isLive: false, playlist: playlist, originType: 'series', recentSeriesId: item.id },
       });
     },
     onError: (error) => {

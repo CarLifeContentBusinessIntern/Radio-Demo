@@ -20,6 +20,8 @@ type ListViewItemProps = {
   playlistType?: string;
   isRound?: boolean;
   isPlayer?: boolean;
+  originType?: 'program' | 'series';
+  recentSeriesId?: number;
 };
 
 function ListViewItem({
@@ -35,6 +37,8 @@ function ListViewItem({
   playlist,
   isRound,
   isPlayer = false,
+  originType,
+  recentSeriesId,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
@@ -43,8 +47,11 @@ function ListViewItem({
     duration,
     currentEpisodeData,
     currentEpisodeId,
+    isOpenChannelList,
     formatTime,
     setPlaylist,
+    toggleChannelList,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
 
   const location = useLocation();
@@ -90,6 +97,13 @@ function ListViewItem({
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() => {
+        if (isOpenChannelList) {
+          toggleChannelList();
+        }
+
+        // 기존 재생 중인 에피소드 저장
+        saveCurrentEpisodeProgress();
+
         setPlaylist(playlist ?? []);
         if (hasAudio) {
           if (isPodcast) {
@@ -98,6 +112,8 @@ function ListViewItem({
               state: {
                 isLive: false,
                 playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
               },
             });
           } else if (isLive) {
@@ -108,7 +124,12 @@ function ListViewItem({
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: false, playlist: playlist },
+              state: {
+                isLive: false,
+                playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
+              },
             });
           }
         } else {
