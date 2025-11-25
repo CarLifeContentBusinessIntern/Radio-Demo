@@ -13,4 +13,5 @@ export type SectionItemType = {
   img_url: string;
   has_episodes: boolean;
   first_episode_id: number;
+  oem_key?: string;
 };
