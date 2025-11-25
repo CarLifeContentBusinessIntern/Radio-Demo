@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { formatTimeString } from '../utils/timeUtils';
+import { formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
 import ImageWithSkeleton from './ImageWithSkeleton';
 
 type ListViewItemProps = {
@@ -22,6 +22,7 @@ type ListViewItemProps = {
   isPlayer?: boolean;
   originType?: 'program' | 'series';
   recentSeriesId?: number;
+  listenedDuration?: number;
 };
 
 function ListViewItem({
@@ -39,6 +40,7 @@ function ListViewItem({
   isPlayer = false,
   originType,
   recentSeriesId,
+  listenedDuration,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
@@ -50,12 +52,22 @@ function ListViewItem({
     isLive,
     formatTime,
     setPlaylist,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
 
-  const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const isHourDisplay = duration >= 3600;
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
+
+  // 재생 중인 에피소드는 현재 재생 시간, 그렇지 않은 에피소드는 저장된 재생 시간 사용
+  const lastPlayedTime = isPlayingEpisode ? currentTime : listenedDuration || 0;
+
+  const totalTimeSeconds = timeStringToSeconds(totalTime || '');
+  const progressPercent = isLive
+    ? 100
+    : totalTimeSeconds > 0
+      ? (lastPlayedTime / totalTimeSeconds) * 100
+      : 0;
 
   if (isLoading) {
     return (
@@ -147,11 +159,15 @@ function ListViewItem({
               .join(' · ')}
           </div>
         </div>
-        {hasBeenActivated && currentEpisodeId === id && (
+        {(lastPlayedTime > 0 || isPlayingEpisode) && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
             <div
-              className="h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
-              style={{ width: `${progress}%` }}
+              className={`h-[4px] transition-width duration-100 ease-linear ${
+                currentEpisodeId === id ? 'bg-[#B76EEF]' : 'bg-[#888888]'
+              }`}
+              style={{
+                width: `${progressPercent}%`,
+              }}
             />
           </div>
         )}

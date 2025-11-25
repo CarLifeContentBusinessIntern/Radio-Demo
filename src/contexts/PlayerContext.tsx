@@ -50,6 +50,8 @@ interface PlayerContextType extends PlayerState {
   handlePlayBarPrev: () => void;
   resetPlayer: () => void;
   saveCurrentEpisodeProgress: () => void;
+  playedDurations: Record<number, number>;
+  setPlayedDurations: (callback: (prev: Record<number, number>) => Record<number, number>) => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -475,6 +477,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
 
+  const [playedDurations, setPlayedDurations] = useState<Record<number, number>>({});
+
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
@@ -493,6 +497,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarPrev,
     resetPlayer,
     saveCurrentEpisodeProgress,
+    playedDurations,
+    setPlayedDurations,
   };
 
   //최근 들은 시점 저장
@@ -525,6 +531,12 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('❌ Failed to save listening history:', error.message);
     }
+
+    // 여기서 UI용 Context에도 바로 반영
+    setPlayedDurations((prev) => ({
+      ...prev,
+      [episodeId]: currentTime,
+    }));
   }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
