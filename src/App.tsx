@@ -22,7 +22,7 @@ import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
-import ChannelDetailViewPage from './pages/LikedChannelViewPage.tsx';
+import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
