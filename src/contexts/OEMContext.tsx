@@ -7,7 +7,7 @@ interface OEMContextType {
 
 const OEMContext = createContext<OEMContextType | undefined>(undefined);
 
-const DEFAULT_OEM = 'Hyundai';
+const DEFAULT_OEM = 'hyundai';
 
 export const useOEM = () => {
   const context = useContext(OEMContext);
