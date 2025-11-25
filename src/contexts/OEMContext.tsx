@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 interface OEMContextType {
   selectedOEM: string;
@@ -7,6 +7,8 @@ interface OEMContextType {
 
 const OEMContext = createContext<OEMContextType | undefined>(undefined);
 
+const DEFAULT_OEM = 'Hyundai';
+
 export const useOEM = () => {
   const context = useContext(OEMContext);
   if (context === undefined) throw new Error('useOEM must be used inside OEMProvider');
@@ -14,9 +16,9 @@ export const useOEM = () => {
 };
 
 export const OEMProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedOEM, setSelectedOEM] = useState('Hyundai');
+  const [selectedOEM, setSelectedOEM] = useState(DEFAULT_OEM);
 
-  const contextValue: OEMContextType = { selectedOEM, setSelectedOEM };
+  const contextValue = useMemo(() => ({ selectedOEM, setSelectedOEM }), [selectedOEM]);
 
   return <OEMContext.Provider value={contextValue}>{children}</OEMContext.Provider>;
 };
