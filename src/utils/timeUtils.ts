@@ -33,3 +33,18 @@ export function formatTimeString(totalTime: string | undefined) {
     return totalTime;
   }
 }
+
+export function formatRemainingTime(startTime: number, endTime: number): string {
+  const remaining = Math.max(0, endTime - Math.floor(startTime));
+  const hours = Math.floor(remaining / 3600);
+  const mins = Math.floor((remaining % 3600) / 60);
+  const secs = remaining % 60;
+
+  const paddedMins = mins.toString().padStart(2, '0');
+  const paddedSecs = secs.toString().padStart(2, '0');
+
+  if (hours > 0) {
+    return `${hours}:${paddedMins}:${paddedSecs}`;
+  }
+  return `${paddedMins}:${paddedSecs}`;
+}

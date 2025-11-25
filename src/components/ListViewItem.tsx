@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
+import { formatRemainingTime, formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
 import ImageWithSkeleton from './ImageWithSkeleton';
 
 type ListViewItemProps = {
@@ -44,12 +44,9 @@ function ListViewItem({
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
-    hasBeenActivated,
     currentTime,
-    duration,
     currentEpisodeData,
     currentEpisodeId,
-    formatTime,
     setPlaylist,
     saveCurrentEpisodeProgress,
   } = usePlayer();
@@ -57,7 +54,6 @@ function ListViewItem({
   const location = useLocation();
   const isLive = location.state?.isLive ?? false;
 
-  const isHourDisplay = duration >= 3600;
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
 
@@ -156,7 +152,6 @@ function ListViewItem({
           ></div>
         )}
       </div>
-
       <div className="flex flex-col flex-grow text-[28px] min-w-0">
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
@@ -179,14 +174,22 @@ function ListViewItem({
           </div>
         )}
       </div>
-
       <div className="hidden md:block">
-        {(!isPodcast || isPlayer) && isPlayingEpisode && !isLive && (
-          <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
-            {playTime || formatTime(currentTime, isHourDisplay)}
-            {totalTime ? ` / ${totalTime}` : ``}
-          </p>
-        )}
+        {
+          // (!isPodcast || isPlayer) &&
+          !isLive &&
+            (isPlayingEpisode ? (
+              <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+                - {formatRemainingTime(currentTime, totalTimeSeconds)}
+              </p>
+            ) : (
+              lastPlayedTime > 0 && (
+                <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+                  - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
+                </p>
+              )
+            ))
+        }
       </div>
     </div>
   );
