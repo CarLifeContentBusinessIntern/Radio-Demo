@@ -22,6 +22,7 @@ import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
+import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -193,9 +194,11 @@ function App() {
       <BrowserRouter>
         <VersionProvider>
           <OEMProvider>
-            <PlayerProvider>
-              <AppRoutes />
-            </PlayerProvider>
+            <PreferenceProvider>
+              <PlayerProvider>
+                <AppRoutes />
+              </PlayerProvider>
+            </PreferenceProvider>
           </OEMProvider>
         </VersionProvider>
       </BrowserRouter>
