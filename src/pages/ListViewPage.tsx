@@ -1,10 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useMemo } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
 import { usePlayer } from '../contexts/PlayerContext';
-import { supabase } from '../lib/supabaseClient';
-import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
+import type { EpisodeType } from '../types/episode';
+import { useSeriesEpisodes } from '../hooks/useSeriesEpisodes';
 
 function ListViewPage() {
   const location = useLocation();
@@ -13,23 +12,7 @@ function ListViewPage() {
   const { type, id } = useParams();
   const { setPlaylist } = usePlayer();
 
-  const {
-    data: episodes = [],
-    isLoading,
-    error,
-  } = useQuery<SeriesEpisodesType[]>({
-    queryKey: ['episodes', type, id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('series_episodes')
-        .select('*, episodes(*, programs(*, broadcastings(*)))')
-        .eq('series_id', id);
-
-      if (error) throw error;
-      return data as SeriesEpisodesType[];
-    },
-    enabled: !!id,
-  });
+  const { data: episodes = [], isLoading, error } = useSeriesEpisodes(id, type);
 
   const currentPlaylist: EpisodeType[] = useMemo(() => {
     const playlist = episodes.map((item) => item.episodes).filter((ep): ep is EpisodeType => !!ep);

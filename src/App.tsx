@@ -8,7 +8,6 @@ import PlayerLayout from './layouts/PlayerLayout.tsx';
 import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
 import HomePage from './pages/HomePage.tsx';
-import ListViewPage from './pages/ListViewPage.tsx';
 import Player from './pages/Player.tsx';
 import Radio from './pages/Radio.tsx';
 import RecentPage from './pages/RecentPage.tsx';
@@ -18,6 +17,7 @@ import PopularChannelPage from './pages/PopularChannelPage.tsx';
 import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
 import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,7 +63,7 @@ function AppRoutes() {
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="episodes/:type/:id" element={<ListViewPage />} />
+          <Route path="episodes/:type/:id" element={<PicklePickTemplate />} />
         </Route>
       </Route>
 
