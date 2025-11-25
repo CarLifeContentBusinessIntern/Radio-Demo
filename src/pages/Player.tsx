@@ -53,8 +53,7 @@ function Player() {
   useEffect(() => {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
-      const isPodcast = episodeToPlay?.type === 'podcast';
-
+      const isPodcast = episodeToPlay?.type !== 'radio';
       const isLiveEpisode = liveStatus ?? false;
 
       playEpisode(episodeId, isLiveEpisode, isPodcast, originType, recentSeriesId);

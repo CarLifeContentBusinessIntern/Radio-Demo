@@ -8,17 +8,17 @@ import PlayerLayout from './layouts/PlayerLayout.tsx';
 import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
 import GridViewPage from './pages/GridViewPage.tsx';
 import HomePage from './pages/HomePage.tsx';
-import ListViewPage from './pages/ListViewPage.tsx';
 import Player from './pages/Player.tsx';
 import Radio from './pages/Radio.tsx';
 import RecentPage from './pages/RecentPage.tsx';
 import Search from './pages/Search.tsx';
 import SettingPage from './pages/SettingPage.tsx';
 import PopularChannelPage from './pages/PopularChannelPage.tsx';
-import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
-import LikedChannelPage from './pages/LikedChannelPage.tsx';
+// import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
+// import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
+import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
 import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
@@ -70,15 +70,17 @@ function AppRoutes() {
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="episodes/:type/:id" element={<ListViewPage />} />
+          <Route path="episodes/:type/:id" element={<PicklePickTemplate />} />
         </Route>
       </Route>
 
+      {/*}
       <Route element={<Layout scrollbar={true} paddingX={true} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
           <Route path="liked-channels" element={<LikedChannelPage />} />
         </Route>
       </Route>
+      */}
 
       <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
         <Route element={<PlayerLayout />}>
@@ -119,6 +121,7 @@ function AppRoutes() {
         <Route path="/player/podcasts/:id" element={<Player />} />
       </Route>
 
+      {/*
       <Route
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
@@ -126,6 +129,7 @@ function AppRoutes() {
           <Route path="/like/:id" element={<LikedChannelViewPage />} />
         </Route>
       </Route>
+      */}
 
       <Route
         element={
