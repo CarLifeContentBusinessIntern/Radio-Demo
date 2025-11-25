@@ -9,10 +9,20 @@ interface PlayListProps {
   isOpenList: boolean;
   isHourDisplay: boolean;
   playlistType: string;
+  originType: 'program' | 'series';
+  recentSeriesId: number;
   onClose?: () => void;
 }
 
-function PlayList({ playlist, isOpenList, isHourDisplay, playlistType, onClose }: PlayListProps) {
+function PlayList({
+  playlist,
+  isOpenList,
+  isHourDisplay,
+  playlistType,
+  onClose,
+  originType,
+  recentSeriesId,
+}: PlayListProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const { currentEpisodeId, currentTime, isLive, formatTime } = usePlayer();
 
@@ -35,10 +45,11 @@ function PlayList({ playlist, isOpenList, isHourDisplay, playlistType, onClose }
               const subTitle = isLive
                 ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
                 : item.programs?.title;
+              const uniqueKey = `${item.id || 'program'}_${item.programs?.id || 'no-id'}`;
 
               return (
                 <li
-                  key={item.id}
+                  key={uniqueKey}
                   className={`rounded-md cursor-pointer p-3 flex items-center`}
                   onClick={onClose}
                 >
@@ -55,6 +66,8 @@ function PlayList({ playlist, isOpenList, isHourDisplay, playlistType, onClose }
                       playlist={playlist}
                       playlistType={playlistType}
                       isPlayer={true}
+                      originType={originType}
+                      recentSeriesId={recentSeriesId}
                     />
                   </div>
                 </li>

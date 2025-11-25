@@ -17,7 +17,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
   const location = useLocation();
   const { type } = location.state || {};
   const { id } = useParams();
-  const { isLive } = usePlayer();
+  const isLive = location.state?.isLive ?? false;
 
   const isSeriesEpisodes = type === 'series_episodes';
   const programsQuery = usePrograms(id, type);

@@ -18,6 +18,10 @@ import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
 import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
+import SettingFunction from './pages/SettingFunction.tsx';
+import SettingDemo from './pages/SettingDemo.tsx';
+import Preference from './pages/Preference.tsx';
+import { OEMProvider } from './contexts/OEMContext.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -108,6 +112,7 @@ function AppRoutes() {
         }
       >
         <Route path="/player/:id" element={<Player />} />
+        <Route path="/player/:id/live" element={<Player />} />
         <Route path="/player/podcasts/:id" element={<Player />} />
       </Route>
 
@@ -131,6 +136,9 @@ function AppRoutes() {
         }
       >
         <Route path="setting" element={<SettingPage />} />
+        <Route path="setting/function" element={<SettingFunction />} />
+        <Route path="setting/demo" element={<SettingDemo />} />
+        <Route path="setting/preference" element={<Preference />} />
       </Route>
 
       <Route
@@ -180,9 +188,11 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <VersionProvider>
-          <PlayerProvider>
-            <AppRoutes />
-          </PlayerProvider>
+          <OEMProvider>
+            <PlayerProvider>
+              <AppRoutes />
+            </PlayerProvider>
+          </OEMProvider>
         </VersionProvider>
       </BrowserRouter>
     </QueryClientProvider>

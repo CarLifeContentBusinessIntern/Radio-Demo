@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AiOutlineLoading } from 'react-icons/ai';
 import { IoEllipsisVertical } from 'react-icons/io5';
 import { RiForward15Fill, RiReplay15Fill } from 'react-icons/ri';
 import {
@@ -11,10 +12,9 @@ import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
+import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { AiOutlineLoading } from 'react-icons/ai';
-import PlayList from '../components/player/PlayList';
 
 function Player() {
   const { id } = useParams();
@@ -23,6 +23,8 @@ function Player() {
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
+  const originType = location.state?.originType;
+  const recentSeriesId = location.state?.recentSeriesId;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
   const {
     currentEpisodeData,
@@ -41,7 +43,10 @@ function Player() {
     formatTime,
     playEpisode,
     setPlaylist,
+    closePlaylist,
   } = usePlayer();
+
+  const effectiveIsLive = isLive || liveStatus;
 
   const episodeId = id ? parseInt(id, 10) : null;
 
@@ -49,12 +54,31 @@ function Player() {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
       const isPodcast = episodeToPlay?.type !== 'radio';
-      playEpisode(episodeId, liveStatus, isPodcast);
+      const isLiveEpisode = liveStatus ?? false;
+
+      playEpisode(episodeId, isLiveEpisode, isPodcast, originType, recentSeriesId);
       setPlaylist(playlist);
     }
-  }, [episodeId, playEpisode, playlist, isLive, setPlaylist, liveStatus]);
+  }, [
+    episodeId,
+    playEpisode,
+    playlist,
+    isLive,
+    setPlaylist,
+    liveStatus,
+    originType,
+    recentSeriesId,
+  ]);
 
-  const progressPercent = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
+  useEffect(() => {
+    return () => {
+      if (isPlaylistOpen && closePlaylist) {
+        closePlaylist();
+      }
+    };
+  }, [isPlaylistOpen, closePlaylist]);
+
+  const progressPercent = effectiveIsLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const playedColor = '#B76EEF';
   const unplayedColor = '#ffffff';
   const sliderStyle = useMemo(
@@ -151,6 +175,8 @@ function Player() {
         isOpenList={isPlaylistOpen}
         isHourDisplay={isHourDisplay}
         playlistType={playlistType}
+        originType={originType}
+        recentSeriesId={recentSeriesId}
       />
 
       {/* 플레이 화면 */}
@@ -203,7 +229,7 @@ function Player() {
               )}
             </p>
             <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
-              {isLive
+              {effectiveIsLive
                 ? 'LIVE'
                 : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
             </p>
@@ -216,15 +242,15 @@ function Player() {
               type="range"
               min="0"
               max={duration}
-              value={isLive ? duration : currentTime}
+              value={effectiveIsLive ? duration : currentTime}
               onChange={onHandleSeek}
-              disabled={isLive || isLoading}
-              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLive ? 'invisible' : ''}`}
+              disabled={effectiveIsLive || isLoading}
+              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
               style={sliderStyle}
             />
 
             <div
-              className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${isLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+              className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
             >
               <button onClick={() => handleSkip(-15)}>
                 <RiReplay15Fill size={36} />
@@ -236,7 +262,7 @@ function Player() {
           </div>
 
           <div className="flex items-center justify-between gap-16 z-20">
-            <button className={`text-gray-400 ${isLive ? 'invisible' : ''}`}>
+            <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
               <img src={speedIcon} />
               <p className="text-[12px]">1.0x</p>
             </button>
@@ -258,7 +284,7 @@ function Player() {
             </button>
 
             <button
-              className={`text-gray-400 ${isLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
+              className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
               onClick={() => setIsMoreBtn(!isMoreBtn)}
             >
               <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />

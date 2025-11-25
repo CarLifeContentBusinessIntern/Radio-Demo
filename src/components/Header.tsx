@@ -11,7 +11,7 @@ import HomeIcon from '../assets/ic_home.svg';
 import PopularIcon from '../assets/ic_popular.svg';
 import RadioIcon from '../assets/ic_radio.png';
 import RecentIcon from '../assets/ic_recent.svg';
-import PickleLogo from '../assets/pickleLogo.svg';
+import PickleLogo from '../assets/pickle_logo.png';
 import SearchIcon from '../assets/searchIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useVersion } from '../contexts/VersionContext';
@@ -48,7 +48,7 @@ const HomeHeader = () => {
       <div className="flex flex-row items-center gap-4 sm:gap-7 md:gap-11 lg:gap-20">
         {/* 로고 */}
         <button className="flex-shrink-0">
-          <img src={PickleLogo} alt="Pickle Logo" />
+          <img src={PickleLogo} alt="Pickle Logo" height={50} width={50} />
         </button>
 
         {/* 네비게이션 버튼들 */}
@@ -67,10 +67,10 @@ const HomeHeader = () => {
                 <img
                   src={link.icon}
                   alt={link.name}
-                  className="h-6 sm:h-7 md:h-8 lg:h-9 w-auto transition-all "
+                  className="h-6 sm:h-7 md:h-8 w-auto transition-all "
                 />
               ) : (
-                <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9" />
+                <div className="bg-gray-600 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9" />
               )}
               <p className="text-xs sm:text-sm md:text-lg lg:text-2xl whitespace-nowrap transition-all ">
                 {link.name}
@@ -100,7 +100,7 @@ const SearchHeader = () => {
       <button onClick={() => navigate(-1)} className="pr-11">
         <img src={BackArrowIcon} alt="Back" />
       </button>
-      <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
+      <img src={PickleLogo} alt="Pickle Logo" className="pr-5" height={70} width={70} />
       <div className="relative flex-grow h-[68px] border-4 border-white rounded-2xl flex items-center">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <IoSearch size={30} />
@@ -179,21 +179,21 @@ const SubPageHeader = ({ title, isPlayer }: { title?: string; isPlayer?: boolean
         <button onClick={() => navigate(-1)} className="pr-11">
           {isPlayer ? <FaAngleDown size={30} /> : <img src={BackArrowIcon} alt="Back" />}
         </button>
-        <img src={PickleLogo} alt="Pickle Logo" className="pr-5" />
+        <img src={PickleLogo} alt="Pickle Logo" className="pr-5" height={70} width={70} />
         <p className="text-[32px] whitespace-pre mr-6">{title}</p>
         {isLikePage && (
           <button
-            className={`rounded-full px-4 py-3 flex gap-4 items-center border-2 text-lg font-normal transition-colors ${
-              isLiked ? 'border-red-500 bg-red-500/10' : 'border-[#8C8C8C]'
-            }`}
+            className="rounded-full p-[2px] bg-gradient-to-tr from-[#3B3B3B] to-[#8C8C8C]"
             onClick={handleClickLike}
           >
-            <img
-              src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
-              alt="좋아요"
-              className="w-8 h-8"
-            />
-            {isLiked ? '좋아요 취소' : '좋아요'}
+            <div className="rounded-full px-[16px] py-[9px] flex gap-[10px] items-center text-[22px] font-medium bg-[#1B1B1B]">
+              <img
+                src={isLiked ? '/favorite.png' : '/nonfavorite.png'}
+                alt="좋아요"
+                className="w-10 h-10"
+              />
+              좋아요
+            </div>
           </button>
         )}
       </div>

@@ -1,5 +1,5 @@
 import Skeleton from 'react-loading-skeleton';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
@@ -20,6 +20,8 @@ type ListViewItemProps = {
   playlistType?: string;
   isRound?: boolean;
   isPlayer?: boolean;
+  originType?: 'program' | 'series';
+  recentSeriesId?: number;
 };
 
 function ListViewItem({
@@ -35,6 +37,8 @@ function ListViewItem({
   playlist,
   isRound,
   isPlayer = false,
+  originType,
+  recentSeriesId,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
@@ -43,12 +47,13 @@ function ListViewItem({
     duration,
     currentEpisodeData,
     currentEpisodeId,
-    isLive,
-    isOpenChannelList,
     formatTime,
     setPlaylist,
-    toggleChannelList,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
+
+  const location = useLocation();
+  const isLive = location.state?.isLive ?? false;
 
   const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
   const isHourDisplay = duration >= 3600;
@@ -90,9 +95,8 @@ function ListViewItem({
     <div
       className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
       onClick={() => {
-        if (isOpenChannelList) {
-          toggleChannelList();
-        }
+        // 기존 재생 중인 에피소드 저장
+        saveCurrentEpisodeProgress();
 
         setPlaylist(playlist ?? []);
         if (hasAudio) {
@@ -102,12 +106,24 @@ function ListViewItem({
               state: {
                 isLive: false,
                 playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
               },
+            });
+          } else if (isLive) {
+            navigate(`/player/${id}/live`, {
+              replace: isPlayer ? true : false,
+              state: { isLive: true, playlist: playlist },
             });
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: isLive, playlist: playlist },
+              state: {
+                isLive: false,
+                playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
+              },
             });
           }
         } else {

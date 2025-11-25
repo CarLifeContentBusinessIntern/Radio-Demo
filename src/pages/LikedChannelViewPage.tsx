@@ -1,10 +1,11 @@
 import { useParams } from 'react-router-dom';
 import ListViewItem from '../components/ListViewItem';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 import type { ProgramType } from '../types/program';
 import { usePlayer } from '../contexts/PlayerContext';
+import { useQuery } from '@tanstack/react-query';
 
 type ProgramWithEpisodes = ProgramType & {
   episodes: EpisodeType[];
@@ -13,13 +14,10 @@ type ProgramWithEpisodes = ProgramType & {
 function LikedChannelViewPage() {
   const { id } = useParams();
   const { setPlaylist } = usePlayer();
-  const [isLoading, setIsLoading] = useState(false);
-  const [programData, setProgramData] = useState<ProgramWithEpisodes | null>(null);
 
-  useEffect(() => {
-    const fetchProgramWithEpisodes = async () => {
-      setIsLoading(true);
-
+  const { data: programData, isLoading } = useQuery<ProgramWithEpisodes>({
+    queryKey: ['programWithEpisodes', id],
+    queryFn: async () => {
       const { data, error } = await supabase
         .from('programs')
         .select('*, broadcastings(*), episodes(*)')
@@ -28,16 +26,19 @@ function LikedChannelViewPage() {
 
       if (error) {
         console.error('프로그램 조회 실패:', error);
-      } else if (data) {
-        setProgramData(data as ProgramWithEpisodes);
-        setPlaylist(data.episodes || []);
+        throw error;
       }
 
-      setIsLoading(false);
-    };
+      return data as ProgramWithEpisodes;
+    },
+    enabled: !!id,
+  });
 
-    fetchProgramWithEpisodes();
-  }, [id, setPlaylist]);
+  useEffect(() => {
+    if (programData?.episodes) {
+      setPlaylist(programData.episodes);
+    }
+  }, [programData, setPlaylist]);
 
   return (
     <div className="flex flex-col gap-y-1">
