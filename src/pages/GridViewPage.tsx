@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import GridViewItem from '../components/GridViewItem';
-import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 
@@ -11,7 +10,7 @@ function GridViewPage() {
   const location = useLocation();
   const { type } = location.state || {};
   const { id } = useParams();
-  const { isLive } = usePlayer();
+  const isLive = location.state?.isLive ?? false;
 
   const {
     data: programs = [],
@@ -19,7 +18,7 @@ function GridViewPage() {
     error,
     isError,
   } = useQuery<ProgramType[]>({
-    queryKey: ['programs', id, type], // ✅ 오타 수정
+    queryKey: ['programs', id, type],
     queryFn: async () => {
       if (!id || !type) {
         return [];

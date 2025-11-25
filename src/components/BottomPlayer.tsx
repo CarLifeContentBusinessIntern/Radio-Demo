@@ -47,6 +47,10 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           isPickle: true,
         },
       });
+    } else if (isLive) {
+      navigate(`/player/${targetId}/live`, {
+        state: { isLive: true, playlist: activePlaylist, playlistType: 'EpisodeType' },
+      });
     } else {
       navigate(`/player/${targetId}`, {
         state: { isLive: isLive, playlist: activePlaylist, playlistType: 'EpisodeType' },
