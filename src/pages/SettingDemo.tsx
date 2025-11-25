@@ -28,7 +28,7 @@ function SettingDemo() {
 
   return (
     <div className="px-6">
-      <div className="flex px-4 items-center h-[170px] justify-between">
+      <div className="flex px-4 items-center h-[160px] justify-between">
         <p className="text-[36px]">OEM 콘텐츠</p>
 
         <div className="relative w-60 h-16" ref={dropdownRef}>

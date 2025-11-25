@@ -1,16 +1,14 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RightArrowIcon from '../assets/rightArrowIcon.svg';
-import { useVersion } from '../contexts/VersionContext';
 
 function SettingPage() {
   const navigate = useNavigate();
-  const { isLiveVersion, toggleLiveVersion, isRadioVersion, toggleRadioVersion } = useVersion();
-  const [selectedCountry, setSelectedCountry] = useState('대한민국');
+  // const { isLiveVersion, toggleLiveVersion, isRadioVersion, toggleRadioVersion } = useVersion();
+  // const [selectedCountry, setSelectedCountry] = useState('대한민국');
 
-  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCountry(event.target.value);
-  };
+  // const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setSelectedCountry(event.target.value);
+  // };
 
   return (
     <div>
