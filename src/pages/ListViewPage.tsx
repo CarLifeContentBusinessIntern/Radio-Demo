@@ -10,10 +10,10 @@ function ListViewPage() {
   const { isRound } = location.state || { isRound: true };
   const originType = location.state?.originType;
 
-  const { type, id } = useParams();
+  const { id } = useParams();
   const { setPlaylist } = usePlayer();
 
-  const { data: episodes = [], isLoading, error } = useSeriesEpisodes(id, type);
+  const { data: episodes = [], isLoading, error } = useSeriesEpisodes(id);
 
   const currentPlaylist: EpisodeType[] = useMemo(() => {
     const playlist = episodes.map((item) => item.episodes).filter((ep): ep is EpisodeType => !!ep);

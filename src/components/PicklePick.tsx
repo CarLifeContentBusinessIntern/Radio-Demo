@@ -8,7 +8,13 @@ export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemT
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';
     navigate(`/episodes/${pathSegment}/${item.id}`, {
-      state: { isPodcast: true, isRound: false, title: item.title, type: 'series_episodes', originType: 'series' },
+      state: {
+        isPodcast: true,
+        isRound: false,
+        title: item.title,
+        type: 'series_episodes',
+        originType: 'series',
+      },
     });
   } else {
     toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });

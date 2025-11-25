@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import type { SeriesEpisodesType } from '../types/episode';
 
-export function useSeriesEpisodes(id: string | undefined, type: string | undefined) {
+export function useSeriesEpisodes(id: string | undefined) {
   return useQuery<SeriesEpisodesType[]>({
-    queryKey: ['episodes', type, id],
+    queryKey: ['episodes', id],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('series_episodes')

@@ -39,7 +39,7 @@ function RectangleGridViewItem({
           src={img}
           alt="썸네일"
           className={`w-full aspect-[16/9] ${isRounded ? 'rounded-[11%]' : ''} mb-4 object-cover`}
-          skeletonClassName={`w-full aspect-[16/9] mb-4 ${isRounded ? 'rounded-[11%]' : ''} `}
+          skeletonClassName={`w-full aspect-[16/9] mb-4 ${isRounded ? 'rounded-[11%]' : ''}`}
         />
       ) : (
         <div

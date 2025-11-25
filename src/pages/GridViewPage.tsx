@@ -1,7 +1,6 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import GridViewItem from '../components/GridViewItem';
-import { usePlayer } from '../contexts/PlayerContext';
 import RectangleGridViewItem from '../components/RectangleGridViewItem';
 import { usePrograms } from '../hooks/usePrograms';
 import { useSeriesEpisodes } from '../hooks/useSeriesEpisodes';
@@ -21,7 +20,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
 
   const isSeriesEpisodes = type === 'series_episodes';
   const programsQuery = usePrograms(id, type);
-  const seriesEpisodesQuery = useSeriesEpisodes(id, type);
+  const seriesEpisodesQuery = useSeriesEpisodes(id);
 
   const {
     data: rawData = [],
@@ -46,7 +45,6 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
         created_at: item.created_at,
         broadcasting_id: item.episodes?.programs?.broadcasting_id || 0,
         type: 'podcast' as const,
-        episodes: allSeriesEpisodes,
       }))
     : (rawData as ProgramType[]);
 

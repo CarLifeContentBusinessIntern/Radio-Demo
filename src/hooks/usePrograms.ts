@@ -15,7 +15,7 @@ export function usePrograms(id: string | undefined, type: string | undefined) {
 
       const { data, error } = await supabase
         .from('programs')
-        .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
+        .select('*, broadcastings(*), episodes(*)')
         .order(filterProgramsOrder, { ascending: true })
         .eq(filterColumn, id);
 
