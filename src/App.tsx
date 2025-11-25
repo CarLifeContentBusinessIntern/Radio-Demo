@@ -18,6 +18,7 @@ import PopularChannelPage from './pages/PopularChannelPage.tsx';
 import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
 import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,6 +36,8 @@ function AppRoutes() {
   const { resetPlayer } = usePlayer();
 
   const isFirstRender = useRef(true);
+
+  useSaveProgressOnNavigate();
 
   useEffect(() => {
     if (isFirstRender.current) {
