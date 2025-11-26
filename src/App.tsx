@@ -17,6 +17,7 @@ import PopularChannelPage from './pages/PopularChannelPage.tsx';
 // import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
 // import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
 import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
 import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
@@ -41,6 +42,8 @@ function AppRoutes() {
   const { resetPlayer } = usePlayer();
 
   const isFirstRender = useRef(true);
+
+  useSaveProgressOnNavigate();
 
   useEffect(() => {
     if (isFirstRender.current) {

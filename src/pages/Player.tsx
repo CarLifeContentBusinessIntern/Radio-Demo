@@ -14,6 +14,7 @@ import speedIcon from '../assets/speedIcon.svg';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 function Player() {
   const { id } = useParams();
@@ -29,7 +30,6 @@ function Player() {
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
-    duration,
     isPlaying,
     isLive,
     isLoading,
@@ -47,6 +47,9 @@ function Player() {
 
   const effectiveIsLive = isLive || liveStatus;
   const episodeId = id ? parseInt(id, 10) : null;
+
+  const totalTime = currentEpisodeData?.duration;
+  const totalTimeSeconds = timeStringToSeconds(totalTime || '');
 
   useEffect(() => {
     if (episodeId !== null && playlist) {
@@ -76,7 +79,11 @@ function Player() {
     };
   }, [isPlaylistOpen, closePlaylist]);
 
-  const progressPercent = effectiveIsLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progressPercent = effectiveIsLive
+    ? 100
+    : totalTimeSeconds > 0
+      ? (currentTime / totalTimeSeconds) * 100
+      : 0;
   const playedColor = '#B76EEF';
   const unplayedColor = '#ffffff';
   const sliderStyle = useMemo(
@@ -123,7 +130,8 @@ function Player() {
   };
 
   const imgUrl = currentEpisodeData.img_url || currentEpisodeData.programs?.img_url;
-  const isHourDisplay = duration >= 3600;
+
+  const isHourDisplay = totalTimeSeconds >= 3600;
 
   const handleToggleChannelList = (title: string) => {
     navigate(`/channel-detail/${currentEpisodeData.program_id}`, {
@@ -210,7 +218,7 @@ function Player() {
             <p className={`text-[#A6A6A9] text-lg ${isLoading ? 'invisible' : ''}`}>
               {effectiveIsLive
                 ? 'LIVE'
-                : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
+                : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
             </p>
           </div>
         </div>
@@ -220,8 +228,8 @@ function Player() {
             <input
               type="range"
               min="0"
-              max={duration}
-              value={effectiveIsLive ? duration : currentTime}
+              max={totalTimeSeconds}
+              value={effectiveIsLive ? totalTimeSeconds : currentTime}
               onChange={onHandleSeek}
               disabled={effectiveIsLive || isLoading}
               className={`custom-slider w-full h-1 rounded-lg appearance-none range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}

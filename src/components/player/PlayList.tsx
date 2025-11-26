@@ -17,14 +17,13 @@ interface PlayListProps {
 function PlayList({
   playlist,
   isOpenList,
-  isHourDisplay,
   playlistType,
   onClose,
   originType,
   recentSeriesId,
 }: PlayListProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  const { currentEpisodeId, currentTime, isLive, formatTime } = usePlayer();
+  const { isLive, playedDurations } = usePlayer();
 
   return (
     <div
@@ -37,7 +36,6 @@ function PlayList({
         <div ref={contentRef} className="relative overflow-y-auto scrollbar-hide pr-20 w-full">
           <ul className="flex flex-col">
             {playlist.map((item: EpisodeType) => {
-              const isActive = currentEpisodeId === item.id;
               const imageUrl = item.img_url || item.programs?.img_url;
               const subTitle = isLive
                 ? `${item.programs?.broadcastings?.title} ${item.programs?.broadcastings?.channel}`
@@ -56,8 +54,7 @@ function PlayList({
                       imgUrl={imageUrl}
                       title={isLive ? item.programs?.title : item.title}
                       subTitle={subTitle}
-                      playTime={isActive ? formatTime(currentTime, isHourDisplay) : ''}
-                      totalTime={!isLive && isActive ? (item.duration ?? '') : ''}
+                      totalTime={!isLive ? (item.duration ?? '') : ''}
                       date={isLive ? '' : item.date}
                       hasAudio={item.audio_file ? true : false}
                       playlist={playlist}
@@ -65,6 +62,7 @@ function PlayList({
                       isPlayer={true}
                       originType={originType}
                       recentSeriesId={recentSeriesId}
+                      listenedDuration={playedDurations[item.id] ?? item.listened_duration}
                     />
                   </div>
                 </li>

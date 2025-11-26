@@ -11,7 +11,7 @@ function ListViewPage() {
   const originType = location.state?.originType;
 
   const { id } = useParams();
-  const { setPlaylist } = usePlayer();
+  const { setPlaylist, playedDurations } = usePlayer();
 
   const { data: episodes = [], isLoading, error } = useSeriesEpisodes(id);
 
@@ -69,6 +69,7 @@ function ListViewPage() {
             isRound={isRound ?? true}
             originType={originType}
             recentSeriesId={item.series_id}
+            listenedDuration={playedDurations[item.episode_id] ?? item.episodes?.listened_duration}
           />
         );
       })}
