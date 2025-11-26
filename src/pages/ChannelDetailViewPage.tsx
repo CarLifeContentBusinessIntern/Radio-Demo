@@ -13,7 +13,7 @@ type ProgramWithEpisodes = ProgramType & {
 
 function ChannelDetailViewPage() {
   const { id } = useParams();
-  const { setPlaylist } = usePlayer();
+  const { setPlaylist, playedDurations } = usePlayer();
 
   const { data: programData, isLoading } = useQuery<ProgramWithEpisodes>({
     queryKey: ['programWithEpisodes', id],
@@ -62,6 +62,8 @@ function ChannelDetailViewPage() {
                 hasAudio={!!episode.audio_file}
                 playlist={programData.episodes}
                 isRound={true}
+                originType="program"
+                listenedDuration={playedDurations[episode.id] ?? episode.listened_duration}
               />
             );
           })}
