@@ -4,8 +4,8 @@ import BannerBackground from '../assets/ai_pick_banner_background.png';
 import BannerIcon from '../assets/ai_pick_banner_icon.png';
 import PickleAIIcon from '../assets/ic_pickle_ai.png';
 import ListViewItem from '../components/ListViewItem';
+import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
-import { formatTimeString } from '../utils/timeUtils';
 import type { EpisodeType } from '../types/episode';
 
 function AIPick() {
@@ -27,6 +27,8 @@ function AIPick() {
     queryFn: fetchRandomEpisodes,
     refetchOnWindowFocus: false,
   });
+
+  const { playedDurations } = usePlayer();
 
   return (
     <div className="pt-7 pr-20 flex flex-col gap-8">
@@ -74,13 +76,14 @@ function AIPick() {
                 id={ep.id}
                 imgUrl={ep.img_url || ep.programs?.img_url}
                 title={ep.title}
-                subTitle={[ep.programs?.title, ep.date, formatTimeString(ep.duration)]
-                  .filter(Boolean)
-                  .join(' · ')}
+                subTitle={ep.programs?.title}
                 date={ep.date}
                 hasAudio={ep.audio_file ? true : false}
                 isRound={true}
                 playlist={episodes}
+                isPlayer={false}
+                totalTime={ep.duration}
+                listenedDuration={playedDurations[ep.id] ?? ep.listened_duration}
               />
             ))}
           </div>
