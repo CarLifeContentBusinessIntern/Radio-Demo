@@ -18,7 +18,7 @@ export const useZoom = () => {
 export const ZoomProvider = ({ children }: { children: ReactNode }) => {
   const [selectedZoom, setSelectedZoomState] = useState<number>(() => {
     const saved = localStorage.getItem(ZOOM_KEY);
-    return saved ? Number(saved) : 1;
+    return Number(saved) || 1;
   });
 
   const setSelectedZoom = (newZoom: number) => {
