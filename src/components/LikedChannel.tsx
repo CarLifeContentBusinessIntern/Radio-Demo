@@ -21,7 +21,7 @@ function LikedChannel() {
 
   return (
     <>
-      <div className="text-2xl font-bold mb-8">회원님이 좋아요 한 채널</div>
+      <div className="text-lg font-bold mb-8">회원님이 좋아요 한 채널</div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {isLoading ? (

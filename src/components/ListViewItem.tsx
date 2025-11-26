@@ -93,7 +93,7 @@ function ListViewItem({
 
   return (
     <div
-      className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
+      className="flex items-center justify-between gap-8 cursor-pointer"
       onClick={() => {
         // 기존 재생 중인 에피소드 저장
         saveCurrentEpisodeProgress();
@@ -136,17 +136,17 @@ function ListViewItem({
           <ImageWithSkeleton
             src={imgUrl}
             alt={title}
-            className={`w-28 h-28 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
+            className={`w-24 h-24 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
             skeletonClassName="rounded-[11px]"
           />
         ) : (
           <div
-            className={`w-28 h-28 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
+            className={`w-24 h-24 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
           ></div>
         )}
       </div>
 
-      <div className="flex flex-col flex-grow text-[28px] min-w-0">
+      <div className="flex flex-col flex-grow text-lg min-w-0">
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">
@@ -158,7 +158,7 @@ function ListViewItem({
         {hasBeenActivated && currentEpisodeId === id && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
             <div
-              className="h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
+              className="h-1 bg-[#B76EEF] transition-width duration-100 ease-linear"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -167,7 +167,7 @@ function ListViewItem({
 
       <div className="hidden md:block">
         {(!isPodcast || isPlayer) && isPlayingEpisode && !isLive && (
-          <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+          <p className="text-lg text-[#A6A6A9] w-32 text-right">
             {playTime || formatTime(currentTime, isHourDisplay)}
             {totalTime ? ` / ${totalTime}` : ``}
           </p>

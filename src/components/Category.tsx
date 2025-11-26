@@ -36,7 +36,7 @@ function Category({ title, type }: CategoryInterface) {
 
   return (
     <>
-      {title && <div className="text-2xl mb-7 font-semibold">카테고리</div>}
+      {title && <div className="text-lg mb-7 font-semibold">카테고리</div>}
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (

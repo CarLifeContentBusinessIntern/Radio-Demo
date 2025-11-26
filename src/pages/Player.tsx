@@ -14,12 +14,14 @@ import speedIcon from '../assets/speedIcon.svg';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
+import { useZoom } from '../contexts/ZoomContext';
 import type { EpisodeType } from '../types/episode';
 
 function Player() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { selectedZoom } = useZoom();
   const playlist = location.state?.playlist;
   const playlistType = location.state?.playlistType;
   const liveStatus = location.state?.isLive;
@@ -47,14 +49,22 @@ function Player() {
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
-
   const episodeId = id ? parseInt(id, 10) : null;
+
+  // zoom에 따른 스케일 조정 (Player 페이지만)
+  const scale = (value: number) => {
+    // zoom이 클수록 크기를 줄임
+    if (selectedZoom >= 1.8) return value * 0.65;
+    if (selectedZoom >= 1.6) return value * 0.7;
+    if (selectedZoom >= 1.4) return value * 0.8;
+    if (selectedZoom >= 1.2) return value * 0.9;
+    return value;
+  };
 
   useEffect(() => {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
       const isPodcast = episodeToPlay?.type === 'podcast';
-
       const isLiveEpisode = liveStatus ?? false;
 
       playEpisode(episodeId, isLiveEpisode, isPodcast, originType, recentSeriesId);
@@ -92,31 +102,40 @@ function Player() {
   if (!currentEpisodeData || !playlist) {
     return (
       <div className="relative h-full overflow-hidden">
-        <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+        <div
+          className="relative z-10 flex flex-col justify-center items-center h-full"
+          style={{ gap: `${scale(103)}px` }}
+        >
+          <div
+            className="flex flex-row items-center justify-center w-[80%] max-w-[1025px]"
+            style={{ gap: `${scale(52)}px` }}
+          >
             <div className="flex-shrink-0">
-              <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
+              <Skeleton
+                width={scale(224)}
+                height={scale(224)}
+                baseColor="#222"
+                highlightColor="#444"
+              />
             </div>
-
-            <div className="flex flex-col flex-grow justify-between h-full w-full md:w-auto">
+            <div className="flex flex-col flex-grow justify-between h-full">
               <div>
-                <Skeleton height={'2.25rem'} width="90%" baseColor="#222" highlightColor="#444" />
+                <Skeleton height={scale(36)} width="90%" baseColor="#222" highlightColor="#444" />
                 <Skeleton
-                  height={'1.8rem'}
+                  height={scale(29)}
                   width="60%"
-                  className="mt-4"
+                  style={{ marginTop: `${scale(16)}px` }}
                   baseColor="#222"
                   highlightColor="#444"
                 />
               </div>
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={scale(24)} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={scale(24)} width="40%" baseColor="#222" highlightColor="#444" />
             </div>
           </div>
-
-          <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
-            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
-            <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
+          <div className="flex flex-col w-[80%] max-w-[1025px]" style={{ gap: `${scale(80)}px` }}>
+            <Skeleton height={scale(60)} width="100%" baseColor="#222" highlightColor="#444" />
+            <Skeleton height={scale(60)} width="100%" baseColor="#222" highlightColor="#444" />
           </div>
         </div>
       </div>
@@ -128,29 +147,21 @@ function Player() {
   };
 
   const imgUrl = currentEpisodeData.img_url || currentEpisodeData.programs?.img_url;
-
   const isHourDisplay = duration >= 3600;
 
   const handleToggleChannelList = (title: string) => {
     navigate(`/like/${currentEpisodeData.program_id}`, {
       replace: true,
-      state: {
-        ...location.state,
-        title: title,
-        program_id: currentEpisodeData.program_id,
-      },
+      state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
 
   return (
-    <div className="relative h-full overflow-hidden">
-      {/* 플레이어 배경 */}
+    <div className="relative overflow-hidden flex justify-center items-center h-full pb-5">
       {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{
-            backgroundImage: `url('${imgUrl}')`,
-          }}
+          style={{ backgroundImage: `url('${imgUrl}')` }}
         >
           <div
             className="absolute inset-0 backdrop-blur-lg"
@@ -162,15 +173,10 @@ function Player() {
         </div>
       )}
 
-      {/* 확장 버튼 배경 */}
       <div
-        className={`bg-black/70 fixed inset-0 z-20
-          transition-opacity duration-300 ease-in-out
-          ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
-        `}
+        className={`bg-black/70 fixed inset-0 z-20 transition-opacity duration-300 ease-in-out ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}`}
       />
 
-      {/* 에피소드 목록 */}
       <PlayList
         playlist={playlist}
         isOpenList={isPlaylistOpen}
@@ -180,29 +186,25 @@ function Player() {
         recentSeriesId={recentSeriesId}
       />
 
-      {/* 플레이 화면 */}
-      <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
-          <div className="flex-shrink-0">
+      <div className="relative flex flex-col justify-center items-center h-full gap-12 w-1/2">
+        <div className="flex flex-row items-center justify-center gap-12 max-h-[260px] w-full">
+          <div className="flex-shrink-0 w-40 h-40">
             {imgUrl ? (
-              <ImageWithSkeleton
+              <img
                 src={imgUrl}
                 alt={currentEpisodeData.title}
-                className="w-40 h-40 md:w-60 md:h-60 object-cover"
-                skeletonClassName="w-[224px] h-[224px]"
-                baseColor="#222"
-                highlightColor="#444"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
+              <div className="w-full h-full bg-gray-400"></div>
             )}
           </div>
 
-          <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
-            <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
+          <div className="flex flex-col flex-grow justify-between h-full text-left">
+            <p className="line-clamp-2 leading-snug text-2xl">
               {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
-            <p className="text-xl md:text-[38px] text-[#A6A6A9]">
+            <p className="text-[#A6A6A9] text-lg">
               {currentEpisodeType === 'podcast' ? (
                 <>
                   <button
@@ -229,7 +231,7 @@ function Player() {
                 </>
               )}
             </p>
-            <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
+            <p className={`text-[#A6A6A9] text-lg ${isLoading ? 'invisible' : ''}`}>
               {effectiveIsLive
                 ? 'LIVE'
                 : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
@@ -237,7 +239,7 @@ function Player() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
+        <div className="flex flex-col gap-5 w-full ">
           <div className="flex flex-col items-center gap-5">
             <input
               type="range"
@@ -246,49 +248,54 @@ function Player() {
               value={effectiveIsLive ? duration : currentTime}
               onChange={onHandleSeek}
               disabled={effectiveIsLive || isLoading}
-              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
+              className={`custom-slider w-full h-1 rounded-lg appearance-none range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
               style={sliderStyle}
             />
 
             <div
-              className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+              className={`flex justify-between w-[30%] max-w-[280px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20`}
             >
               <button onClick={() => handleSkip(-15)}>
-                <RiReplay15Fill size={36} />
+                <RiReplay15Fill size={scale(36)} />
               </button>
               <button onClick={() => handleSkip(15)}>
-                <RiForward15Fill size={36} />
+                <RiForward15Fill size={scale(36)} />
               </button>
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-16 z-20">
+          <div className="flex items-center justify-between z-20" style={{ gap: `${scale(64)}px` }}>
             <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
-              <img src={speedIcon} />
-              <p className="text-[12px]">1.0x</p>
+              <img
+                src={speedIcon}
+                style={{ width: `${scale(32)}px`, height: `${scale(32)}px` }}
+                alt="speed"
+              />
+              <p style={{ fontSize: `${scale(12)}px` }}>1.0x</p>
             </button>
 
             <button onClick={handlePlayPrev}>
-              <TbPlayerSkipBackFilled size={30} />
+              <TbPlayerSkipBackFilled size={scale(30)} />
             </button>
             <button onClick={togglePlayPause} disabled={isLoading}>
               {isLoading ? (
-                <AiOutlineLoading size={30} className="animate-spin" />
+                <AiOutlineLoading size={scale(30)} className="animate-spin" />
               ) : isPlaying ? (
-                <TbPlayerPauseFilled size={30} />
+                <TbPlayerPauseFilled size={scale(30)} />
               ) : (
-                <TbPlayerPlayFilled size={30} />
+                <TbPlayerPlayFilled size={scale(30)} />
               )}
             </button>
             <button onClick={handlePlayNext}>
-              <TbPlayerSkipForwardFilled size={30} />
+              <TbPlayerSkipForwardFilled size={scale(30)} />
             </button>
 
             <button
-              className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
+              className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''} flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
+              style={{ width: `${scale(48)}px`, height: `${scale(48)}px` }}
               onClick={() => setIsMoreBtn(!isMoreBtn)}
             >
-              <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />
+              <IoEllipsisVertical size={scale(30)} color={isMoreBtn ? 'black' : 'white'} />
             </button>
           </div>
         </div>

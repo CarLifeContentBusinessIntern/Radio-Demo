@@ -22,6 +22,7 @@ import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
+import { ZoomProvider } from './contexts/ZoomContext.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -187,13 +188,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <VersionProvider>
-          <OEMProvider>
-            <PlayerProvider>
-              <AppRoutes />
-            </PlayerProvider>
-          </OEMProvider>
-        </VersionProvider>
+        <ZoomProvider>
+          <VersionProvider>
+            <OEMProvider>
+              <PlayerProvider>
+                <AppRoutes />
+              </PlayerProvider>
+            </OEMProvider>
+          </VersionProvider>
+        </ZoomProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

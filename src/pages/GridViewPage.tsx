@@ -51,7 +51,7 @@ function GridViewPage() {
   }
 
   return (
-    <div className="pr-28 pt-3">
+    <div className="pr-20">
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading ? (
           Array.from({ length: 8 }).map((_, index) => <GridViewItem isLoading={true} key={index} />)
