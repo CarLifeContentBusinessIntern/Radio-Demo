@@ -11,9 +11,9 @@ type ProgramWithEpisodes = ProgramType & {
   episodes: EpisodeType[];
 };
 
-function LikedChannelViewPage() {
+function ChannelDetailViewPage() {
   const { id } = useParams();
-  const { setPlaylist } = usePlayer();
+  const { setPlaylist, playedDurations } = usePlayer();
 
   const { data: programData, isLoading } = useQuery<ProgramWithEpisodes>({
     queryKey: ['programWithEpisodes', id],
@@ -62,6 +62,8 @@ function LikedChannelViewPage() {
                 hasAudio={!!episode.audio_file}
                 playlist={programData.episodes}
                 isRound={true}
+                originType="program"
+                listenedDuration={playedDurations[episode.id] ?? episode.listened_duration}
               />
             );
           })}
@@ -69,4 +71,4 @@ function LikedChannelViewPage() {
   );
 }
 
-export default LikedChannelViewPage;
+export default ChannelDetailViewPage;

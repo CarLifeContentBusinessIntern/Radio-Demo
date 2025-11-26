@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { useSection } from '../hooks/useSection';
 import type { SectionItemType } from '../types/section';
 import GridViewItem from './GridViewItem';
+import { useOEM } from '../contexts/OEMContext';
 
 export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemType) => {
   if (item.has_episodes) {
@@ -23,11 +24,12 @@ export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemT
 
 function PicklePick() {
   const navigate = useNavigate();
-  const { data: sectionData, isLoading } = useSection(1);
+  const { selectedOEM } = useOEM();
+  const { data: sectionData, isLoading } = useSection(1, selectedOEM);
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">P!ckle P!ck</div>
+      <div className="text-lg mb-7 font-semibold">P!ckle P!ck</div>
 
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"

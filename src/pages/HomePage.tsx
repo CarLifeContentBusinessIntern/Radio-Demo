@@ -1,16 +1,16 @@
+import Category from '../components/Category';
 import DriveMood from '../components/DriveMood';
 import MonthlyPickle from '../components/MonthlyPickle';
 import PicklePick from '../components/PicklePick';
-import Category from '../components/Category';
-import { useVersion } from '../contexts/VersionContext';
 import RecentEpisode from '../components/RecentEpisode';
+import { useVersion } from '../contexts/VersionContext';
 // import LikedChannel from '../components/LikedChannel';
 
 function HomePage() {
   const { isRadioVersion } = useVersion();
 
   return (
-    <div className="pr-28 pt-7">
+    <div className="pt-7 pr-20">
       {/* 최근 들은 에피소드 */}
       <RecentEpisode />
 

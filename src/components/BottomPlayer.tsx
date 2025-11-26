@@ -68,7 +68,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   return (
     <div
-      className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
+      className="relative w-full h-24 flex items-center gap-4 py-4 px-6 cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
       <div className="absolute top-0 left-0 w-full h-[4px] bg-gray-600">
@@ -80,25 +80,23 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
       <div className="flex-shrink-0">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} className={`w-24 h-24 rounded-[11px] object-cover`} />
+          <img src={imageUrl} alt={title} className={`w-16 h-16 rounded-lg object-cover`} />
         ) : (
-          <div className="w-24 h-24 rounded-md bg-gray-400"></div>
+          <div className="w-16 h-16 rounded-lg bg-gray-400"></div>
         )}
       </div>
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        <p className="font-semibold truncate text-[32px]">
+        <p className="text-lg font-semibold truncate">
           {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
         </p>
-        <p className="text-[28px] truncate">
-          {currentEpisodeType === 'podcast'
-            ? `${currentEpisodeData?.programs?.title} ${currentEpisodeData?.date}`
-            : `${currentEpisodeData?.programs?.broadcastings?.title} ${currentEpisodeData?.programs?.broadcastings?.channel}`}
+        <p className="text-base truncate">
+          {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
         </p>
       </div>
 
-      <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={30} onClick={handlePlayBarPrev} />
+      <div className="flex w-full justify-between max-w-60 mr-4" onClick={handleControlsClick}>
+        <TbPlayerSkipBackFilled size={25} onClick={handlePlayBarPrev} />
 
         <button
           className="relative w-6 h-6 disabled:cursor-not-allowed"
@@ -106,15 +104,15 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           disabled={isLoading}
         >
           {isLoading ? (
-            <AiOutlineLoading size={30} className="animate-spin" />
+            <AiOutlineLoading size={25} className="animate-spin" />
           ) : isPlaying ? (
-            <TbPlayerPauseFilled size={30} />
+            <TbPlayerPauseFilled size={25} />
           ) : (
-            <TbPlayerPlayFilled size={30} />
+            <TbPlayerPlayFilled size={25} />
           )}
         </button>
 
-        <TbPlayerSkipForwardFilled size={30} onClick={handlePlayBarNext} />
+        <TbPlayerSkipForwardFilled size={25} onClick={handlePlayBarNext} />
       </div>
     </div>
   );

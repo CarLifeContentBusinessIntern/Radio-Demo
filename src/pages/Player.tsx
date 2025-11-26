@@ -11,11 +11,11 @@ import {
 import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
-import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import ToggleButton from '../components/ToggleButton';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 function Player() {
   const { id } = useParams();
@@ -32,7 +32,6 @@ function Player() {
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
-    duration,
     isPlaying,
     isLive,
     isLoading,
@@ -50,8 +49,10 @@ function Player() {
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
-
   const episodeId = id ? parseInt(id, 10) : null;
+
+  const totalTime = currentEpisodeData?.duration;
+  const totalTimeSeconds = timeStringToSeconds(totalTime || '');
 
   useEffect(() => {
     if (episodeId !== null && playlist) {
@@ -81,7 +82,11 @@ function Player() {
     };
   }, [isPlaylistOpen, closePlaylist]);
 
-  const progressPercent = effectiveIsLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
+  const progressPercent = effectiveIsLive
+    ? 100
+    : totalTimeSeconds > 0
+      ? (currentTime / totalTimeSeconds) * 100
+      : 0;
   const playedColor = '#B76EEF';
   const unplayedColor = '#ffffff';
   const sliderStyle = useMemo(
@@ -95,28 +100,26 @@ function Player() {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+          <div className="flex flex-row items-center justify-center w-[80%] max-w-[1025px] gap-[52px]">
             <div className="flex-shrink-0">
               <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
             </div>
-
-            <div className="flex flex-col flex-grow justify-between h-full w-full md:w-auto">
+            <div className="flex flex-col flex-grow justify-between h-full">
               <div>
-                <Skeleton height={'2.25rem'} width="90%" baseColor="#222" highlightColor="#444" />
+                <Skeleton height={36} width="90%" baseColor="#222" highlightColor="#444" />
                 <Skeleton
-                  height={'1.8rem'}
+                  height={29}
                   width="60%"
-                  className="mt-4"
+                  style={{ marginTop: `16px` }}
                   baseColor="#222"
                   highlightColor="#444"
                 />
               </div>
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={24} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={24} width="40%" baseColor="#222" highlightColor="#444" />
             </div>
           </div>
-
-          <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
+          <div className="flex flex-col w-[80%] max-w-[1025px]" style={{ gap: `80px` }}>
             <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
             <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
           </div>
@@ -131,28 +134,21 @@ function Player() {
 
   const imgUrl = currentEpisodeData.img_url || currentEpisodeData.programs?.img_url;
 
-  const isHourDisplay = duration >= 3600;
+  const isHourDisplay = totalTimeSeconds >= 3600;
 
   const handleToggleChannelList = (title: string) => {
-    navigate(`/like/${currentEpisodeData.program_id}`, {
+    navigate(`/channel-detail/${currentEpisodeData.program_id}`, {
       replace: true,
-      state: {
-        ...location.state,
-        title: title,
-        program_id: currentEpisodeData.program_id,
-      },
+      state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
 
   return (
-    <div className="relative h-full overflow-hidden">
-      {/* 플레이어 배경 */}
+    <div className="relative overflow-hidden flex justify-center items-center h-full pb-5">
       {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{
-            backgroundImage: `url('${imgUrl}')`,
-          }}
+          style={{ backgroundImage: `url('${imgUrl}')` }}
         >
           <div
             className="absolute inset-0 backdrop-blur-lg"
@@ -163,14 +159,11 @@ function Player() {
           />
         </div>
       )}
-      {/* 확장 버튼 배경 */}
+      
       <div
-        className={`bg-black/70 fixed inset-0 z-20
-          transition-opacity duration-300 ease-in-out
-          ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
-        `}
+        className={`bg-black/70 fixed inset-0 z-20 transition-opacity duration-300 ease-in-out ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}`}
       />
-      {/* 에피소드 목록 */}
+
       <PlayList
         playlist={playlist}
         isOpenList={isPlaylistOpen}

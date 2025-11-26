@@ -39,7 +39,7 @@ function PopularRadio() {
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">라디오 인기 채널</div>
+      <div className="text-lg mb-7 font-semibold">라디오 인기 채널</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{

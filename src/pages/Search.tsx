@@ -32,7 +32,6 @@ function Search() {
               imgUrl={item.imgUrl}
               title={item.title}
               subTitle={item.channel}
-              playTime={item.playTime}
               totalTime={item.totalTime}
             />
           ))}
