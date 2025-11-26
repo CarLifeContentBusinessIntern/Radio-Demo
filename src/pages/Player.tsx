@@ -11,7 +11,6 @@ import {
 import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
-import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useZoom } from '../contexts/ZoomContext';
@@ -64,7 +63,7 @@ function Player() {
   useEffect(() => {
     if (episodeId !== null && playlist) {
       const episodeToPlay = playlist.find((item: EpisodeType) => item.id === episodeId);
-      const isPodcast = episodeToPlay?.type === 'podcast';
+      const isPodcast = episodeToPlay?.type !== 'radio';
       const isLiveEpisode = liveStatus ?? false;
 
       playEpisode(episodeId, isLiveEpisode, isPodcast, originType, recentSeriesId);
