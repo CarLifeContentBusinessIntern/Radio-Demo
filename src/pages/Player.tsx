@@ -131,7 +131,7 @@ function Player() {
   const isHourDisplay = duration >= 3600;
 
   const handleToggleChannelList = (title: string) => {
-    navigate(`/like/${currentEpisodeData.program_id}`, {
+    navigate(`/channel-detail/${currentEpisodeData.program_id}`, {
       replace: true,
       state: {
         ...location.state,
