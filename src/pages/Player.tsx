@@ -16,6 +16,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import ToggleButton from '../components/ToggleButton';
 import { timeStringToSeconds } from '../utils/timeUtils';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 
 function Player() {
   const { id } = useParams();
@@ -27,7 +28,6 @@ function Player() {
   const originType = location.state?.originType;
   const recentSeriesId = location.state?.recentSeriesId;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
-  const [isActivate, setIsActivate] = useState(true);
   const {
     currentEpisodeData,
     currentEpisodeType,
@@ -45,6 +45,7 @@ function Player() {
     playEpisode,
     setPlaylist,
     closePlaylist,
+    useOriginalAudio,
     setUseOriginalAudio,
   } = usePlayer();
 
@@ -159,7 +160,7 @@ function Player() {
           />
         </div>
       )}
-      
+
       <div
         className={`bg-black/70 fixed inset-0 z-20 transition-opacity duration-300 ease-in-out ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}`}
       />
@@ -175,14 +176,8 @@ function Player() {
       {/* 플레이 화면 */}
       <div className="flex justify-around h-full">
         <div className="w-[10%]">
-          {currentEpisodeData.audioFile_dubbing !== null && (
-            <ToggleButton
-              isActivate={isActivate}
-              setIsActivate={(value) => {
-                setIsActivate(value);
-                setUseOriginalAudio(value);
-              }}
-            />
+          {currentEpisodeData.audioFile_dubbing && (
+            <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
           )}
         </div>
         <div className="relative flex flex-col justify-center items-center w-[80%] h-full gap-[103px]">
@@ -238,7 +233,7 @@ function Player() {
               >
                 {effectiveIsLive
                   ? 'LIVE'
-                  : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(duration, isHourDisplay)}`}
+                  : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
               </p>
             </div>
           </div>
@@ -248,8 +243,8 @@ function Player() {
               <input
                 type="range"
                 min="0"
-                max={duration}
-                value={effectiveIsLive ? duration : currentTime}
+                max={totalTimeSeconds}
+                value={effectiveIsLive ? totalTimeSeconds : currentTime}
                 onChange={onHandleSeek}
                 disabled={effectiveIsLive || isLoading}
                 className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}

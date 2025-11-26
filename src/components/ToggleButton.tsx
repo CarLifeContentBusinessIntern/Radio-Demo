@@ -11,14 +11,14 @@ function ToggleButton({
   const [imageSrc, setImageSrc] = useState('/toggle_off.png');
 
   const handleToggle = () => {
-    if (isActivate === true) {
+    if (isActivate) {
       setIsActivate(false);
       setAction('animate-toggle-off');
       setTimeout(() => {
         setImageSrc('/toggle_on.png');
       }, 100);
     }
-    if (isActivate === false) {
+    if (!isActivate) {
       setIsActivate(true);
       setAction('animate-toggle-on');
       setTimeout(() => {

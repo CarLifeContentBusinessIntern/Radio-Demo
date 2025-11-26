@@ -529,7 +529,6 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
 
-
   const setUseOriginalAudio = useCallback((useOriginal: boolean) => {
     const savedTime = audioRef.current?.currentTime || 0;
 
@@ -544,7 +543,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       }
     }, 100);
   }, []);
-  
+
   const [playedDurations, setPlayedDurations] = useState<Record<number, number>>({});
 
   const contextValue: PlayerContextType = {
