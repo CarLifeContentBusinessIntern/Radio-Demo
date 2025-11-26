@@ -11,7 +11,6 @@ import {
 import Skeleton from 'react-loading-skeleton';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import speedIcon from '../assets/speedIcon.svg';
-import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
@@ -47,7 +46,6 @@ function Player() {
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
-
   const episodeId = id ? parseInt(id, 10) : null;
 
   const totalTime = currentEpisodeData?.duration;
@@ -99,28 +97,26 @@ function Player() {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-56">
+          <div className="flex flex-row items-center justify-center w-[80%] max-w-[1025px] gap-[52px]">
             <div className="flex-shrink-0">
               <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
             </div>
-
-            <div className="flex flex-col flex-grow justify-between h-full w-full md:w-auto">
+            <div className="flex flex-col flex-grow justify-between h-full">
               <div>
-                <Skeleton height={'2.25rem'} width="90%" baseColor="#222" highlightColor="#444" />
+                <Skeleton height={36} width="90%" baseColor="#222" highlightColor="#444" />
                 <Skeleton
-                  height={'1.8rem'}
+                  height={29}
                   width="60%"
-                  className="mt-4"
+                  style={{ marginTop: `16px` }}
                   baseColor="#222"
                   highlightColor="#444"
                 />
               </div>
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
-              <Skeleton height={'1.5rem'} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={24} width="40%" baseColor="#222" highlightColor="#444" />
+              <Skeleton height={24} width="40%" baseColor="#222" highlightColor="#444" />
             </div>
           </div>
-
-          <div className="flex flex-col gap-20 w-[80%] max-w-[1025px]">
+          <div className="flex flex-col w-[80%] max-w-[1025px]" style={{ gap: `80px` }}>
             <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
             <Skeleton height={60} width="100%" baseColor="#222" highlightColor="#444" />
           </div>
@@ -138,25 +134,18 @@ function Player() {
   const isHourDisplay = totalTimeSeconds >= 3600;
 
   const handleToggleChannelList = (title: string) => {
-    navigate(`/like/${currentEpisodeData.program_id}`, {
+    navigate(`/channel-detail/${currentEpisodeData.program_id}`, {
       replace: true,
-      state: {
-        ...location.state,
-        title: title,
-        program_id: currentEpisodeData.program_id,
-      },
+      state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
 
   return (
-    <div className="relative h-full overflow-hidden">
-      {/* 플레이어 배경 */}
+    <div className="relative overflow-hidden flex justify-center items-center h-full pb-5">
       {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{
-            backgroundImage: `url('${imgUrl}')`,
-          }}
+          style={{ backgroundImage: `url('${imgUrl}')` }}
         >
           <div
             className="absolute inset-0 backdrop-blur-lg"
@@ -168,15 +157,10 @@ function Player() {
         </div>
       )}
 
-      {/* 확장 버튼 배경 */}
       <div
-        className={`bg-black/70 fixed inset-0 z-20
-          transition-opacity duration-300 ease-in-out
-          ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}
-        `}
+        className={`bg-black/70 fixed inset-0 z-20 transition-opacity duration-300 ease-in-out ${isMoreBtn ? 'opacity-100' : 'opacity-0 invisible'}`}
       />
 
-      {/* 에피소드 목록 */}
       <PlayList
         playlist={playlist}
         isOpenList={isPlaylistOpen}
@@ -186,29 +170,25 @@ function Player() {
         recentSeriesId={recentSeriesId}
       />
 
-      {/* 플레이 화면 */}
-      <div className="relative flex flex-col justify-center items-center h-full gap-[103px]">
-        <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[80%] max-w-[1025px] max-h-[260px]">
-          <div className="flex-shrink-0">
+      <div className="relative flex flex-col justify-center items-center h-full gap-12 w-1/2">
+        <div className="flex flex-row items-center justify-center gap-12 max-h-[260px] w-full">
+          <div className="flex-shrink-0 w-40 h-40">
             {imgUrl ? (
-              <ImageWithSkeleton
+              <img
                 src={imgUrl}
                 alt={currentEpisodeData.title}
-                className="w-40 h-40 md:w-60 md:h-60 object-cover"
-                skeletonClassName="w-[224px] h-[224px]"
-                baseColor="#222"
-                highlightColor="#444"
+                className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
+              <div className="w-full h-full bg-gray-400"></div>
             )}
           </div>
 
-          <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
-            <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
+          <div className="flex flex-col flex-grow justify-between h-full text-left">
+            <p className="line-clamp-2 leading-snug text-2xl">
               {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
             </p>
-            <p className="text-xl md:text-[38px] text-[#A6A6A9]">
+            <p className="text-[#A6A6A9] text-lg">
               {currentEpisodeType === 'podcast' ? (
                 <>
                   <button
@@ -235,7 +215,7 @@ function Player() {
                 </>
               )}
             </p>
-            <p className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}>
+            <p className={`text-[#A6A6A9] text-lg ${isLoading ? 'invisible' : ''}`}>
               {effectiveIsLive
                 ? 'LIVE'
                 : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
@@ -243,7 +223,7 @@ function Player() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
+        <div className="flex flex-col gap-5 w-full ">
           <div className="flex flex-col items-center gap-5">
             <input
               type="range"
@@ -252,12 +232,12 @@ function Player() {
               value={effectiveIsLive ? totalTime : currentTime}
               onChange={onHandleSeek}
               disabled={effectiveIsLive || isLoading}
-              className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
+              className={`custom-slider w-full h-1 rounded-lg appearance-none range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
               style={sliderStyle}
             />
 
             <div
-              className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+              className={`flex justify-between w-[30%] max-w-[280px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20`}
             >
               <button onClick={() => handleSkip(-15)}>
                 <RiReplay15Fill size={36} />
@@ -268,10 +248,10 @@ function Player() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-16 z-20">
+          <div className="flex items-center justify-between z-20 gap-16">
             <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
-              <img src={speedIcon} />
-              <p className="text-[12px]">1.0x</p>
+              <img src={speedIcon} className="w-8 h-8" alt="speed" />
+              <p className="text-xs">1.0x</p>
             </button>
 
             <button onClick={handlePlayPrev}>
@@ -291,7 +271,7 @@ function Player() {
             </button>
 
             <button
-              className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
+              className={`w-12 h-12 text-gray-400 ${effectiveIsLive ? 'invisible' : ''} flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
               onClick={() => setIsMoreBtn(!isMoreBtn)}
             >
               <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />

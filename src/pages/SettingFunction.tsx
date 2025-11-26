@@ -10,12 +10,12 @@ interface SettingItemProps {
 
 const SettingItem = memo(({ label, isEnabled, onToggle }: SettingItemProps) => (
   <div>
-    <div className="flex px-4 items-center h-[160px] justify-between">
-      <p className="text-[36px]">{label}</p>
+    <div className="flex px-4 items-center h-32 justify-between">
+      <p className="text-lg">{label}</p>
       {isEnabled ? (
-        <PiToggleRightFill size={80} className="cursor-pointer" onClick={onToggle} />
+        <PiToggleRightFill size={50} className="cursor-pointer" onClick={onToggle} />
       ) : (
-        <PiToggleLeftLight size={80} className="cursor-pointer" onClick={onToggle} />
+        <PiToggleLeftLight size={50} className="cursor-pointer" onClick={onToggle} />
       )}
     </div>
 

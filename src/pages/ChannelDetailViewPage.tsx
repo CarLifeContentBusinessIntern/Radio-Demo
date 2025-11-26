@@ -11,7 +11,7 @@ type ProgramWithEpisodes = ProgramType & {
   episodes: EpisodeType[];
 };
 
-function LikedChannelViewPage() {
+function ChannelDetailViewPage() {
   const { id } = useParams();
   const { setPlaylist, playedDurations } = usePlayer();
 
@@ -71,4 +71,4 @@ function LikedChannelViewPage() {
   );
 }
 
-export default LikedChannelViewPage;
+export default ChannelDetailViewPage;
