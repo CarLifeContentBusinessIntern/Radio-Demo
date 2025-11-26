@@ -10,7 +10,7 @@ export function useSaveProgressOnNavigate() {
   useEffect(() => {
     if (prevPath.current !== location.pathname) {
       // /player로 이동하기 전이면 저장
-      if (location.pathname.startsWith('/player')) {
+      if (prevPath.current.startsWith('/player')) {
         saveCurrentEpisodeProgress();
       }
     }

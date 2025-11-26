@@ -169,7 +169,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('playing', handleCanPlay);
-      audio.addEventListener('ended', handleEnded);
+      audio.removeEventListener('ended', handleEnded);
 
       audio.src = '';
     };
@@ -369,7 +369,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         searchCount++;
       }
     },
-    [state.currentEpisodeId, state.isLive, playEpisode, navigate]
+    [
+      state.currentEpisodeId,
+      state.isLive,
+      playEpisode,
+      navigate,
+      state.currentEpisodeType,
+      state.originType,
+      state.recentSeriesId,
+    ]
   );
 
   const handlePlayNext = useCallback(() => {

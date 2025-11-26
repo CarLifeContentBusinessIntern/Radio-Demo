@@ -229,7 +229,7 @@ function Player() {
               type="range"
               min="0"
               max={totalTimeSeconds}
-              value={effectiveIsLive ? totalTime : currentTime}
+              value={effectiveIsLive ? totalTimeSeconds : currentTime}
               onChange={onHandleSeek}
               disabled={effectiveIsLive || isLoading}
               className={`custom-slider w-full h-1 rounded-lg appearance-none range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}

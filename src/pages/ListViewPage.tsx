@@ -10,7 +10,7 @@ function ListViewPage() {
   const { isRound } = location.state || { isRound: true };
   const originType = location.state?.originType;
 
-  const { type, id } = useParams();
+  const { id } = useParams();
   const { setPlaylist, playedDurations } = usePlayer();
 
   const { data: episodes = [], isLoading, error } = useSeriesEpisodes(id);

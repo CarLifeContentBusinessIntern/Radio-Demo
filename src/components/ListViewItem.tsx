@@ -174,22 +174,19 @@ function ListViewItem({
         )}
       </div>
       <div className="hidden md:block">
-        {
-          // (!isPodcast || isPlayer) &&
-          !isLive &&
-            (isPlayingEpisode
-              ? Math.max(0, totalTimeSeconds - Math.floor(lastPlayedTime)) > 0 && (
-                  <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
-                    - {formatRemainingTime(currentTime, totalTimeSeconds)}
-                  </p>
-                )
-              : lastPlayedTime > 0 &&
-                Math.max(0, totalTimeSeconds - Math.floor(lastPlayedTime)) > 0 && (
-                  <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
-                    - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
-                  </p>
-                ))
-        }
+        {(() => {
+          const remainingSeconds = totalTimeSeconds - Math.floor(lastPlayedTime);
+          const shouldShowRemainingTime =
+            !isLive && remainingSeconds > 0 && (isPlayingEpisode || lastPlayedTime > 0);
+
+          return (
+            shouldShowRemainingTime && (
+              <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
+                - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
+              </p>
+            )
+          );
+        })()}
       </div>
     </div>
   );
