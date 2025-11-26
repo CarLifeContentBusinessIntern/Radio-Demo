@@ -167,7 +167,7 @@ function ListViewItem({
 
       <div className="hidden md:block">
         {(!isPodcast || isPlayer) && isPlayingEpisode && !isLive && (
-          <p className="text-lg text-[#A6A6A9] w-32 text-right">
+          <p className="text-lg text-[#A6A6A9] w-36 text-right">
             {playTime || formatTime(currentTime, isHourDisplay)}
             {totalTime ? ` / ${totalTime}` : ``}
           </p>

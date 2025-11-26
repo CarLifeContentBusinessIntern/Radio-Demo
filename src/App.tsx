@@ -24,6 +24,7 @@ import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
+import AIPick from './pages/AIPick.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -173,6 +174,14 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="/episodes/recent" element={<RecentPage />} />
+        </Route>
+      </Route>
+
+      <Route
+        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
+      >
+        <Route element={<PlayerLayout />}>
+          <Route path="/ai-pick" element={<AIPick />} />
         </Route>
       </Route>
 
