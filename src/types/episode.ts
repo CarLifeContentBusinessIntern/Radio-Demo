@@ -5,6 +5,7 @@ export type EpisodeType = {
   title: string;
   img_url: string;
   audio_file: string;
+  audioFile_dubbing?: string | null;
   date: string;
   duration: string;
   type: string;

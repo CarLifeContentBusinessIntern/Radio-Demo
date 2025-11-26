@@ -46,6 +46,7 @@ function Player() {
     playEpisode,
     setPlaylist,
     closePlaylist,
+    setUseOriginalAudio,
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
@@ -181,7 +182,13 @@ function Player() {
       {/* 플레이 화면 */}
       <div className="flex justify-around h-full">
         <div className="w-[10%]">
-          <ToggleButton isActivate={isActivate} setIsActivate={setIsActivate} />
+          <ToggleButton
+            isActivate={isActivate}
+            setIsActivate={(value) => {
+              setIsActivate(value);
+              setUseOriginalAudio(value);
+            }}
+          />
         </div>
         <div className="relative flex flex-col justify-center items-center w-[80%] h-full gap-[103px]">
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[100%] max-w-[1025px] max-h-[260px]">
@@ -213,7 +220,7 @@ function Player() {
                       }
                     >
                       {currentEpisodeData.programs?.title}
-                    </button>
+                    </button>{' '}
                     · {currentEpisodeData.date}
                   </>
                 ) : (
