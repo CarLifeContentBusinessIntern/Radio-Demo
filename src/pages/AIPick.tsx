@@ -8,12 +8,13 @@ import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 
+const EPISODE_COUNT = 5;
+
 function AIPick() {
   const fetchRandomEpisodes = async (): Promise<EpisodeType[]> => {
-    const { data, error } = await supabase.rpc('get_random_episodes', { count: 5 });
+    const { data, error } = await supabase.rpc('get_random_episodes', { count: EPISODE_COUNT });
 
     if (error) throw error;
-    console.log('daat', data);
     return data;
   };
 
@@ -64,7 +65,7 @@ function AIPick() {
 
         {isLoading ? (
           <div className="flex flex-col gap-3">
-            {[1, 2, 3, 4, 5].map((i) => (
+            {[...Array(EPISODE_COUNT)].map((_, i) => (
               <div key={i} className="h-20 bg-[#2A2A2E] rounded-xl animate-pulse" />
             ))}
           </div>
@@ -78,7 +79,7 @@ function AIPick() {
                 title={ep.title}
                 subTitle={ep.programs?.title}
                 date={ep.date}
-                hasAudio={ep.audio_file ? true : false}
+                hasAudio={!!ep.audio_file}
                 isRound={true}
                 playlist={episodes}
                 isPlayer={false}
@@ -95,13 +96,9 @@ function AIPick() {
             disabled={isFetching}
             className="bg-[#202026] w-full rounded-full flex justify-center items-center gap-6 py-5"
           >
-            {isFetching ? (
-              <div className="animate-spin">
-                <FiRefreshCcw size={20} color="#A1A1A1" />
-              </div>
-            ) : (
+            <div className={isFetching ? 'animate-spin' : ''}>
               <FiRefreshCcw size={20} color="#A1A1A1" />
-            )}
+            </div>
             <p className="text-xl text-[#A1A1A1] font-semibold">
               {isFetching ? '추천 불러오는 중...' : '다시 추천받기'}
             </p>

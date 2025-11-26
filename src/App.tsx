@@ -177,21 +177,7 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="/episodes/recent" element={<RecentPage />} />
-        </Route>
-      </Route>
-
-      <Route
-        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
-      >
-        <Route element={<PlayerLayout />}>
           <Route path="/ai-pick" element={<AIPick />} />
-        </Route>
-      </Route>
-
-      <Route
-        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
-      >
-        <Route element={<PlayerLayout />}>
           <Route path="/popular" element={<PopularChannelPage />} />
         </Route>
       </Route>

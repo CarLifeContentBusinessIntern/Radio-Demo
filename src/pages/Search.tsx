@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import Skeleton from 'react-loading-skeleton';
 import ListViewItem from '../components/ListViewItem';
+import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
-import type { ProgramType } from '../types/program';
-import { usePlayer } from '../contexts/PlayerContext';
 
 function Search() {
   const { playedDurations } = usePlayer();
@@ -53,12 +52,12 @@ function Search() {
         <p className="text-lg">채널</p>
 
         {isLoading ? (
-          renderLoadingSkeleton(MAX_SEARCH_RESULTS, false)
+          renderLoadingSkeleton(MAX_SEARCH_RESULTS, true)
         ) : (
           <div className="flex flex-col gap-y-1">
             {allData?.slice(0, MAX_SEARCH_RESULTS).map((ep) => (
               <ListViewItem
-                key={ep.programs?.id}
+                key={ep.id}
                 id={ep.programs?.id}
                 imgUrl={ep.programs?.img_url || ep.img_url}
                 title={ep.programs?.title}
