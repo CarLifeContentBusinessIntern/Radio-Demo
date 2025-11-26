@@ -28,17 +28,14 @@ function PlayList({
 
   return (
     <div
-      className={`bg-black fixed inset-0 z-10 pt-20 transition-opacity duration-300 ease-in-out
+      className={`bg-black fixed inset-0 z-30 pt-16 transition-opacity duration-300 ease-in-out
           ${isOpenList ? 'opacity-100' : 'opacity-0 invisible'} flex justify-center`}
     >
-      <div className="flex relative overflow-hidden w-full">
+      <div className="flex relative overflow-hidden w-full h-[90%]">
         <Scrollbar scrollableRef={contentRef} />
 
-        <div
-          ref={contentRef}
-          className="relative h-[70%] overflow-y-auto scrollbar-hide pr-24 w-full"
-        >
-          <ul className="flex flex-col gap-1">
+        <div ref={contentRef} className="relative overflow-y-auto scrollbar-hide pr-20 w-full">
+          <ul className="flex flex-col">
             {playlist.map((item: EpisodeType) => {
               const isActive = currentEpisodeId === item.id;
               const imageUrl = item.img_url || item.programs?.img_url;
@@ -50,7 +47,7 @@ function PlayList({
               return (
                 <li
                   key={uniqueKey}
-                  className={`rounded-md cursor-pointer p-3 flex items-center`}
+                  className={`rounded-md cursor-pointer p-1 flex items-center`}
                   onClick={onClose}
                 >
                   <div className="w-full">
