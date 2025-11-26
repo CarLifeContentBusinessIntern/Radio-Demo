@@ -23,6 +23,7 @@ import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
+import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -119,15 +120,13 @@ function AppRoutes() {
         <Route path="/player/podcasts/:id" element={<Player />} />
       </Route>
 
-      {/*
       <Route
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="/like/:id" element={<LikedChannelViewPage />} />
+          <Route path="/channel-detail/:id" element={<ChannelDetailViewPage />} />
         </Route>
       </Route>
-      */}
 
       <Route
         element={
