@@ -145,7 +145,7 @@ function Player() {
   };
 
   return (
-    <div className="relative overflow-hidden flex justify-center items-center h-full pb-5">
+    <div className="relative overflow-hidden h-full">
       {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
