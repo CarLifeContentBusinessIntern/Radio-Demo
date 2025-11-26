@@ -10,7 +10,7 @@ import {
 } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { timeStringToSeconds } from '../utils/timeUtils';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 
 interface PlayerState {
@@ -82,9 +82,12 @@ export const usePlayer = () => {
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerState);
   const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
+  const activePlaylistRef = useRef<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -144,11 +147,20 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setState((prev) => ({ ...prev, isLoading: false }));
     };
 
+    const handleEnded = () => {
+      const isPlayerPage = /^\/player\/[^/]+$/.test(location.pathname);
+      if (isPlayerPage) {
+        handlePlayNext(); // /player/:id 인 경우
+      } else {
+        handlePlayBarNext(); // 그 외 모든 경우
+      }
+    };
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
     audio.addEventListener('playing', handleCanPlay);
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.pause();
@@ -157,6 +169,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('playing', handleCanPlay);
+      audio.addEventListener('ended', handleEnded);
 
       audio.src = '';
     };
@@ -274,25 +287,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const setPlaylist = useCallback((playlist: EpisodeType[]) => {
-    setActivePlaylist(playlist);
+    activePlaylistRef.current = playlist; // 최신값을 ref에 저장
+    setActivePlaylist(playlist); // state 업데이트 (UI용)
   }, []);
 
   const changeEpisode = useCallback(
     (direction: 1 | -1, isPlayBar: boolean) => {
-      if (!activePlaylist.length || state.currentEpisodeId === null) return;
+      const playlist = activePlaylistRef.current;
+      if (!playlist.length || currentEpisodeRef.current === null) return;
 
       // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
-      if (state.currentEpisodeId && audioRef.current) {
+      if (currentEpisodeRef.current && audioRef.current) {
         saveListeningHistory(
-          state.currentEpisodeId,
+          currentEpisodeRef.current,
           audioRef.current.currentTime,
           state.originType,
           state.recentSeriesId
         );
       }
 
-      const playlistLength = activePlaylist.length;
-      let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+      const playlistLength = playlist.length;
+      let currentIndex = playlist.findIndex((ep) => ep.id === currentEpisodeRef.current);
 
       if (currentIndex === -1) {
         currentIndex = 0;
@@ -301,7 +316,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       let searchCount = 0;
       while (searchCount < playlistLength) {
         const nextIndex = (currentIndex + direction + playlistLength) % playlistLength;
-        const nextEpisode = activePlaylist[nextIndex];
+        const nextEpisode = playlist[nextIndex];
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
@@ -312,7 +327,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                 replace: true,
                 state: {
                   isLive: false,
-                  playlist: activePlaylist,
+                  playlist: playlist,
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
@@ -320,14 +335,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {
                 replace: true,
-                state: { isLive: state.isLive, playlist: activePlaylist },
+                state: { isLive: state.isLive, playlist: playlist },
               });
             } else {
               navigate(`/player/${nextEpisode.id}`, {
                 replace: true,
                 state: {
                   isLive: state.isLive,
-                  playlist: activePlaylist,
+                  playlist: playlist,
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
@@ -349,14 +364,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
         searchCount++;
       }
     },
-    [
-      activePlaylist,
-      state.currentEpisodeId,
-      state.isLive,
-      playEpisode,
-      state.currentEpisodeType,
-      navigate,
-    ]
+    [state.currentEpisodeId, state.isLive, playEpisode, navigate]
   );
 
   const handlePlayNext = useCallback(() => {

@@ -12,7 +12,6 @@ type ListViewItemProps = {
   imgUrl?: string;
   title?: string;
   subTitle?: string;
-  playTime?: string;
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
@@ -31,7 +30,6 @@ function ListViewItem({
   imgUrl,
   title,
   subTitle,
-  playTime,
   totalTime,
   date,
   hasAudio,
@@ -168,7 +166,7 @@ function ListViewItem({
                 currentEpisodeId === id ? 'bg-[#B76EEF]' : 'bg-[#888888]'
               }`}
               style={{
-                width: `${progressPercent}%`,
+                width: `${Math.min(progressPercent, 100)}%`,
               }}
             />
           </div>
@@ -179,12 +177,12 @@ function ListViewItem({
           // (!isPodcast || isPlayer) &&
           !isLive &&
             (isPlayingEpisode ? (
-              <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+              <p className="w-fit whitespace-nowrap text-[28px] text-[#A6A6A9] text-right">
                 - {formatRemainingTime(currentTime, totalTimeSeconds)}
               </p>
             ) : (
               lastPlayedTime > 0 && (
-                <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
+                <p className="w-fit whitespace-nowrap text-[28px] text-[#A6A6A9] text-right">
                   - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
                 </p>
               )

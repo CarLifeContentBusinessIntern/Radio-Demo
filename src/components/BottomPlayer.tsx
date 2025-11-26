@@ -91,9 +91,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
         </p>
         <p className="text-[28px] truncate">
-          {currentEpisodeType === 'podcast'
-            ? `${currentEpisodeData?.programs?.title} ${currentEpisodeData?.date}`
-            : `${currentEpisodeData?.programs?.broadcastings?.title} ${currentEpisodeData?.programs?.broadcastings?.channel}`}
+          {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
         </p>
       </div>
 
