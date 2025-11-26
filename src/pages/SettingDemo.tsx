@@ -1,10 +1,18 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { FaCaretDown } from 'react-icons/fa';
 import { useOEM } from '../contexts/OEMContext';
+import { useNavigate } from 'react-router-dom';
 
-const OEM_OPTIONS = ['Hyundai', 'RKM', 'TOYOTA', 'KGM', 'Kia'];
+const OEM_OPTIONS = [
+  { key: 'hyundai', label: 'Hyundai' },
+  { key: 'rkm', label: 'RKM' },
+  { key: 'toyota', label: 'TOYOTA' },
+  { key: 'kgm', label: 'KGM' },
+  { key: 'kia', label: 'Kia' },
+];
 
 function SettingDemo() {
+  const navigate = useNavigate();
   const { selectedOEM, setSelectedOEM } = useOEM();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,9 +30,10 @@ function SettingDemo() {
     };
   }, [handleClickOutside]);
 
-  const handleSelect = (oem: string) => {
-    setSelectedOEM(oem);
+  const handleSelect = (oemKey: string) => {
+    setSelectedOEM(oemKey);
     setIsOpen(false);
+    navigate('/');
   };
 
   return (
@@ -41,7 +50,7 @@ function SettingDemo() {
             aria-haspopup="listbox"
             aria-expanded={isOpen}
           >
-            <span>{selectedOEM}</span>
+            <span>{OEM_OPTIONS.find((oem) => oem.key === selectedOEM)?.label || selectedOEM}</span>
             <FaCaretDown size={50} />
           </button>
 
@@ -53,16 +62,16 @@ function SettingDemo() {
             >
               {OEM_OPTIONS.map((oem) => (
                 <li
-                  key={oem}
-                  onClick={() => handleSelect(oem)}
+                  key={oem.key}
+                  onClick={() => handleSelect(oem.key)}
                   className={`
-                    p-3 pl-5 cursor-pointer 
-                    ${oem === selectedOEM ? 'bg-[#94CBFF] text-black' : 'hover:bg-blue-600'}
+                    p-3 pl-5 cursor-pointer
+                    ${oem.key === selectedOEM ? 'bg-[#94CBFF] text-black' : 'hover:bg-blue-600'}
                   `}
                   role="option"
-                  aria-selected={oem === selectedOEM}
+                  aria-selected={oem.key === selectedOEM}
                 >
-                  {oem}
+                  {oem.label}
                 </li>
               ))}
             </ul>
