@@ -177,17 +177,18 @@ function ListViewItem({
         {
           // (!isPodcast || isPlayer) &&
           !isLive &&
-            (isPlayingEpisode ? (
-              <p className="w-fit whitespace-nowrap text-[28px] text-[#A6A6A9] text-right">
-                - {formatRemainingTime(currentTime, totalTimeSeconds)}
-              </p>
-            ) : (
-              lastPlayedTime > 0 && (
-                <p className="w-fit whitespace-nowrap text-[28px] text-[#A6A6A9] text-right">
-                  - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
-                </p>
-              )
-            ))
+            (isPlayingEpisode
+              ? Math.max(0, totalTimeSeconds - Math.floor(lastPlayedTime)) > 0 && (
+                  <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
+                    - {formatRemainingTime(currentTime, totalTimeSeconds)}
+                  </p>
+                )
+              : lastPlayedTime > 0 &&
+                Math.max(0, totalTimeSeconds - Math.floor(lastPlayedTime)) > 0 && (
+                  <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
+                    - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
+                  </p>
+                ))
         }
       </div>
     </div>

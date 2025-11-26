@@ -90,7 +90,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         <p className="text-lg font-semibold truncate">
           {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
         </p>
-        <p className="text-[28px] truncate">
+        <p className="text-base truncate">
           {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
         </p>
       </div>

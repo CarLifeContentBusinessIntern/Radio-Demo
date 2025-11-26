@@ -225,12 +225,17 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (!episode) return;
 
       // 마지막 재생 시점 가져오기
-      const startTime = Number(episode?.listened_duration) || 0;
+      let startTime = Number(episode?.listened_duration) || 0;
 
       if (episode?.audio_file === null) return;
 
       if (episode) {
         const newDuration = getEpisodeDuration(episode);
+
+        // 마지막 재생 시점이 에피소드 길이보다 크면 0으로 초기화
+        if (startTime > newDuration - 1) {
+          startTime = 0;
+        }
 
         setState((prevState) => {
           const isNewEpisode = prevState.currentEpisodeId !== id;
