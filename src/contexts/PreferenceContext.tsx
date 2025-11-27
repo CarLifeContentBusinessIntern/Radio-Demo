@@ -2,6 +2,19 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { PreferenceState } from '../types/preference';
 import { DEFAULT_PREFERENCE_STATE } from '../constants/preferenceQuestions';
 
+const INIT_PREFERENCE_STATE = {
+  age: '',
+  genres: [],
+  purpose: [],
+  contentLength: [],
+  contentType: [],
+  mood: [],
+  time: [],
+  environment: [],
+  companion: [],
+  diversity: 50,
+};
+
 interface PreferenceContextType {
   preferences: PreferenceState;
   updatePreference: <K extends keyof PreferenceState>(key: K, value: PreferenceState[K]) => void;
@@ -44,7 +57,7 @@ export function PreferenceProvider({ children }: { children: ReactNode }) {
   };
 
   const resetPreferences = () => {
-    setPreferences(DEFAULT_PREFERENCE_STATE);
+    setPreferences(INIT_PREFERENCE_STATE);
   };
 
   return (
