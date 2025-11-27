@@ -1,9 +1,9 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
-import CircularProgressBar from './CircularProgressBar';
-import CircleViewItem from './CircleViewItem';
-import type { EpisodeType } from '../types/episode';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
+import type { EpisodeType } from '../types/episode';
+import CircleViewItem from './CircleViewItem';
+import CircularProgressBar from './CircularProgressBar';
 
 interface CircularItemWrapperProps {
   episode: EpisodeType;
@@ -52,14 +52,17 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full aspect-square">
-      {/* CircleViewItem 이미지 100% */}
-      <div className="w-full h-full">
+    <div ref={containerRef} className="relative w-full aspect-square ">
+      {/* CircleViewItem 이미지 85% */}
+      {/* <div className="w-full h-full"> */}
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+                    w-[90%] h-[90%] "
+      >
         <CircleViewItem
-          title={episode.title}
-          //   subTitle={episode.subTitle}
           img={episode.programs?.img_url || episode.img_url}
           onClick={handleOnClick}
+          isRecentEpisode={true}
         />
       </div>
 
@@ -69,6 +72,12 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
           <CircularProgressBar size={parentSize} episode={episode} />
         </div>
       )}
+
+      {/* 제목/부제목 */}
+      <div style={{ top: parentSize }} className="absolute w-full ">
+        <p className="text-base mb-1 px-1 font-semibold truncate  mt-4">{episode.title}</p>
+        <p className="text-sm text-gray-400 px-1 truncate ">{episode.programs?.title}</p>
+      </div>
     </div>
   );
 }

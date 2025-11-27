@@ -8,6 +8,7 @@ interface CircleViewItemProps {
   img?: string;
   onClick?: () => void;
   isPickleLive?: boolean;
+  isRecentEpisode?: boolean;
 }
 
 function CircleViewItem({
@@ -16,7 +17,8 @@ function CircleViewItem({
   subTitle,
   img,
   onClick,
-  isPickleLive,
+  isPickleLive = false,
+  isRecentEpisode = false,
 }: CircleViewItemProps) {
   const trimedTitle = title?.trimEnd();
   if (isLoading) {
@@ -47,11 +49,15 @@ function CircleViewItem({
           <div className="bg-gray-600 w-full rounded-full aspect-square mb-4" />
         )}
         {isPickleLive && (
-          <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-px bg-[#666666]" />
+          <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-[1.6px] bg-[#666666]" />
         )}
       </div>
-      <p className="text-base mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
-      <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
+      {!isRecentEpisode && (
+        <>
+          <p className="text-base mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
+          <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
+        </>
+      )}
     </div>
   );
 }

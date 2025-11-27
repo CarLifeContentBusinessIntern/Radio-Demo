@@ -6,20 +6,23 @@ interface CircularProgressBarProps {
   size: number; // px
   episode: EpisodeType;
 }
-// bg-[#B76EEF]' : 'bg-[#888888]
+
 function CircularProgressBar({ size, episode }: CircularProgressBarProps) {
-  const strokeWidth = 8;
+  const strokeWidth = size * 0.028;
   const radius = (size - strokeWidth) / 2;
+  // 원 둘레
   const circumference = 2 * Math.PI * radius;
 
-  const { playedDurations } = usePlayer();
+  const { playedDurations, currentEpisodeId } = usePlayer();
 
-  //   const progress = 0; // 나중에 episode로 계산 가능
   const playTime = playedDurations[episode.id]
     ? playedDurations[episode.id]
     : episode.listened_duration
       ? episode.listened_duration
       : 0;
+
+  const isCurrentEpisode = currentEpisodeId === episode.id;
+  const playedColor = isCurrentEpisode ? '#B76EEF' : '#FFFFFFBF';
 
   const totalTimeSeconds = timeStringToSeconds(episode.duration);
 
@@ -29,19 +32,21 @@ function CircularProgressBar({ size, episode }: CircularProgressBarProps) {
 
   return (
     <svg width={size} height={size} className="rotate-[-90deg]">
+      {/* 배경 원 */}
       <circle
         cx={size / 2}
         cy={size / 2}
         r={radius}
-        stroke="#444"
+        stroke="#FFFFFF40"
         strokeWidth={strokeWidth}
         fill="none"
       />
+      {/* 시청 진행률 */}
       <circle
         cx={size / 2}
         cy={size / 2}
         r={radius}
-        stroke="#B76EEF"
+        stroke={playedColor}
         strokeWidth={strokeWidth}
         fill="none"
         strokeDasharray={circumference}

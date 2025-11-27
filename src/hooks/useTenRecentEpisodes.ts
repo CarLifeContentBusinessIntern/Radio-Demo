@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 
-export function useAllRecentEpisodes() {
+export function useTenRecentEpisodes() {
   return useQuery<EpisodeType[]>({
     queryKey: ['episodes'],
     queryFn: async () => {
@@ -11,7 +11,8 @@ export function useAllRecentEpisodes() {
         .select('*, programs(*, broadcastings(*))')
         .not('listened_at', 'is', null)
         .filter('listened_duration', 'gt', '0')
-        .order('listened_at', { ascending: false });
+        .order('listened_at', { ascending: false })
+        .limit(10);
       if (error) throw error;
       return data as EpisodeType[];
     },
