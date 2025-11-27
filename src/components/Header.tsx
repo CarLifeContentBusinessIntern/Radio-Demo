@@ -9,7 +9,8 @@ import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
 import CategoryIcon from '../assets/ic_category.svg';
 import HomeIcon from '../assets/ic_home.svg';
-import PopularIcon from '../assets/ic_popular.svg';
+// import PopularIcon from '../assets/ic_popular.svg';
+import AIPickIcon from '../assets/ic_aipick.svg';
 import RadioIcon from '../assets/ic_radio.svg';
 import RecentIcon from '../assets/ic_recent.svg';
 import PickleLogo from '../assets/pickle_logo.png';
@@ -39,7 +40,7 @@ const HomeHeader = () => {
       {
         name: t('header.ai-pick'),
         path: '/ai-pick',
-        icon: PopularIcon,
+        icon: AIPickIcon,
       },
     ],
     [isRadioVersion, t, i18n.language]
