@@ -23,6 +23,7 @@ import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
+import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 import AIPick from './pages/AIPick.tsx';
@@ -192,9 +193,11 @@ function App() {
         <ZoomProvider>
           <VersionProvider>
             <OEMProvider>
-              <PlayerProvider>
-                <AppRoutes />
-              </PlayerProvider>
+              <PreferenceProvider>
+                <PlayerProvider>
+                  <AppRoutes />
+                </PlayerProvider>
+              </PreferenceProvider>
             </OEMProvider>
           </VersionProvider>
         </ZoomProvider>
