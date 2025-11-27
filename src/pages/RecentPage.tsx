@@ -1,9 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
+import GridViewItem from '../components/GridViewItem';
 import ListViewItem from '../components/ListViewItem';
+import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 
 function RecentPage() {
+  const { playedDurations } = usePlayer();
+
   const { data: recentEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
     queryKey: ['recentEpisodes'],
     queryFn: async () => {
@@ -11,6 +15,7 @@ function RecentPage() {
         .from('episodes')
         .select('*,  programs(*, broadcastings(*))')
         .not('listened_at', 'is', null)
+        .filter('listened_duration', 'gt', '0')
         .order('listened_at', { ascending: false })
         .limit(10);
 
@@ -38,7 +43,21 @@ function RecentPage() {
   return (
     <div className="flex flex-col gap-y-9 pr-11 pt-7">
       <p className="text-lg">큐레이션/채널</p>
-      {/* <GridViewItem /> */}
+      <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
+        {recentEpisodes?.slice(0, 4).map((item) => {
+          const imgUrl = item.programs?.img_url ?? item.img_url;
+
+          return (
+            <GridViewItem
+              key={item.id}
+              img={imgUrl}
+              title={item.programs?.title}
+              subTitle={item.programs?.subtitle}
+              isRounded={true}
+            />
+          );
+        })}
+      </div>
 
       <div className="flex flex-col gap-4">
         <p className="text-lg">에피소드</p>
@@ -54,11 +73,12 @@ function RecentPage() {
                 imgUrl={imgUrl}
                 title={item.title}
                 subTitle={subTitleText}
-                totalTime={item.duration}
                 date={item.date}
                 hasAudio={!!item.audio_file}
-                playlist={recentEpisodes}
                 isRound={true}
+                playlist={recentEpisodes}
+                totalTime={item.duration}
+                listenedDuration={playedDurations[item.id] ?? item.listened_duration}
               />
             );
           })}
