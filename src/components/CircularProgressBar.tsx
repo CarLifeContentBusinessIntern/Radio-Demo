@@ -13,16 +13,14 @@ function CircularProgressBar({ size, episode }: CircularProgressBarProps) {
   // 원 둘레
   const circumference = 2 * Math.PI * radius;
 
-  const { playedDurations, currentEpisodeId } = usePlayer();
-
-  const playTime = playedDurations[episode.id]
-    ? playedDurations[episode.id]
-    : episode.listened_duration
-      ? episode.listened_duration
-      : 0;
+  const { playedDurations, currentEpisodeId, currentTime } = usePlayer();
 
   const isCurrentEpisode = currentEpisodeId === episode.id;
   const playedColor = isCurrentEpisode ? '#B76EEF' : '#FFFFFFBF';
+
+  const playTime = isCurrentEpisode
+    ? currentTime
+    : (playedDurations[episode.id] ?? episode.listened_duration ?? 0);
 
   const totalTimeSeconds = timeStringToSeconds(episode.duration);
 

@@ -53,14 +53,14 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
 
   return (
     <div ref={containerRef} className="relative w-full aspect-square ">
-      {/* CircleViewItem 이미지 85% */}
+      {/* CircleViewItem 이미지 90% */}
       {/* <div className="w-full h-full"> */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                     w-[90%] h-[90%] "
       >
         <CircleViewItem
-          img={episode.programs?.img_url || episode.img_url}
+          img={episode.img_url || episode.programs?.img_url}
           onClick={handleOnClick}
           isRecentEpisode={true}
         />
