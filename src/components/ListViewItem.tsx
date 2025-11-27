@@ -5,6 +5,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { formatRemainingTime, formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { useTranslation } from 'react-i18next';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -48,9 +49,11 @@ function ListViewItem({
     setPlaylist,
     saveCurrentEpisodeProgress,
   } = usePlayer();
+  const { t } = useTranslation();
 
   const location = useLocation();
   const isLive = location.state?.isLive ?? false;
+  const isRecentPage = location.pathname === '/episodes/recent';
 
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
@@ -132,7 +135,7 @@ function ListViewItem({
             });
           }
         } else {
-          toast.error(`콘텐츠 준비 중입니다`, { toastId: id });
+          toast.error(t('toast.no-contents'), { toastId: id });
         }
       }}
     >
@@ -160,7 +163,7 @@ function ListViewItem({
               .join(' · ')}
           </div>
         </div>
-        {(lastPlayedTime > 0 || isPlayingEpisode) && (
+        {!isRecentPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
             <div
               className={`h-1 transition-width duration-100 ease-linear ${
@@ -180,6 +183,7 @@ function ListViewItem({
             !isLive && remainingSeconds > 0 && (isPlayingEpisode || lastPlayedTime > 0);
 
           return (
+            !isRecentPage &&
             shouldShowRemainingTime && (
               <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
                 - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}

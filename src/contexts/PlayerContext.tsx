@@ -12,6 +12,7 @@ import { supabase } from '../lib/supabaseClient';
 import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -25,6 +26,7 @@ interface PlayerState {
   isLoading: boolean;
   originType: 'program' | 'series' | null;
   recentSeriesId: number | null;
+  useOriginalAudio: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -51,6 +53,7 @@ interface PlayerContextType extends PlayerState {
   handlePlayBarPrev: () => void;
   resetPlayer: () => void;
   saveCurrentEpisodeProgress: () => void;
+  setUseOriginalAudio: (useOriginal: boolean) => void;
   playedDurations: Record<number, number>;
   setPlayedDurations: (callback: (prev: Record<number, number>) => Record<number, number>) => void;
 }
@@ -67,6 +70,7 @@ const initialPlayerState: PlayerState = {
   isLoading: false,
   originType: null,
   recentSeriesId: null,
+  useOriginalAudio: true,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -88,6 +92,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -124,7 +129,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     return 2712;
   };
 
-  const currentAudioUrl = currentEpisodeData?.audio_file || null;
+  const currentAudioUrl = useMemo(() => {
+    if (!currentEpisodeData) return null;
+
+    if (!state.useOriginalAudio && currentEpisodeData.audioFile_dubbing) {
+      return currentEpisodeData.audioFile_dubbing;
+    }
+
+    return currentEpisodeData.audio_file || null;
+  }, [currentEpisodeData, state.useOriginalAudio]);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -518,6 +531,21 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
 
+  const setUseOriginalAudio = useCallback((useOriginal: boolean) => {
+    const savedTime = audioRef.current?.currentTime || 0;
+
+    setState((prev) => ({
+      ...prev,
+      useOriginalAudio: useOriginal,
+    }));
+
+    setTimeout(() => {
+      if (audioRef.current && savedTime > 0) {
+        audioRef.current.currentTime = savedTime;
+      }
+    }, 100);
+  }, []);
+
   const [playedDurations, setPlayedDurations] = useState<Record<number, number>>({});
 
   const contextValue: PlayerContextType = {
@@ -539,6 +567,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarPrev,
     resetPlayer,
     saveCurrentEpisodeProgress,
+    setUseOriginalAudio,
     playedDurations,
     setPlayedDurations,
   };
@@ -579,6 +608,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       ...prev,
       [episodeId]: currentTime,
     }));
+
+    queryClient.invalidateQueries({ queryKey: ['recentEpisodes'] });
   }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;

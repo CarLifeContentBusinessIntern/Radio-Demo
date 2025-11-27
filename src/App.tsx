@@ -23,8 +23,11 @@ import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
+import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
+import AIPick from './pages/AIPick.tsx';
+import { useTranslation } from 'react-i18next';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -38,6 +41,7 @@ const queryClient = new QueryClient({
 
 function AppRoutes() {
   const location = useLocation();
+  const { t } = useTranslation();
   const { isRadioVersion, isLiveVersion } = useVersion();
   const { resetPlayer } = usePlayer();
 
@@ -135,7 +139,7 @@ function AppRoutes() {
         element={
           <Layout
             defaultType="setting"
-            defaultTitle="설정"
+            defaultTitle={t('header.setting')}
             scrollbar={false}
             paddingX={false}
             paddingB={false}
@@ -176,13 +180,7 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="/episodes/recent" element={<RecentPage />} />
-        </Route>
-      </Route>
-
-      <Route
-        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
-      >
-        <Route element={<PlayerLayout />}>
+          <Route path="/ai-pick" element={<AIPick />} />
           <Route path="/popular" element={<PopularChannelPage />} />
         </Route>
       </Route>
@@ -197,9 +195,11 @@ function App() {
         <ZoomProvider>
           <VersionProvider>
             <OEMProvider>
-              <PlayerProvider>
-                <AppRoutes />
-              </PlayerProvider>
+              <PreferenceProvider>
+                <PlayerProvider>
+                  <AppRoutes />
+                </PlayerProvider>
+              </PreferenceProvider>
             </OEMProvider>
           </VersionProvider>
         </ZoomProvider>

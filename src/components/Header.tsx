@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaAngleDown } from 'react-icons/fa6';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
@@ -8,7 +9,8 @@ import GearIcon from '../assets/gearIcon.svg';
 import GridIcon from '../assets/gridIcon.svg';
 import CategoryIcon from '../assets/ic_category.svg';
 import HomeIcon from '../assets/ic_home.svg';
-import PopularIcon from '../assets/ic_popular.svg';
+// import PopularIcon from '../assets/ic_popular.svg';
+import AIPickIcon from '../assets/ic_aipick.svg';
 import RadioIcon from '../assets/ic_radio.svg';
 import RecentIcon from '../assets/ic_recent.svg';
 import PickleLogo from '../assets/pickle_logo.png';
@@ -16,29 +18,32 @@ import SearchIcon from '../assets/searchIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useVersion } from '../contexts/VersionContext';
 import type { HeaderType } from '../types';
+import CountryToggle from './CountryToggle';
 
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
   const { isRadioVersion } = useVersion();
+  const { t, i18n } = useTranslation();
+
   const navLinks = useMemo(
     () => [
-      { name: '홈', path: '/', icon: HomeIcon },
+      { name: t('header.home'), path: '/', icon: HomeIcon },
       isRadioVersion === true
-        ? { name: '라디오', path: '/category-radio', icon: RadioIcon }
-        : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
+        ? { name: t('header.radio'), path: '/category-radio', icon: RadioIcon }
+        : { name: t('header.category'), path: '/category-radio', icon: CategoryIcon },
       {
-        name: '최근청취',
+        name: t('header.recent'),
         path: '/episodes/recent',
         icon: RecentIcon,
       },
       {
-        name: 'AI PICK',
+        name: t('header.ai-pick'),
         path: '/ai-pick',
-        icon: PopularIcon,
+        icon: AIPickIcon,
       },
     ],
-    [isRadioVersion]
+    [isRadioVersion, t, i18n.language]
   );
 
   return (
@@ -83,6 +88,7 @@ const HomeHeader = () => {
 const SearchHeader = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation();
 
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -100,7 +106,7 @@ const SearchHeader = () => {
         </div>
         <input
           type="text"
-          placeholder="검색어"
+          placeholder={t('placeholder.search')}
           value={searchQuery}
           onChange={handleSearchQuery}
           className="w-full bg-transparent px-14 text-white text-base focus:outline-none"
@@ -217,6 +223,7 @@ const RightActions = () => {
       <button onClick={() => navigate('/search')}>
         <img src={SearchIcon} alt="Search" className="w-6 h-6" />
       </button>
+      <CountryToggle />
       <button onClick={() => navigate('/setting')}>
         <img src={GearIcon} alt="Settings" className="w-6 h-6" />
       </button>

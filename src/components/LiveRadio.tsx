@@ -5,9 +5,11 @@ import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 import type { ProgramType } from '../types/program';
 import GridViewItem from './GridViewItem';
+import { useTranslation } from 'react-i18next';
 
 function LiveRadio() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const { data: liveData = [], isLoading } = useQuery<ProgramType[]>({
     queryKey: ['liveRadio'],
@@ -53,7 +55,7 @@ function LiveRadio() {
 
   const handleLiveClick = (id: number | undefined) => {
     if (!id || id === undefined) {
-      toast.error(`콘텐츠 준비 중입니다`);
+      toast.error(t('toast.no-contents'));
       return;
     }
     navigate(`/player/${id}/live`, { state: { isLive: true, playlist: playlist } });
