@@ -37,7 +37,6 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
-
     if (currentEpisodeType === 'podcast') {
       navigate(`/player/podcasts/${id}`, {
         replace: false,
@@ -45,6 +44,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           isLive: false,
           playlist: activePlaylist,
           playlistType: 'PickleEpisodeType',
+          originType: currentEpisodeData?.origin_type,
+          recentSeriesId: currentEpisodeData?.recent_series_id,
           isPickle: true,
         },
       });
@@ -54,7 +55,13 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       });
     } else {
       navigate(`/player/${targetId}`, {
-        state: { isLive: isLive, playlist: activePlaylist, playlistType: 'EpisodeType' },
+        state: {
+          isLive: isLive,
+          playlist: activePlaylist,
+          playlistType: 'EpisodeType',
+          originType: currentEpisodeData?.origin_type,
+          recentSeriesId: currentEpisodeData?.recent_series_id,
+        },
       });
     }
   };

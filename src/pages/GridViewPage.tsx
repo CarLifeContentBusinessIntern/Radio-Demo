@@ -44,6 +44,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
         subtitle: item.episodes?.programs?.title || '',
         img_url: item.episodes?.img_url || '',
         is_live: false,
+        series_id: item.series_id,
         created_at: item.created_at,
         broadcasting_id: item.episodes?.programs?.broadcasting_id || 0,
         type: 'podcast' as const,
@@ -96,7 +97,11 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                 if (isSeriesEpisodes) {
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
-                    state: { isLive: isLive, playlist: validPlaylist },
+                    state: {
+                      isLive: isLive,
+                      playlist: validPlaylist,
+                      originType: 'program',
+                    },
                   });
                 } else {
                   const firstEpisodeWithAudio = item.episodes?.find((ep) => ep.audio_file !== null);
@@ -104,7 +109,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                     const validPlaylist =
                       item.episodes?.filter((ep) => ep.audio_file !== null) || [];
                     navigate(`/player/${firstEpisodeWithAudio.id}`, {
-                      state: { isLive: isLive, playlist: validPlaylist },
+                      state: { isLive: isLive, playlist: validPlaylist, originType: 'program' },
                     });
                   } else {
                     toast.error(t('toast.no-contents'), { toastId: item.id });
@@ -128,7 +133,12 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                 if (isSeriesEpisodes) {
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
-                    state: { isLive: isLive, playlist: validPlaylist },
+                    state: {
+                      isLive: isLive,
+                      playlist: validPlaylist,
+                      originType: 'series',
+                      recentSeriesId: item.series_id,
+                    },
                   });
                 } else {
                   const firstEpisodeWithAudio = item.episodes?.find((ep) => ep.audio_file !== null);
@@ -136,7 +146,11 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                     const validPlaylist =
                       item.episodes?.filter((ep) => ep.audio_file !== null) || [];
                     navigate(`/player/${firstEpisodeWithAudio.id}`, {
-                      state: { isLive: isLive, playlist: validPlaylist },
+                      state: {
+                        isLive: isLive,
+                        playlist: validPlaylist,
+                        originType: 'program',
+                      },
                     });
                   } else {
                     toast.error(t('toast.no-contents'), { toastId: item.id });

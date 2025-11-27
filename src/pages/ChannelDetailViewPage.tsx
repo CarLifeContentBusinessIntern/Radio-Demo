@@ -20,7 +20,7 @@ function ChannelDetailViewPage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('programs')
-        .select('*, broadcastings(*), episodes(*)')
+        .select('*, broadcastings(*), episodes(*, programs(*, broadcastings(*)))')
         .eq('id', id)
         .single();
 
