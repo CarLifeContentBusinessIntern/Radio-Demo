@@ -1,40 +1,29 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
 import ListViewItem from '../components/ListViewItem';
-import { useVersion } from '../contexts/VersionContext';
 import { supabase } from '../lib/supabaseClient';
-import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
+import type { EpisodeType } from '../types/episode';
 
 function RecentPage() {
-  const { isRadioVersion } = useVersion();
-
-  const { data: allEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
+  const { data: recentEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
     queryKey: ['recentEpisodes'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('series_episodes')
-        .select('*, episodes(*, programs(*, broadcastings(*)))')
-        .eq('series_id', 21)
-        .order('order', { ascending: true });
+        .from('episodes')
+        .select('*,  programs(*, broadcastings(*))')
+        .not('listened_at', 'is', null)
+        .order('listened_at', { ascending: false })
+        .limit(10);
 
       if (error) {
         console.log('❌ 최근 청취 조회 실패 :', error);
         throw error;
       }
 
-      const episodes: EpisodeType[] = data
-        .map((item: SeriesEpisodesType) => item.episodes)
-        .filter((episode): episode is EpisodeType => episode != null && episode !== undefined);
-
-      return episodes;
+      return data;
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
   });
-
-  const recentEpisodes = useMemo(() => {
-    return isRadioVersion
-      ? allEpisodes
-      : allEpisodes.filter((episode) => episode.type === 'podcast');
-  }, [allEpisodes, isRadioVersion]);
 
   if (isLoading) {
     return (
@@ -47,26 +36,34 @@ function RecentPage() {
   }
 
   return (
-    <div className="flex flex-col gap-y-1 pr-11 pt-7">
-      {recentEpisodes?.map((item) => {
-        const subTitleText = item.programs?.title;
-        const imgUrl = item.img_url ?? item.programs?.img_url;
+    <div className="flex flex-col gap-y-9 pr-11 pt-7">
+      <p className="text-lg">큐레이션/채널</p>
+      {/* <GridViewItem /> */}
 
-        return (
-          <ListViewItem
-            key={item.id}
-            id={item.id}
-            imgUrl={imgUrl}
-            title={item.title}
-            subTitle={subTitleText}
-            totalTime={item.duration}
-            date={item.date}
-            hasAudio={!!item.audio_file}
-            playlist={recentEpisodes}
-            isRound={true}
-          />
-        );
-      })}
+      <div className="flex flex-col gap-4">
+        <p className="text-lg">에피소드</p>
+        <div className="flex flex-col gap-y-1">
+          {recentEpisodes?.map((item) => {
+            const subTitleText = item.programs?.title;
+            const imgUrl = item.img_url ?? item.programs?.img_url;
+
+            return (
+              <ListViewItem
+                key={item.id}
+                id={item.id}
+                imgUrl={imgUrl}
+                title={item.title}
+                subTitle={subTitleText}
+                totalTime={item.duration}
+                date={item.date}
+                hasAudio={!!item.audio_file}
+                playlist={recentEpisodes}
+                isRound={true}
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 }
