@@ -4,6 +4,7 @@ import { useSection } from '../hooks/useSection';
 import type { SectionItemType } from '../types/section';
 import GridViewItem from './GridViewItem';
 import { useOEM } from '../contexts/OEMContext';
+import { useTranslation } from 'react-i18next';
 
 export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemType) => {
   if (item.has_episodes) {
@@ -26,10 +27,11 @@ function PicklePick() {
   const navigate = useNavigate();
   const { selectedOEM } = useOEM();
   const { data: sectionData, isLoading } = useSection(1, selectedOEM);
+  const { t } = useTranslation();
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">P!ckle P!ck</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.pickle-pick')}</div>
 
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"

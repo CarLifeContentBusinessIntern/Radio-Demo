@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaAngleDown } from 'react-icons/fa6';
 import { IoClose, IoSearch } from 'react-icons/io5';
 import { RiPlayListFill } from 'react-icons/ri';
@@ -16,29 +17,32 @@ import SearchIcon from '../assets/searchIcon.svg';
 import { usePlayer } from '../contexts/PlayerContext';
 import { useVersion } from '../contexts/VersionContext';
 import type { HeaderType } from '../types';
+import CountryToggle from './CountryToggle';
 
 // 홈 헤더
 const HomeHeader = () => {
   const navigate = useNavigate();
   const { isRadioVersion } = useVersion();
+  const { t, i18n } = useTranslation();
+
   const navLinks = useMemo(
     () => [
-      { name: '홈', path: '/', icon: HomeIcon },
+      { name: t('header.home'), path: '/', icon: HomeIcon },
       isRadioVersion === true
-        ? { name: '라디오', path: '/category-radio', icon: RadioIcon }
-        : { name: '카테고리', path: '/category-radio', icon: CategoryIcon },
+        ? { name: t('header.radio'), path: '/category-radio', icon: RadioIcon }
+        : { name: t('header.category'), path: '/category-radio', icon: CategoryIcon },
       {
-        name: '최근청취',
+        name: t('header.recent'),
         path: '/episodes/recent',
         icon: RecentIcon,
       },
       {
-        name: 'AI PICK',
+        name: t('header.ai-pick'),
         path: '/ai-pick',
         icon: PopularIcon,
       },
     ],
-    [isRadioVersion]
+    [isRadioVersion, t, i18n.language]
   );
 
   return (
@@ -217,6 +221,7 @@ const RightActions = () => {
       <button onClick={() => navigate('/search')}>
         <img src={SearchIcon} alt="Search" className="w-6 h-6" />
       </button>
+      <CountryToggle />
       <button onClick={() => navigate('/setting')}>
         <img src={GearIcon} alt="Settings" className="w-6 h-6" />
       </button>

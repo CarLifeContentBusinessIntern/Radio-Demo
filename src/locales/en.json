@@ -1,0 +1,34 @@
+{
+  "header": { "home": "Home", "radio": "Radio", "recent": "Recent", "ai-pick": "AI PICK" },
+  "sections": {
+    "listening": "Episodes Obigo is listening to",
+    "pickle-pick": "P!ckle P!ck",
+    "monthly-pickle": "Monthly Pickle",
+    "drive-mood": "Drive Mood",
+    "category": "Category",
+    "popular-radio": "Popular Radio Channels",
+    "radio-mix": "Radio Mix",
+    "broadcast-radio": "Radio by Broadcaster",
+    "timeslot": "Browse by Timeslot",
+    "radio-dacumentary": "Radio Documentary",
+    "curation-channel": "Curation/Channel",
+    "episode": "Episode",
+    "ai-pick-before-recomend": "Channels similar to recently listened channels",
+    "ai-pick-after-recomend": "Recommendations for tired Joy"
+  },
+  "button": {
+    "re-recomend": "Get New Recommendations"
+  },
+  "placeholder": {
+    "voice-search": "Pickle! Any podcasts worth listening to at this time?"
+  },
+  "category": {
+    "news": "news",
+    "business": "business",
+    "global": "global",
+    "wellness": "wellness",
+    "insight": "insight",
+    "entertainment": "entertainment",
+    "audio-drama": "audio"
+  }
+}

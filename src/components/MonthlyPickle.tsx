@@ -2,14 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { useSection } from '../hooks/useSection';
 import CircleViewItem from './CircleViewItem';
 import { handleClickSeries } from './PicklePick';
+import { useTranslation } from 'react-i18next';
 
 function MonthlyPickle() {
   const navigate = useNavigate();
   const { data: sectionData, isLoading } = useSection(2);
+  const { t } = useTranslation();
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">월간 픽클</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.monthly-pickle')}</div>
 
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"

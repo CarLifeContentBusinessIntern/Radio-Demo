@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
+
 function RecentEpisode() {
+  const { t } = useTranslation();
+
   return (
     <div>
-      <div className="text-lg mb-7 font-semibold">
-        <span className="font-bold">오비고</span>님이 듣고 있는 에피소드
-      </div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.listening')}</div>
     </div>
   );
 }
