@@ -14,7 +14,9 @@ import speedIcon from '../assets/speedIcon.svg';
 import PlayList from '../components/player/PlayList';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
+import ToggleButton from '../components/ToggleButton';
 import { timeStringToSeconds } from '../utils/timeUtils';
+import ImageWithSkeleton from '../components/ImageWithSkeleton';
 
 function Player() {
   const { id } = useParams();
@@ -43,6 +45,8 @@ function Player() {
     playEpisode,
     setPlaylist,
     closePlaylist,
+    useOriginalAudio,
+    setUseOriginalAudio,
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
@@ -141,7 +145,7 @@ function Player() {
   };
 
   return (
-    <div className="relative overflow-hidden flex justify-center items-center h-full pb-5">
+    <div className="relative overflow-hidden h-full">
       {imgUrl && (
         <div
           className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
@@ -169,115 +173,128 @@ function Player() {
         originType={originType}
         recentSeriesId={recentSeriesId}
       />
-
-      <div className="relative flex flex-col justify-center items-center h-full gap-12 w-1/2">
-        <div className="flex flex-row items-center justify-center gap-12 max-h-[260px] w-full">
-          <div className="flex-shrink-0 w-40 h-40">
-            {imgUrl ? (
-              <img
-                src={imgUrl}
-                alt={currentEpisodeData.title}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gray-400"></div>
-            )}
-          </div>
-
-          <div className="flex flex-col flex-grow justify-between h-full text-left">
-            <p className="line-clamp-2 leading-snug text-2xl">
-              {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
-            </p>
-            <p className="text-[#A6A6A9] text-lg">
-              {currentEpisodeType === 'podcast' ? (
-                <>
-                  <button
-                    onClick={() =>
-                      handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
-                    }
-                  >
-                    {currentEpisodeData.programs?.title}
-                  </button>
-                  · {currentEpisodeData.date}
-                </>
-              ) : (
-                <>
-                  {currentEpisodeData.programs?.broadcastings?.title}
-                  <button
-                    onClick={() =>
-                      handleToggleChannelList(
-                        currentEpisodeData.programs?.broadcastings?.channel ?? ''
-                      )
-                    }
-                  >
-                    {currentEpisodeData.programs?.broadcastings?.channel}
-                  </button>
-                </>
-              )}
-            </p>
-            <p className={`text-[#A6A6A9] text-lg ${isLoading ? 'invisible' : ''}`}>
-              {effectiveIsLive
-                ? 'LIVE'
-                : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
-            </p>
-          </div>
+      {/* 플레이 화면 */}
+      <div className="flex justify-around h-full">
+        <div className="w-[10%]">
+          {currentEpisodeData.audioFile_dubbing && (
+            <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
+          )}
         </div>
+        <div className="relative flex flex-col justify-center items-center w-[80%] h-full gap-[103px]">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[100%] max-w-[1025px] max-h-[260px]">
+            <div className="flex-shrink-0">
+              {imgUrl ? (
+                <ImageWithSkeleton
+                  src={imgUrl}
+                  alt={currentEpisodeData.title}
+                  className="w-40 h-40 md:w-60 md:h-60 object-cover"
+                  skeletonClassName="w-[224px] h-[224px]"
+                  baseColor="#222"
+                  highlightColor="#444"
+                />
+              ) : (
+                <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
+              )}
+            </div>
 
-        <div className="flex flex-col gap-5 w-full ">
-          <div className="flex flex-col items-center gap-5">
-            <input
-              type="range"
-              min="0"
-              max={totalTimeSeconds}
-              value={effectiveIsLive ? totalTimeSeconds : currentTime}
-              onChange={onHandleSeek}
-              disabled={effectiveIsLive || isLoading}
-              className={`custom-slider w-full h-1 rounded-lg appearance-none range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
-              style={sliderStyle}
-            />
-
-            <div
-              className={`flex justify-between w-[30%] max-w-[280px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20`}
-            >
-              <button onClick={() => handleSkip(-15)}>
-                <RiReplay15Fill size={36} />
-              </button>
-              <button onClick={() => handleSkip(15)}>
-                <RiForward15Fill size={36} />
-              </button>
+            <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
+              <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
+                {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
+              </p>
+              <p className="text-xl md:text-[38px] text-[#A6A6A9]">
+                {currentEpisodeType === 'podcast' ? (
+                  <>
+                    <button
+                      onClick={() =>
+                        handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                      }
+                    >
+                      {currentEpisodeData.programs?.title}
+                    </button>{' '}
+                    · {currentEpisodeData.date}
+                  </>
+                ) : (
+                  <>
+                    {currentEpisodeData.programs?.broadcastings?.title}
+                    <button
+                      onClick={() =>
+                        handleToggleChannelList(
+                          currentEpisodeData.programs?.broadcastings?.channel ?? ''
+                        )
+                      }
+                    >
+                      {currentEpisodeData.programs?.broadcastings?.channel}
+                    </button>
+                  </>
+                )}
+              </p>
+              <p
+                className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}
+              >
+                {effectiveIsLive
+                  ? 'LIVE'
+                  : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center justify-between z-20 gap-16">
-            <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
-              <img src={speedIcon} className="w-8 h-8" alt="speed" />
-              <p className="text-xs">1.0x</p>
-            </button>
+          <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
+            <div className="flex flex-col items-center gap-5">
+              <input
+                type="range"
+                min="0"
+                max={totalTimeSeconds}
+                value={effectiveIsLive ? totalTimeSeconds : currentTime}
+                onChange={onHandleSeek}
+                disabled={effectiveIsLive || isLoading}
+                className={`custom-slider w-full h-1 rounded-lg appearance-none cursor-pointer range-sm bg-slate-600 ${isLoading ? 'invisible' : ''} ${effectiveIsLive ? 'cursor-default' : 'cursor-pointer'}`}
+                style={sliderStyle}
+              />
 
-            <button onClick={handlePlayPrev}>
-              <TbPlayerSkipBackFilled size={30} />
-            </button>
-            <button onClick={togglePlayPause} disabled={isLoading}>
-              {isLoading ? (
-                <AiOutlineLoading size={30} className="animate-spin" />
-              ) : isPlaying ? (
-                <TbPlayerPauseFilled size={30} />
-              ) : (
-                <TbPlayerPlayFilled size={30} />
-              )}
-            </button>
-            <button onClick={handlePlayNext}>
-              <TbPlayerSkipForwardFilled size={30} />
-            </button>
+              <div
+                className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+              >
+                <button onClick={() => handleSkip(-15)}>
+                  <RiReplay15Fill size={36} />
+                </button>
+                <button onClick={() => handleSkip(15)}>
+                  <RiForward15Fill size={36} />
+                </button>
+              </div>
+            </div>
 
-            <button
-              className={`w-12 h-12 text-gray-400 ${effectiveIsLive ? 'invisible' : ''} flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
-              onClick={() => setIsMoreBtn(!isMoreBtn)}
-            >
-              <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />
-            </button>
+            <div className="flex items-center justify-between gap-16 z-20">
+              <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
+                <img src={speedIcon} />
+                <p className="text-[12px]">1.0x</p>
+              </button>
+
+              <button onClick={handlePlayPrev}>
+                <TbPlayerSkipBackFilled size={30} />
+              </button>
+              <button onClick={togglePlayPause} disabled={isLoading}>
+                {isLoading ? (
+                  <AiOutlineLoading size={30} className="animate-spin" />
+                ) : isPlaying ? (
+                  <TbPlayerPauseFilled size={30} />
+                ) : (
+                  <TbPlayerPlayFilled size={30} />
+                )}
+              </button>
+              <button onClick={handlePlayNext}>
+                <TbPlayerSkipForwardFilled size={30} />
+              </button>
+
+              <button
+                className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''} w-12 h-12 flex items-center justify-center ${isMoreBtn ? 'rounded-full bg-white' : ''}`}
+                onClick={() => setIsMoreBtn(!isMoreBtn)}
+              >
+                <IoEllipsisVertical size={30} color={isMoreBtn ? 'black' : 'white'} />
+              </button>
+            </div>
           </div>
         </div>
+        <div className="w-[10%]" />
       </div>
     </div>
   );
