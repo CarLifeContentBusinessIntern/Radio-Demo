@@ -1,10 +1,11 @@
 import AIPickAfter from '../components/AIPickAfter';
 import AIPickBefore from '../components/AIPickBefore';
+import { usePreference } from '../contexts/PreferenceContext';
 
 function AIPick() {
-  const isSetupComplete = true;
+  const { hasAnySelection } = usePreference();
 
-  return <>{isSetupComplete ? <AIPickAfter /> : <AIPickBefore />}</>;
+  return <>{hasAnySelection ? <AIPickAfter /> : <AIPickBefore />}</>;
 }
 
 export default AIPick;
