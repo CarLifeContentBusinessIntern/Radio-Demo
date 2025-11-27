@@ -151,6 +151,7 @@ function AIPickBefore() {
               isPlayer={false}
               totalTime={ep.duration}
               listenedDuration={playedDurations[ep.id] ?? ep.listened_duration}
+              originType="program"
             />
           ))}
         </div>

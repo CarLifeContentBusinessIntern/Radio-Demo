@@ -111,8 +111,12 @@ function AIPickAfter() {
       </div>
 
       <div
-        className="relative w-full overflow-hidden"
-        // onClick={() => navigate('/setting/preference')}
+        className="relative w-full overflow-hidden cursor-pointer"
+        onClick={() => {
+          navigate(`/player/${episodes?.[0].id}`, {
+            state: { isLive: false, playlist: episodes, originType: 'program' },
+          });
+        }}
       >
         <img
           src={BannerBackground}
@@ -131,14 +135,7 @@ function AIPickAfter() {
                   <span className="text-[#3D7D6D]">{t('ai-pick.banner-after-2-highlight')}</span>
                   {t('ai-pick.banner-after-2-end')}
                 </p>
-                <button
-                  className="font-bold text-base bg-[#202020]/30 px-5 py-3 rounded-full flex items-center gap-3 cursor-pointer"
-                  onClick={() => {
-                    navigate(`/player/${episodes?.[0].id}`, {
-                      state: { isLive: false, playlist: episodes },
-                    });
-                  }}
-                >
+                <button className="font-bold text-base bg-[#202020]/30 px-5 py-3 rounded-full flex items-center gap-3 cursor-pointer">
                   <MdOutlinePlayCircle size={20} />
                   <p>{t('ai-pick.banner-after-3')}</p>
                 </button>
@@ -166,6 +163,7 @@ function AIPickAfter() {
               isPlayer={false}
               totalTime={ep.duration}
               listenedDuration={playedDurations[ep.id] ?? ep.listened_duration}
+              originType="program"
             />
           ))}
         </div>
