@@ -22,7 +22,14 @@ export default function ImageWithSkeleton({
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div className={`relative aspect-square overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden flex items-center justify-center ${className}`}>
+      {isLoaded && src && (
+        <div
+          className="absolute inset-0 bg-cover bg-center blur-2xl"
+          style={{ backgroundImage: `url('${src}')` }}
+        />
+      )}
+
       {/* Skeleton */}
       {!isLoaded && (
         <Skeleton
@@ -37,7 +44,7 @@ export default function ImageWithSkeleton({
         src={src ?? ''}
         alt={alt}
         onLoad={() => setIsLoaded(true)}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${
+        className={`relative w-fit object-cover transition-opacity duration-300 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
       />

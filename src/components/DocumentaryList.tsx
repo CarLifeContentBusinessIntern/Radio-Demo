@@ -35,7 +35,7 @@ function DocumentaryList() {
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">라디오 다큐멘터리</div>
+      <div className="text-lg mb-7 font-semibold">라디오 다큐멘터리</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (

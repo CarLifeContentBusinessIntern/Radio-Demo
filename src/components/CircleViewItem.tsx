@@ -38,8 +38,8 @@ function CircleViewItem({ isLoading, title, subTitle, img, onClick }: CircleView
         <div className="bg-gray-600 w-full rounded-full aspect-square mb-4" />
       )}
 
-      <p className="text-[28px] mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
-      <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
+      <p className="text-base mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
+      <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );
 }

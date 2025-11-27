@@ -5,7 +5,9 @@ import GridViewPage from './GridViewPage';
 function PicklePickTemplate() {
   const { id } = useParams();
 
-  return <div>{id === '4' ? <GridViewPage rectangle={true} /> : <ListViewPage />}</div>;
+  return (
+    <div>{id === '4' || id === '3' ? <GridViewPage rectangle={true} /> : <ListViewPage />}</div>
+  );
 }
 
 export default PicklePickTemplate;

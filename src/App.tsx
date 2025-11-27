@@ -17,12 +17,16 @@ import PopularChannelPage from './pages/PopularChannelPage.tsx';
 // import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
 // import LikedChannelPage from './pages/LikedChannelPage.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
 import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
 import SettingFunction from './pages/SettingFunction.tsx';
 import SettingDemo from './pages/SettingDemo.tsx';
 import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
 import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
+import { ZoomProvider } from './contexts/ZoomContext.tsx';
+import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
+import AIPick from './pages/AIPick.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +44,8 @@ function AppRoutes() {
   const { resetPlayer } = usePlayer();
 
   const isFirstRender = useRef(true);
+
+  useSaveProgressOnNavigate();
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -119,15 +125,13 @@ function AppRoutes() {
         <Route path="/player/podcasts/:id" element={<Player />} />
       </Route>
 
-      {/*
       <Route
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="/like/:id" element={<LikedChannelViewPage />} />
+          <Route path="/channel-detail/:id" element={<ChannelDetailViewPage />} />
         </Route>
       </Route>
-      */}
 
       <Route
         element={
@@ -174,13 +178,7 @@ function AppRoutes() {
       >
         <Route element={<PlayerLayout />}>
           <Route path="/episodes/recent" element={<RecentPage />} />
-        </Route>
-      </Route>
-
-      <Route
-        element={<Layout defaultType="home" scrollbar={true} paddingX={false} paddingB={true} />}
-      >
-        <Route element={<PlayerLayout />}>
+          <Route path="/ai-pick" element={<AIPick />} />
           <Route path="/popular" element={<PopularChannelPage />} />
         </Route>
       </Route>
@@ -192,15 +190,17 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <VersionProvider>
-          <OEMProvider>
-            <PreferenceProvider>
-              <PlayerProvider>
-                <AppRoutes />
-              </PlayerProvider>
-            </PreferenceProvider>
-          </OEMProvider>
-        </VersionProvider>
+        <ZoomProvider>
+          <VersionProvider>
+            <OEMProvider>
+              <PreferenceProvider>
+                <PlayerProvider>
+                  <AppRoutes />
+                </PlayerProvider>
+              </PreferenceProvider>
+            </OEMProvider>
+          </VersionProvider>
+        </ZoomProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );

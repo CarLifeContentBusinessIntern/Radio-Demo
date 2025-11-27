@@ -46,8 +46,8 @@ function GridViewItem({
           className={`bg-gray-600 w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4`}
         />
       )}
-      <p className="text-[28px] mb-1 px-1 font-semibold truncate">{title}</p>
-      <p className="text-[25px] text-gray-400 px-1 truncate">{subTitle}</p>
+      <p className="text-base mb-1 px-1 font-semibold truncate">{title}</p>
+      <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );
 }

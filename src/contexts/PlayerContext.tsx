@@ -10,8 +10,9 @@ import {
 } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { timeStringToSeconds } from '../utils/timeUtils';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -25,6 +26,7 @@ interface PlayerState {
   isLoading: boolean;
   originType: 'program' | 'series' | null;
   recentSeriesId: number | null;
+  useOriginalAudio: boolean;
 }
 
 interface PlayerContextType extends PlayerState {
@@ -51,6 +53,9 @@ interface PlayerContextType extends PlayerState {
   handlePlayBarPrev: () => void;
   resetPlayer: () => void;
   saveCurrentEpisodeProgress: () => void;
+  setUseOriginalAudio: (useOriginal: boolean) => void;
+  playedDurations: Record<number, number>;
+  setPlayedDurations: (callback: (prev: Record<number, number>) => Record<number, number>) => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -65,6 +70,7 @@ const initialPlayerState: PlayerState = {
   isLoading: false,
   originType: null,
   recentSeriesId: null,
+  useOriginalAudio: true,
 };
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
@@ -80,9 +86,13 @@ export const usePlayer = () => {
 export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<PlayerState>(initialPlayerState);
   const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
+  const activePlaylistRef = useRef<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -119,7 +129,15 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     return 2712;
   };
 
-  const currentAudioUrl = currentEpisodeData?.audio_file || null;
+  const currentAudioUrl = useMemo(() => {
+    if (!currentEpisodeData) return null;
+
+    if (!state.useOriginalAudio && currentEpisodeData.audioFile_dubbing) {
+      return currentEpisodeData.audioFile_dubbing;
+    }
+
+    return currentEpisodeData.audio_file || null;
+  }, [currentEpisodeData, state.useOriginalAudio]);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -142,11 +160,20 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       setState((prev) => ({ ...prev, isLoading: false }));
     };
 
+    const handleEnded = () => {
+      const isPlayerPage = /^\/player\/[^/]+$/.test(location.pathname);
+      if (isPlayerPage) {
+        handlePlayNext(); // /player/:id 인 경우
+      } else {
+        handlePlayBarNext(); // 그 외 모든 경우
+      }
+    };
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('waiting', handleWaiting);
     audio.addEventListener('canplay', handleCanPlay);
     audio.addEventListener('playing', handleCanPlay);
+    audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.pause();
@@ -155,32 +182,24 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.removeEventListener('waiting', handleWaiting);
       audio.removeEventListener('canplay', handleCanPlay);
       audio.removeEventListener('playing', handleCanPlay);
+      audio.removeEventListener('ended', handleEnded);
 
       audio.src = '';
     };
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      if (currentAudioUrl) {
-        if (audioRef.current.src !== currentAudioUrl) {
-          audioRef.current.src = currentAudioUrl;
-        }
+    const audio = audioRef.current;
+    if (!audio || !currentAudioUrl) return;
 
-        if (state.isPlaying) {
-          audioRef.current.play();
-          // .catch((e) => {
-          //   console.error('Audio play failed', e);
-          //   setState((prev) => ({ ...prev, isPlaying: false }));
-          // });
-        } else {
-          audioRef.current.pause();
-        }
-      } else {
-        audioRef.current.pause();
-      }
+    if (audio.src !== currentAudioUrl) {
+      audio.src = currentAudioUrl;
+      audio.currentTime = state.currentTime; // 여기서 한 번만 startTime 반영
     }
-  }, [currentAudioUrl, state.isPlaying]);
+
+    if (state.isPlaying) audio.play();
+    else audio.pause();
+  }, [currentAudioUrl, state.isPlaying, state.currentTime]);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
@@ -199,7 +218,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, [state.currentEpisodeId, currentEpisodeData, episodes]);
 
   const playEpisode = useCallback(
-    (
+    async (
       id: number,
       liveStatus = false,
       isPodcast = false,
@@ -207,12 +226,29 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       recentSeriesId: number | null = null
     ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
-      const episode = episodes.find((item) => item.id === id);
+
+      // 최신 데이터 가져오기 (최신 재생 시점을 위해)
+      const { data: freshEpisode } = await supabase
+        .from('episodes')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      const episode = freshEpisode ?? episodes.find((item) => item.id === id);
+      if (!episode) return;
+
+      // 마지막 재생 시점 가져오기
+      let startTime = Number(episode?.listened_duration) || 0;
 
       if (episode?.audio_file === null) return;
 
       if (episode) {
         const newDuration = getEpisodeDuration(episode);
+
+        // 마지막 재생 시점이 에피소드 길이보다 크면 0으로 초기화
+        if (startTime > newDuration - 1) {
+          startTime = 0;
+        }
 
         setState((prevState) => {
           const isNewEpisode = prevState.currentEpisodeId !== id;
@@ -229,7 +265,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               ...changes,
               currentEpisodeId: id,
               isPlaying: true,
-              currentTime: 0,
+              currentTime: startTime,
               duration: newDuration,
               hasBeenActivated: true,
               isLoading: liveStatus ? false : true,
@@ -269,25 +305,27 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const setPlaylist = useCallback((playlist: EpisodeType[]) => {
-    setActivePlaylist(playlist);
+    activePlaylistRef.current = playlist; // 최신값을 ref에 저장
+    setActivePlaylist(playlist); // state 업데이트 (UI용)
   }, []);
 
   const changeEpisode = useCallback(
     (direction: 1 | -1, isPlayBar: boolean) => {
-      if (!activePlaylist.length || state.currentEpisodeId === null) return;
+      const playlist = activePlaylistRef.current;
+      if (!playlist.length || currentEpisodeRef.current === null) return;
 
       // 다른 에피소드로 변경하기 직전에 DB에 시간 기록
-      if (state.currentEpisodeId && audioRef.current) {
+      if (currentEpisodeRef.current && audioRef.current) {
         saveListeningHistory(
-          state.currentEpisodeId,
+          currentEpisodeRef.current,
           audioRef.current.currentTime,
           state.originType,
           state.recentSeriesId
         );
       }
 
-      const playlistLength = activePlaylist.length;
-      let currentIndex = activePlaylist.findIndex((ep) => ep.id === state.currentEpisodeId);
+      const playlistLength = playlist.length;
+      let currentIndex = playlist.findIndex((ep) => ep.id === currentEpisodeRef.current);
 
       if (currentIndex === -1) {
         currentIndex = 0;
@@ -296,7 +334,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       let searchCount = 0;
       while (searchCount < playlistLength) {
         const nextIndex = (currentIndex + direction + playlistLength) % playlistLength;
-        const nextEpisode = activePlaylist[nextIndex];
+        const nextEpisode = playlist[nextIndex];
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
@@ -307,7 +345,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                 replace: true,
                 state: {
                   isLive: false,
-                  playlist: activePlaylist,
+                  playlist: playlist,
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
@@ -315,14 +353,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {
                 replace: true,
-                state: { isLive: state.isLive, playlist: activePlaylist },
+                state: { isLive: state.isLive, playlist: playlist },
               });
             } else {
               navigate(`/player/${nextEpisode.id}`, {
                 replace: true,
                 state: {
                   isLive: state.isLive,
-                  playlist: activePlaylist,
+                  playlist: playlist,
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
@@ -345,12 +383,13 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       }
     },
     [
-      activePlaylist,
       state.currentEpisodeId,
       state.isLive,
       playEpisode,
-      state.currentEpisodeType,
       navigate,
+      state.currentEpisodeType,
+      state.originType,
+      state.recentSeriesId,
     ]
   );
 
@@ -492,6 +531,23 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [state.currentEpisodeId, state.originType, state.recentSeriesId]);
 
+  const setUseOriginalAudio = useCallback((useOriginal: boolean) => {
+    const savedTime = audioRef.current?.currentTime || 0;
+
+    setState((prev) => ({
+      ...prev,
+      useOriginalAudio: useOriginal,
+    }));
+
+    setTimeout(() => {
+      if (audioRef.current && savedTime > 0) {
+        audioRef.current.currentTime = savedTime;
+      }
+    }, 100);
+  }, []);
+
+  const [playedDurations, setPlayedDurations] = useState<Record<number, number>>({});
+
   const contextValue: PlayerContextType = {
     ...state,
     currentEpisodeData,
@@ -511,6 +567,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     handlePlayBarPrev,
     resetPlayer,
     saveCurrentEpisodeProgress,
+    setUseOriginalAudio,
+    playedDurations,
+    setPlayedDurations,
   };
 
   //최근 들은 시점 저장
@@ -543,6 +602,14 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     if (error) {
       console.error('❌ Failed to save listening history:', error.message);
     }
+
+    // 여기서 UI용 Context에도 바로 반영
+    setPlayedDurations((prev) => ({
+      ...prev,
+      [episodeId]: currentTime,
+    }));
+
+    queryClient.invalidateQueries({ queryKey: ['recentEpisodes'] });
   }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
