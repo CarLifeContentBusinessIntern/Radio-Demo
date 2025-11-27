@@ -12,6 +12,7 @@ import { supabase } from '../lib/supabaseClient';
 import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -91,6 +92,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     async function fetchEpisodes() {
@@ -606,6 +608,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       ...prev,
       [episodeId]: currentTime,
     }));
+
+    queryClient.invalidateQueries({ queryKey: ['recentEpisodes'] });
   }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;
