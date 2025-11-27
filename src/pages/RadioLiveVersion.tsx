@@ -24,11 +24,11 @@ function RadioLiveVersion() {
       {/* 라디오 다큐 */}
       <DocumentaryList />
 
-      {/* 카테고리 */}
-      <Category type="radio" title={true} />
-
       {/* 시간별 몰아보기 */}
       <TimeSlot />
+
+      {/* 카테고리 */}
+      <Category type="radio" title={true} />
     </div>
   );
 }
