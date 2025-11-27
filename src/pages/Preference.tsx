@@ -76,7 +76,7 @@ function Preference() {
                       key={option.value}
                       label={option.label}
                       selected={localPreferences[question.id] === option.value}
-                      onClick={() => handleUpdateLocal(question.id, option.value as never)}
+                      onClick={() => handleUpdateLocal(question.id, option.value)}
                     />
                   ))}
                 </>
@@ -99,7 +99,7 @@ function Preference() {
                 <div className="sticky top-24 w-full">
                   <PreferenceSlider
                     value={localPreferences.diversity as number}
-                    onChange={(value) => handleUpdateLocal('diversity', value as never)}
+                    onChange={(value) => handleUpdateLocal('diversity', value)}
                     min={question.min}
                     max={question.max}
                     step={question.step}

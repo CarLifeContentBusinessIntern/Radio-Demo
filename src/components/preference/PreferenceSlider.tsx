@@ -40,7 +40,7 @@ function PreferenceSlider({
           {milestones.map((milestone) => {
             const milestonePercentage = milestone;
             const isActive = value >= milestone;
-            const isCurrent = Math.abs(value - milestone) < 5;
+            const isCurrent = value === milestone;
 
             return (
               <div

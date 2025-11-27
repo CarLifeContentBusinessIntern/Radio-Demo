@@ -32,7 +32,7 @@ export const PREFERENCE_QUESTIONS: PreferenceQuestion[] = [
       { label: '일상·토크', value: 'daily_talk' },
       { label: '스포츠', value: 'sports' },
       { label: '책', value: 'books' },
-      { label: '마스터리', value: 'mistery' },
+      { label: '마스터리', value: 'mystery' },
       { label: '건강', value: 'health' },
     ],
   },
@@ -132,7 +132,7 @@ export const PREFERENCE_QUESTIONS: PreferenceQuestion[] = [
 
 export const DEFAULT_PREFERENCE_STATE = {
   age: '30s',
-  genres: ['movie_drama', 'humanities', 'language', 'trend', 'music', 'daily_talk', 'mistery'],
+  genres: ['movie_drama', 'humanities', 'language', 'trend', 'music', 'daily_talk', 'mystery'],
   purpose: ['tired', 'stress'],
   contentLength: ['10_30', '30_60'],
   contentType: ['conversation', 'story'],
