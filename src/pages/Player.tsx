@@ -182,16 +182,16 @@ function Player() {
       <div className="flex justify-around h-full">
         <div
           className="relative flex flex-col justify-center items-center w-full h-full"
-          style={{ gap: vh(5) }}
+          style={{ gap: '7vh' }}
         >
-          <div className="flex items-center justify-between w-[100%]" style={{ height: vh(30) }}>
+          <div className="flex items-center justify-between w-[100%]">
             <div className="w-[10%] flex items-center justify-center">
               {currentEpisodeData.audioFile_dubbing && (
                 <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
               )}
             </div>
-            <div className="flex items-center justify-center gap-[5%] w-[60%]">
-              <div className="flex-shrink-0" style={{ width: vh(20), height: vh(20) }}>
+            <div className="flex items-center justify-center h-fit gap-[5%] w-[60%]">
+              <div className="flex-shrink-0 w-[20vh] h-[20vh]">
                 {imgUrl ? (
                   <ImageWithSkeleton
                     src={imgUrl}
@@ -206,14 +206,11 @@ function Player() {
                 )}
               </div>
 
-              <div
-                className="flex flex-col flex-grow justify-around text-center md:text-left"
-                style={{ height: vh(20) }}
-              >
-                <p className="line-clamp-2 leading-snug" style={{ fontSize: vh(4) }}>
+              <div className="flex flex-col flex-grow justify-between gap-[1vh] text-center md:text-left">
+                <p className="line-clamp-2 leading-snug text-[3vh]">
                   {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
                 </p>
-                <p className="text-[#A6A6A9]" style={{ fontSize: vh(3.5) }}>
+                <p className="text-[#A6A6A9] text-[2vh]">
                   {currentEpisodeType === 'podcast' ? (
                     <>
                       <button
@@ -240,10 +237,7 @@ function Player() {
                     </>
                   )}
                 </p>
-                <p
-                  className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}
-                  style={{ fontSize: vh(2.8) }}
-                >
+                <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[1.5vh]`}>
                   {effectiveIsLive
                     ? 'LIVE'
                     : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
