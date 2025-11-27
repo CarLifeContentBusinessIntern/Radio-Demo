@@ -22,9 +22,7 @@ export default function ImageWithSkeleton({
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
-    <div
-      className={`relative aspect-square overflow-hidden flex items-center justify-center ${className}`}
-    >
+    <div className={`relative overflow-hidden flex items-center justify-center ${className}`}>
       {isLoaded && src && (
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl"
