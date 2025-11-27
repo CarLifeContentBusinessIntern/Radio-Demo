@@ -6,6 +6,7 @@ interface PreferenceContextType {
   preferences: PreferenceState;
   updatePreference: <K extends keyof PreferenceState>(key: K, value: PreferenceState[K]) => void;
   toggleGenre: (genre: string) => void;
+  toggleMultipleChoice: (key: keyof PreferenceState, value: string) => void;
   resetPreferences: () => void;
 }
 
@@ -14,10 +15,7 @@ const PreferenceContext = createContext<PreferenceContextType | undefined>(undef
 export function PreferenceProvider({ children }: { children: ReactNode }) {
   const [preferences, setPreferences] = useState<PreferenceState>(DEFAULT_PREFERENCE_STATE);
 
-  const updatePreference = <K extends keyof PreferenceState>(
-    key: K,
-    value: PreferenceState[K]
-  ) => {
+  const updatePreference = <K extends keyof PreferenceState>(key: K, value: PreferenceState[K]) => {
     setPreferences((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -28,9 +26,19 @@ export function PreferenceProvider({ children }: { children: ReactNode }) {
 
       return {
         ...prev,
-        genres: isSelected
-          ? currentGenres.filter((g) => g !== genre)
-          : [...currentGenres, genre],
+        genres: isSelected ? currentGenres.filter((g) => g !== genre) : [...currentGenres, genre],
+      };
+    });
+  };
+
+  const toggleMultipleChoice = (key: keyof PreferenceState, value: string) => {
+    setPreferences((prev) => {
+      const currentValues = prev[key] as string[];
+      const isSelected = currentValues.includes(value);
+
+      return {
+        ...prev,
+        [key]: isSelected ? currentValues.filter((v) => v !== value) : [...currentValues, value],
       };
     });
   };
@@ -41,7 +49,7 @@ export function PreferenceProvider({ children }: { children: ReactNode }) {
 
   return (
     <PreferenceContext.Provider
-      value={{ preferences, updatePreference, toggleGenre, resetPreferences }}
+      value={{ preferences, updatePreference, toggleGenre, toggleMultipleChoice, resetPreferences }}
     >
       {children}
     </PreferenceContext.Provider>

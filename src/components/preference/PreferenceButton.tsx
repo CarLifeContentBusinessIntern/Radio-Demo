@@ -9,12 +9,8 @@ function PreferenceButton({ label, selected, onClick }: PreferenceButtonProps) {
     <button
       onClick={onClick}
       className={`
-        px-4 py-2 rounded-lg transition-all duration-200
-        ${
-          selected
-            ? 'bg-blue-600 text-white border-2 border-blue-600'
-            : 'bg-gray-800 text-gray-300 border-2 border-gray-700 hover:border-gray-600'
-        }
+        px-[40px] py-5 rounded-[10px] transition-all duration-300 text-[24px] leading-none font-bold
+        ${selected ? 'bg-[#B978FF] text-[#232323]' : 'bg-[#232323] text-[#9CA3AF]'}
       `}
     >
       {label}

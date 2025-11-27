@@ -1,13 +1,13 @@
 export interface PreferenceState {
   age: string;
   genres: string[];
-  purpose: string;
-  contentLength: string;
-  contentType: string;
-  mood: string;
-  time: string;
-  companion: string;
-  tone: string;
+  purpose: string[];
+  contentLength: string[];
+  contentType: string[];
+  mood: string[];
+  time: string[];
+  environment: string[];
+  companion: string[];
   diversity: number;
 }
 

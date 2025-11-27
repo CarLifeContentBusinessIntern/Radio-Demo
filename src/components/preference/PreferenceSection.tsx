@@ -7,9 +7,9 @@ interface PreferenceSectionProps {
 
 function PreferenceSection({ question, children }: PreferenceSectionProps) {
   return (
-    <div className="mb-12">
-      <h2 className="text-lg font-medium text-white mb-4">{question}</h2>
-      <div className="flex flex-wrap gap-3">{children}</div>
+    <div className="flex mb-9 w-full h-fit justify-between items-start">
+      <h2 className="text-[26px] font-medium text-white w-[35%]">{question}</h2>
+      <div className="flex flex-wrap justify-end gap-3 w-[60%] h-fit">{children}</div>
     </div>
   );
 }
