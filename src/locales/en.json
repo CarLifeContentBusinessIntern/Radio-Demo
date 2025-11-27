@@ -25,7 +25,8 @@
     "ai-pick-after-recomend": "Recommendations for tired Joy"
   },
   "button": {
-    "re-recomend": "Get New Recommendations"
+    "re-recomend": "Get New Recommendations",
+    "loading-recomend": "Loading Recommendations..."
   },
   "placeholder": {
     "voice-search": "Pickle! Any podcasts worth listening to at this time?",

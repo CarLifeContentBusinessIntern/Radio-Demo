@@ -12,7 +12,9 @@ interface Country {
 function CountryToggle() {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('KR');
+  const [selectedCountry, setSelectedCountry] = useState(
+    () => countries.find((c) => c.language === i18n.language)?.code || 'KR'
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const countries: Country[] = [

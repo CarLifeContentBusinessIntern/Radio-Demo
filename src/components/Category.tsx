@@ -31,8 +31,6 @@ function Category({ title, type }: CategoryInterface) {
         throw error;
       }
 
-      console.log('cate', data);
-
       return data as unknown as CategoryType[];
     },
   });
@@ -56,7 +54,10 @@ function Category({ title, type }: CategoryInterface) {
                 onClick={() => {
                   if (item.programs?.length > 0) {
                     navigate(`/curation/${item.id}`, {
-                      state: { title: item.title, type: `${type}_category` },
+                      state: {
+                        title: isKorean ? item.title : item.en_title || item.title,
+                        type: `${type}_category`,
+                      },
                     });
                   } else {
                     toast.error(t('toast.no-contents'), { toastId: item.id });

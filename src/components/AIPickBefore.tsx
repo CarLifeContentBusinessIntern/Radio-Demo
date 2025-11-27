@@ -166,7 +166,7 @@ function AIPickBefore() {
               <FiRefreshCcw size={20} color="#A1A1A1" />
             </div>
             <p className="text-xl text-[#A1A1A1] font-semibold">
-              {isFetching ? '추천 불러오는 중...' : t('button.re-recomend')}
+              {isFetching ? t('button.loading-recomend') : t('button.re-recomend')}
             </p>
           </button>
         </div>

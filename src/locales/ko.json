@@ -25,7 +25,8 @@
     "ai-pick-after-recomend": "피곤한 조이님을 위한 추천"
   },
   "button": {
-    "re-recomend": "다시 추천받기"
+    "re-recomend": "다시 추천받기",
+    "loading-recomend": "추천 불러오는 중..."
   },
   "placeholder": {
     "voice-search": "픽클! 지금 시간대에 들을만한 팟캐스트 있을까?",
