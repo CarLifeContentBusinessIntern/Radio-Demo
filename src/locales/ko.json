@@ -1,5 +1,11 @@
 {
-  "header": { "home": "홈", "radio": "라디오", "recent": "최근청취", "ai-pick": "AI PICK" },
+  "header": {
+    "home": "홈",
+    "radio": "라디오",
+    "recent": "최근청취",
+    "ai-pick": "AI PICK",
+    "category": "카테고리"
+  },
   "sections": {
     "listening": "오비고님이 듣고 있는 에피소드",
     "pickle-pick": "P!ckle P!ck",

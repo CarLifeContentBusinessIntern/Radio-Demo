@@ -1,5 +1,11 @@
 {
-  "header": { "home": "Home", "radio": "Radio", "recent": "Recent", "ai-pick": "AI PICK" },
+  "header": {
+    "home": "Home",
+    "radio": "Radio",
+    "recent": "Recent",
+    "ai-pick": "AI PICK",
+    "category": "Category"
+  },
   "sections": {
     "listening": "Episodes Obigo is listening to",
     "pickle-pick": "P!ckle P!ck",
