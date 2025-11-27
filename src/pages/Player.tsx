@@ -28,6 +28,10 @@ function Player() {
   const originType = location.state?.originType;
   const recentSeriesId = location.state?.recentSeriesId;
   const [isMoreBtn, setIsMoreBtn] = useState(false);
+
+  const zoom = parseFloat(document.documentElement.style.zoom || '1');
+  const vh = (value: number) => `calc(${value}vh / ${zoom})`;
+
   const {
     currentEpisodeData,
     currentEpisodeType,
@@ -101,7 +105,7 @@ function Player() {
     return (
       <div className="relative h-full overflow-hidden">
         <div className="relative z-10 flex flex-col justify-center items-center h-full gap-[103px]">
-          <div className="flex flex-row items-center justify-center w-[80%] max-w-[1025px] gap-[52px]">
+          <div className="flex flex-row items-center justify-center w-[80%] gap-[52px]">
             <div className="flex-shrink-0">
               <Skeleton width={224} height={224} baseColor="#222" highlightColor="#444" />
             </div>
@@ -173,73 +177,84 @@ function Player() {
         originType={originType}
         recentSeriesId={recentSeriesId}
       />
+
       {/* 플레이 화면 */}
       <div className="flex justify-around h-full">
-        <div className="w-[10%]">
-          {currentEpisodeData.audioFile_dubbing && (
-            <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
-          )}
-        </div>
-        <div className="relative flex flex-col justify-center items-center w-[80%] h-full gap-[103px]">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-[52px] w-[100%] max-w-[1025px] max-h-[260px]">
-            <div className="flex-shrink-0">
-              {imgUrl ? (
-                <ImageWithSkeleton
-                  src={imgUrl}
-                  alt={currentEpisodeData.title}
-                  className="w-40 h-40 md:w-60 md:h-60 object-cover"
-                  skeletonClassName="w-[224px] h-[224px]"
-                  baseColor="#222"
-                  highlightColor="#444"
-                />
-              ) : (
-                <div className="w-40 h-40 md:w-60 md:h-60 bg-gray-400"></div>
+        <div
+          className="relative flex flex-col justify-center items-center w-full h-full"
+          style={{ gap: vh(5) }}
+        >
+          <div className="flex items-center justify-between w-[100%]" style={{ height: vh(30) }}>
+            <div className="w-[10%] flex items-center justify-center">
+              {currentEpisodeData.audioFile_dubbing && (
+                <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
               )}
             </div>
-
-            <div className="flex flex-col flex-grow justify-between h-full text-center md:text-left">
-              <p className="text-2xl md:text-[45px] line-clamp-2 leading-snug">
-                {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
-              </p>
-              <p className="text-xl md:text-[38px] text-[#A6A6A9]">
-                {currentEpisodeType === 'podcast' ? (
-                  <>
-                    <button
-                      onClick={() =>
-                        handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
-                      }
-                    >
-                      {currentEpisodeData.programs?.title}
-                    </button>{' '}
-                    · {currentEpisodeData.date}
-                  </>
+            <div className="flex items-center justify-center gap-[5%] w-[60%]">
+              <div className="flex-shrink-0" style={{ width: vh(20), height: vh(20) }}>
+                {imgUrl ? (
+                  <ImageWithSkeleton
+                    src={imgUrl}
+                    alt={currentEpisodeData.title}
+                    className="w-full h-full object-cover"
+                    skeletonClassName="w-[224px] h-[224px]"
+                    baseColor="#222"
+                    highlightColor="#444"
+                  />
                 ) : (
-                  <>
-                    {currentEpisodeData.programs?.broadcastings?.title}
-                    <button
-                      onClick={() =>
-                        handleToggleChannelList(
-                          currentEpisodeData.programs?.broadcastings?.channel ?? ''
-                        )
-                      }
-                    >
-                      {currentEpisodeData.programs?.broadcastings?.channel}
-                    </button>
-                  </>
+                  <div className="w-full h-full bg-gray-400"></div>
                 )}
-              </p>
-              <p
-                className={`text-lg md:text-[32px] text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}
+              </div>
+
+              <div
+                className="flex flex-col flex-grow justify-around text-center md:text-left"
+                style={{ height: vh(20) }}
               >
-                {effectiveIsLive
-                  ? 'LIVE'
-                  : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
-              </p>
+                <p className="line-clamp-2 leading-snug" style={{ fontSize: vh(4) }}>
+                  {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
+                </p>
+                <p className="text-[#A6A6A9]" style={{ fontSize: vh(3.5) }}>
+                  {currentEpisodeType === 'podcast' ? (
+                    <>
+                      <button
+                        onClick={() =>
+                          handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                        }
+                      >
+                        {currentEpisodeData.programs?.title}
+                      </button>{' '}
+                      · {currentEpisodeData.date}
+                    </>
+                  ) : (
+                    <>
+                      {currentEpisodeData.programs?.broadcastings?.title}
+                      <button
+                        onClick={() =>
+                          handleToggleChannelList(
+                            currentEpisodeData.programs?.broadcastings?.channel ?? ''
+                          )
+                        }
+                      >
+                        {currentEpisodeData.programs?.broadcastings?.channel}
+                      </button>
+                    </>
+                  )}
+                </p>
+                <p
+                  className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''}`}
+                  style={{ fontSize: vh(2.8) }}
+                >
+                  {effectiveIsLive
+                    ? 'LIVE'
+                    : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
+                </p>
+              </div>
             </div>
+            <div className="w-[10%]" />
           </div>
 
-          <div className="flex flex-col gap-16 w-[80%] max-w-[1025px]">
-            <div className="flex flex-col items-center gap-5">
+          <div className="relative flex flex-col w-[60%]" style={{ gap: vh(15) }}>
+            <div className="flex flex-col items-center">
               <input
                 type="range"
                 min="0"
@@ -252,7 +267,8 @@ function Player() {
               />
 
               <div
-                className={`flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+                className={`absolute flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+                style={{ top: vh(-1) }}
               >
                 <button onClick={() => handleSkip(-15)}>
                   <RiReplay15Fill size={36} />
@@ -263,7 +279,7 @@ function Player() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between gap-16 z-20">
+            <div className="flex items-center justify-between px-[5%] z-20">
               <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
                 <img src={speedIcon} />
                 <p className="text-[12px]">1.0x</p>
@@ -294,7 +310,6 @@ function Player() {
             </div>
           </div>
         </div>
-        <div className="w-[10%]" />
       </div>
     </div>
   );
