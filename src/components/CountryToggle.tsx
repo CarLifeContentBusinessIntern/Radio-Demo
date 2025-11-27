@@ -53,9 +53,9 @@ function CountryToggle() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-full flex items-center justify-center relative z-50"
+        className="w-8 h-8 rounded-full flex items-center justify-center relative z-50"
       >
-        <div className="w-7 h-7 rounded-full overflow-hidden flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
           <img
             src={currentCountry?.flag}
             alt={currentCountry?.code}
@@ -65,12 +65,12 @@ function CountryToggle() {
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-1/2 -translate-x-1/2 -translate-y-9 bg-[#D9D9D9]/50 rounded-full z-40 overflow-hidden">
+        <div className="absolute top-full left-1/2 -translate-x-1/2 -translate-y-8 bg-[#D9D9D9]/50 rounded-full z-40 overflow-hidden">
           {otherCountries.map((country) => (
             <button
               key={country.code}
               onClick={() => handleCountrySelect(country)}
-              className="w-8 h-[68px] flex items-end justify-center relative z-50"
+              className="w-8 h-[72px] flex items-end justify-center relative z-50"
             >
               <div className="w-8 h-8 rounded-full overflow-hidden flex items-center justify-center">
                 <img src={country.flag} alt={country.code} className="w-full h-full object-cover" />
