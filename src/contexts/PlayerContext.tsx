@@ -584,7 +584,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     const updateData: {
       listened_duration: number;
       listened_at: string;
-      origin_type?: 'program' | 'series';
+      origin_type?: 'program' | 'series' | null;
       recent_series_id?: number | null;
     } = {
       listened_duration: Math.floor(currentTime),
