@@ -125,9 +125,11 @@ function AIPickAfter() {
               <img src={BannerIcon} className="w-1/2 max-w-[360px] h-[230px]" />
 
               <div className="text-white gap-y1">
-                <p className="font-bold text-2xl">좋은 하루 보내고 있나요?</p>
+                <p className="font-bold text-2xl">{t('ai-pick.banner-after-1')}</p>
                 <p className="font-medium text-lg my-2">
-                  조이님을 위한 <span className="text-[#3D7D6D]">데일리 믹스</span>를 준비했어요
+                  {t('ai-pick.banner-after-2-start')}
+                  <span className="text-[#3D7D6D]">{t('ai-pick.banner-after-2-highlight')}</span>
+                  {t('ai-pick.banner-after-2-end')}
                 </p>
                 <button
                   className="font-bold text-base bg-[#202020]/30 px-5 py-3 rounded-full flex items-center gap-3 cursor-pointer"
@@ -138,7 +140,7 @@ function AIPickAfter() {
                   }}
                 >
                   <MdOutlinePlayCircle size={20} />
-                  <p>고를 필요 없이 바로 재생</p>
+                  <p>{t('ai-pick.banner-after-3')}</p>
                 </button>
               </div>
             </div>

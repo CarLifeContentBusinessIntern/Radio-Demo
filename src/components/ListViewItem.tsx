@@ -5,6 +5,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
 import { formatRemainingTime, formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { useTranslation } from 'react-i18next';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -48,6 +49,7 @@ function ListViewItem({
     setPlaylist,
     saveCurrentEpisodeProgress,
   } = usePlayer();
+  const { t } = useTranslation();
 
   const location = useLocation();
   const isLive = location.state?.isLive ?? false;
@@ -133,7 +135,7 @@ function ListViewItem({
             });
           }
         } else {
-          toast.error(`콘텐츠 준비 중입니다`, { toastId: id });
+          toast.error(t('toast.no-contents'), { toastId: id });
         }
       }}
     >

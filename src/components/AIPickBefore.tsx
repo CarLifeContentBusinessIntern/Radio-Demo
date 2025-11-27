@@ -125,8 +125,8 @@ function AIPickBefore() {
               <img src={BannerIcon} className="w-30 h-28" />
 
               <div className="text-white">
-                <p className="font-normal text-2xl">픽클 AI가 조이님 취향을 잘 파악하도록</p>
-                <p className="font-bold text-2xl">나의 팟캐스트 취향 설정하기</p>
+                <p className="font-normal text-2xl">{t('ai-pick.banner-before-1')}</p>
+                <p className="font-bold text-2xl">{t('ai-pick.banner-before-2')}</p>
               </div>
             </div>
           </div>

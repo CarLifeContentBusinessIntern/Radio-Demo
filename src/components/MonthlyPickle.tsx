@@ -29,7 +29,7 @@ function MonthlyPickle() {
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => handleClickSeries(navigate, item)}
+                onClick={() => handleClickSeries(navigate, item, t('toast.no-contents'))}
               />
             ))}
       </div>

@@ -4,8 +4,10 @@ import ListViewItem from '../components/ListViewItem';
 import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
+import { useTranslation } from 'react-i18next';
 
 function RecentPage() {
+  const { t } = useTranslation();
   const { playedDurations } = usePlayer();
 
   const { data: recentEpisodes = [], isLoading } = useQuery<EpisodeType[]>({
@@ -42,7 +44,7 @@ function RecentPage() {
 
   return (
     <div className="flex flex-col gap-y-9 pr-11 pt-7">
-      <p className="text-lg">큐레이션/채널</p>
+      <p className="text-lg">{t('sections.curation-channel')}</p>
       <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
         {recentEpisodes?.slice(0, 4).map((item) => {
           const imgUrl = item.programs?.img_url ?? item.img_url;
@@ -60,7 +62,7 @@ function RecentPage() {
       </div>
 
       <div className="flex flex-col gap-4">
-        <p className="text-lg">에피소드</p>
+        <p className="text-lg">{t('sections.episode')}</p>
         <div className="flex flex-col gap-y-1">
           {recentEpisodes?.map((item) => {
             const subTitleText = item.programs?.title;

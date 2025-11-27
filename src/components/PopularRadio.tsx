@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
 import GridViewItem from './GridViewItem';
+import { useTranslation } from 'react-i18next';
 
 interface PopularRadioInterface {
   programs: ProgramType;
@@ -12,6 +13,8 @@ interface PopularRadioInterface {
 }
 
 function PopularRadio() {
+  const { t } = useTranslation();
+
   const { data: popularRadios = [], isLoading } = useQuery<PopularRadioInterface[]>({
     queryKey: ['popularRadios'],
     queryFn: async () => {
@@ -39,7 +42,7 @@ function PopularRadio() {
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">라디오 인기 채널</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.popular-radio')}</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{
@@ -64,7 +67,7 @@ function PopularRadio() {
                       state: { playlist: item.programs.episodes, originType: 'program' },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
+                    toast.error(t('toast.no-contents'), { toastId: item.programs.id });
                   }
                 }}
               />

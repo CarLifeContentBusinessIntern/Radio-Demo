@@ -87,6 +87,7 @@ const HomeHeader = () => {
 const SearchHeader = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useTranslation();
 
   const handleSearchQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -104,7 +105,7 @@ const SearchHeader = () => {
         </div>
         <input
           type="text"
-          placeholder="검색어"
+          placeholder={t('placeholder.search')}
           value={searchQuery}
           onChange={handleSearchQuery}
           className="w-full bg-transparent px-14 text-white text-base focus:outline-none"

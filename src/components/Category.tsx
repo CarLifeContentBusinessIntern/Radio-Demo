@@ -59,7 +59,7 @@ function Category({ title, type }: CategoryInterface) {
                       state: { title: item.title, type: `${type}_category` },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
                   }
                 }}
               />

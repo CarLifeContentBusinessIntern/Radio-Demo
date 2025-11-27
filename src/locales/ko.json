@@ -4,7 +4,8 @@
     "radio": "라디오",
     "recent": "최근청취",
     "ai-pick": "AI PICK",
-    "category": "카테고리"
+    "category": "카테고리",
+    "setting": "설정"
   },
   "sections": {
     "listening": "오비고님이 듣고 있는 에피소드",
@@ -19,6 +20,7 @@
     "radio-dacumentary": "라디오 다큐멘터리",
     "curation-channel": "큐레이션/채널",
     "episode": "에피소드",
+    "channel": "채널",
     "ai-pick-before-recomend": "최근 청취한 채널 유사한 채널 추천",
     "ai-pick-after-recomend": "피곤한 조이님을 위한 추천"
   },
@@ -26,7 +28,8 @@
     "re-recomend": "다시 추천받기"
   },
   "placeholder": {
-    "voice-search": "픽클! 지금 시간대에 들을만한 팟캐스트 있을까?"
+    "voice-search": "픽클! 지금 시간대에 들을만한 팟캐스트 있을까?",
+    "search": "검색어"
   },
   "category": {
     "news": "뉴스",
@@ -36,5 +39,27 @@
     "insight": "지식교양",
     "entertainment": "엔터테인먼트",
     "audio-drama": "오디오드라마"
+  },
+  "ai-pick": {
+    "banner-before-1": "픽클 AI가 조이님 취향을 잘 파악하도록",
+    "banner-before-2": "나의 팟캐스트 취향 설정하기",
+    "banner-after-1": "좋은 하루 보내고 있나요?",
+    "banner-after-2-start": "조이님을위한 ",
+    "banner-after-2-highlight": "데일리 믹스",
+    "banner-after-2-end": "를 준비했어요",
+    "banner-after-3": "고를 필요 없이 바로 재생"
+  },
+  "setting": {
+    "logout": "로그아웃",
+    "set-preference": "취향 관리",
+    "notice": "공지사항",
+    "terms-info": "약관 정보",
+    "version-info": "버전 정보",
+    "setting-function": "기능 설정",
+    "setting-demo": "데모 세팅",
+    "delete-account": "서비스 탈퇴"
+  },
+  "toast": {
+    "no-contents": "콘텐츠 준비 중입니다"
   }
 }
