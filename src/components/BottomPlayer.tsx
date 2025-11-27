@@ -7,6 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 type BottomPlayerProps = {
   id: number;
@@ -80,7 +81,14 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
       <div className="flex-shrink-0">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} className={`w-16 h-16 rounded-lg object-cover`} />
+          <ImageWithSkeleton
+            src={imageUrl}
+            alt={title}
+            className="w-16 h-16 rounded-lg object-cover"
+            skeletonClassName="w-[224px] h-[224px]"
+            baseColor="#222"
+            highlightColor="#444"
+          />
         ) : (
           <div className="w-16 h-16 rounded-lg bg-gray-400"></div>
         )}

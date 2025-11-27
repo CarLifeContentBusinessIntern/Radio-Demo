@@ -1,0 +1,66 @@
+{
+  "header": {
+    "home": "Home",
+    "radio": "Radio",
+    "recent": "Recent",
+    "ai-pick": "AI PICK",
+    "category": "Category",
+    "setting": "Setting"
+  },
+  "sections": {
+    "listening": "Episodes Obigo is listening to",
+    "pickle-pick": "P!ckle P!ck",
+    "monthly-pickle": "Monthly Pickle",
+    "drive-mood": "Drive Mood",
+    "category": "Category",
+    "popular-radio": "Popular Radio Channels",
+    "radio-mix": "Radio Mix",
+    "broadcast-radio": "Radio by Broadcaster",
+    "timeslot": "Browse by Timeslot",
+    "radio-dacumentary": "Radio Documentary",
+    "curation-channel": "Curation/Channel",
+    "episode": "Episode",
+    "channel": "Channel",
+    "ai-pick-before-recomend": "Channels similar to recently listened channels",
+    "ai-pick-after-recomend": "Recommendations for tired Joy"
+  },
+  "button": {
+    "re-recomend": "Get New Recommendations",
+    "loading-recomend": "Loading Recommendations..."
+  },
+  "placeholder": {
+    "voice-search": "Pickle! Any podcasts worth listening to at this time?",
+    "search": "Search"
+  },
+  "category": {
+    "news": "news",
+    "business": "business",
+    "global": "global",
+    "wellness": "wellness",
+    "insight": "insight",
+    "entertainment": "entertainment",
+    "audio-drama": "audio"
+  },
+  "ai-pick": {
+    "banner-before-1": "Refine Pickle AI's understanding of Joy",
+    "banner-before-2": "Set My Podcast Preferences",
+    "banner-after-1": "Are you having a good day?",
+    "banner-after-2-start": "I've prepared a ",
+    "banner-after-2-highlight": "Daily Mix",
+    "banner-after-2-end": " just for Joy",
+    "banner-after-3": "Just press play"
+  },
+  "setting": {
+    "logout": "Log Out",
+    "set-preference": "Manage Preferences",
+    "notice": "Notices",
+    "terms-info": "Terms and Conditions",
+    "version-info": "Version Information",
+    "setting-function": "Feature Settings",
+    "setting-demo": "Demo Settings",
+    "delete-account": "Delete Account"
+  },
+  "toast": {
+    "no-contents": "Preparing content"
+  }
+}

@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 import type { SectionItemType } from '../types/section';
 import CircleViewItem from './CircleViewItem';
+import { useTranslation } from 'react-i18next';
 
 const fetchPlaylist = async (seriesId: number) => {
   const table = 'series_episodes';
@@ -29,6 +30,7 @@ const fetchPlaylist = async (seriesId: number) => {
 };
 
 function RadioMix() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: sectionData, isLoading: isSectionLoading } = useSection(6);
 
@@ -37,7 +39,7 @@ function RadioMix() {
 
     onSuccess: (playlist, item) => {
       if (playlist.length === 0) {
-        toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+        toast.error(t('toast.no-contents'), { toastId: item.id });
         return;
       }
 
@@ -57,7 +59,7 @@ function RadioMix() {
     if (item.has_episodes) {
       playlistMutation.mutate(item);
     } else {
-      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+      toast.error(t('toast.no-contents'), { toastId: item.id });
     }
   };
 
@@ -65,7 +67,7 @@ function RadioMix() {
 
   return (
     <div>
-      <div className="text-lg mb-7 font-semibold">라디오 믹스</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.radio-mix')}</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{

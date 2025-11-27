@@ -6,6 +6,7 @@ import { usePrograms } from '../hooks/usePrograms';
 import { useSeriesEpisodes } from '../hooks/useSeriesEpisodes';
 import type { ProgramType } from '../types/program';
 import type { SeriesEpisodesType } from '../types/episode';
+import { useTranslation } from 'react-i18next';
 
 interface GridViewPageProps {
   rectangle?: boolean;
@@ -14,6 +15,7 @@ interface GridViewPageProps {
 function GridViewPage({ rectangle }: GridViewPageProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
   const { type } = location.state || {};
   const { id } = useParams();
   const isLive = location.state?.isLive ?? false;
@@ -105,7 +107,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                       state: { isLive: isLive, playlist: validPlaylist },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
                   }
                 }
               }}
@@ -137,7 +139,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
                       state: { isLive: isLive, playlist: validPlaylist },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
                   }
                 }
               }}

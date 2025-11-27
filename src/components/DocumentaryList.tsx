@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
 import GridViewItem from './GridViewItem';
+import { useTranslation } from 'react-i18next';
 
 interface DocumentaryInterface {
   programs: ProgramType;
@@ -11,6 +12,8 @@ interface DocumentaryInterface {
 }
 
 function DocumentaryList() {
+  const { t } = useTranslation();
+
   const {
     data: documentaries = [],
     isLoading,
@@ -35,7 +38,7 @@ function DocumentaryList() {
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">라디오 다큐멘터리</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.radio-dacumentary')}</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
@@ -47,7 +50,7 @@ function DocumentaryList() {
                 title={item.programs.title}
                 subTitle={`${item.programs.broadcastings?.title} ${item.programs.broadcastings?.channel ? item.programs.broadcastings?.channel : ''}`}
                 img={item.programs.img_url}
-                onClick={() => toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id })}
+                onClick={() => toast.error(t('toast.no-contents'), { toastId: item.programs.id })}
               />
             ))}
       </div>

@@ -54,11 +54,11 @@ function Preference() {
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-[90%] mx-auto">
         <div className="flex justify-between items-center leading-none sticky top-0 bg-black z-10 py-7">
-          <h1 className="text-[32px] font-bold">
+          <h1 className="text-xl font-bold">
             AI 추천 정확도를 높이는 선택 옵션입니다. 자유롭게 선택해 주세요.
           </h1>
           <button
-            className="flex gap-6 text-[32px] font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-between px-[33px] py-[23px]"
+            className="flex gap-6 text-xl font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-between px-6 py-4"
             onClick={handleReset}
           >
             <img src="/refresh.png" alt="초기화" width={34} height={25} />
@@ -112,7 +112,7 @@ function Preference() {
 
         <div className="mt-16 mb-[72px]">
           <button
-            className="w-full bg-[#B978FF] text-white py-[30px] rounded-full text-[32px] font-semibold hover:bg-[#aa5bff] transition-colors"
+            className="w-full bg-[#202026] text-[#A1A1A1] py-6 rounded-full text-xl font-semibold hover:bg-[#aa5bff] hover:text-white transition-colors"
             onClick={handleSave}
           >
             저장하기

@@ -4,8 +4,10 @@ import { toast } from 'react-toastify';
 import { supabase } from '../lib/supabaseClient';
 import type { ChannelType } from '../types/channel';
 import CircleViewItem from './CircleViewItem';
+import { useTranslation } from 'react-i18next';
 
 function ChannelList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { data: channels = [], isLoading } = useQuery<ChannelType[]>({
@@ -31,13 +33,13 @@ function ChannelList() {
         state: { title: `${item.title} ${item.channel || ''}`, type: 'channel' },
       });
     } else {
-      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+      toast.error(t('toast.no-contents'), { toastId: item.id });
     }
   };
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">방송사별 라디오</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.broadcast-radio')}</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
