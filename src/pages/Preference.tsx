@@ -53,17 +53,25 @@ function Preference() {
   return (
     <div className="min-h-screen bg-black text-white">
       <div className="max-w-[90%] mx-auto">
-        <div className="flex justify-between items-center leading-none sticky top-0 bg-black z-10 py-7">
+        <div className="flex justify-between items-center leading-none sticky top-0 bg-black z-10 py-2">
           <h1 className="text-xl font-bold">
             AI 추천 정확도를 높이는 선택 옵션입니다. 자유롭게 선택해 주세요.
           </h1>
-          <button
-            className="flex gap-6 text-xl font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-between px-6 py-4"
-            onClick={handleReset}
-          >
-            <img src="/refresh.png" alt="초기화" width={34} height={25} />
-            <span>초기화</span>
-          </button>
+          <div className="flex gap-4">
+            <button
+              className="flex gap-6 text-xl font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-between px-6 py-4"
+              onClick={handleReset}
+            >
+              <img src="/refresh.png" alt="초기화" width={34} height={25} />
+              <span>초기화</span>
+            </button>
+            <button
+              className="flex gap-6 text-xl font-semibold rounded-full bg-[#5D3983] text-[#D5D5D5] items-center justify-between px-6 py-4"
+              onClick={handleSave}
+            >
+              <span>저장하기</span>
+            </button>
+          </div>
         </div>
 
         <div className="my-6">
@@ -108,15 +116,6 @@ function Preference() {
               )}
             </PreferenceSection>
           ))}
-        </div>
-
-        <div className="mt-16 mb-[72px]">
-          <button
-            className="w-full bg-[#202026] text-[#A1A1A1] py-6 rounded-full text-xl font-semibold hover:bg-[#aa5bff] hover:text-white transition-colors"
-            onClick={handleSave}
-          >
-            저장하기
-          </button>
         </div>
       </div>
     </div>
