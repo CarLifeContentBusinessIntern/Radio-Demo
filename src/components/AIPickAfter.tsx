@@ -26,6 +26,16 @@ function AIPickAfter() {
     return data;
   };
 
+  const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
+    const { data, error } = await supabase
+      .from('episodes')
+      .select('*, programs(*, broadcastings(*))')
+      .eq('program_id', id);
+
+    if (error) throw error;
+    return data;
+  };
+
   const {
     data: episodes,
     refetch,
@@ -35,6 +45,21 @@ function AIPickAfter() {
     queryKey: ['random-episodes'],
     queryFn: fetchRandomEpisodes,
     refetchOnWindowFocus: false,
+  });
+
+  const programIds = episodes?.map((ep) => ep.program_id) || [];
+  const uniqueProgramIds = [...new Set(programIds)];
+
+  const { data: playlistsMap } = useQuery({
+    queryKey: ['playlists', uniqueProgramIds],
+    queryFn: async () => {
+      const playlists = await Promise.all(uniqueProgramIds.map((id) => fetchPlaylist(id)));
+      return Object.fromEntries(uniqueProgramIds.map((id, idx) => [id, playlists[idx]])) as Record<
+        number,
+        EpisodeType[]
+      >;
+    },
+    enabled: uniqueProgramIds.length > 0,
   });
 
   const { playedDurations } = usePlayer();
@@ -159,7 +184,7 @@ function AIPickAfter() {
               date={ep.date}
               hasAudio={!!ep.audio_file}
               isRound={true}
-              playlist={episodes}
+              playlist={playlistsMap?.[ep.program_id] || []}
               isPlayer={false}
               totalTime={ep.duration}
               listenedDuration={playedDurations[ep.id] ?? ep.listened_duration}

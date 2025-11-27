@@ -26,6 +26,16 @@ function AIPickBefore() {
     return data;
   };
 
+  const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
+    const { data, error } = await supabase
+      .from('episodes')
+      .select('*, programs(*, broadcastings(*))')
+      .eq('program_id', id);
+
+    if (error) throw error;
+    return data;
+  };
+
   const {
     data: episodes,
     refetch,
@@ -35,6 +45,21 @@ function AIPickBefore() {
     queryKey: ['random-episodes'],
     queryFn: fetchRandomEpisodes,
     refetchOnWindowFocus: false,
+  });
+
+  const programIds = episodes?.map((ep) => ep.program_id) || [];
+  const uniqueProgramIds = [...new Set(programIds)];
+
+  const { data: playlistsMap } = useQuery({
+    queryKey: ['playlists', uniqueProgramIds],
+    queryFn: async () => {
+      const playlists = await Promise.all(uniqueProgramIds.map((id) => fetchPlaylist(id)));
+      return Object.fromEntries(uniqueProgramIds.map((id, idx) => [id, playlists[idx]])) as Record<
+        number,
+        EpisodeType[]
+      >;
+    },
+    enabled: uniqueProgramIds.length > 0,
   });
 
   const { playedDurations } = usePlayer();
@@ -117,12 +142,13 @@ function AIPickBefore() {
         <img
           src={BannerBackground}
           className="cursor-pointer w-full h-40 rounded-3xl object-cover"
+          alt="AI Pick Banner"
         />
 
         <div className="absolute w-full top-6">
           <div className="flex justify-center items-center">
             <div className="flex items-center justify-between w-full max-w-[700px] px-10">
-              <img src={BannerIcon} className="w-30 h-28" />
+              <img src={BannerIcon} className="w-30 h-28" alt="Banner Icon" />
 
               <div className="text-white">
                 <p className="font-normal text-2xl">{t('ai-pick.banner-before-1')}</p>
@@ -147,7 +173,7 @@ function AIPickBefore() {
               date={ep.date}
               hasAudio={!!ep.audio_file}
               isRound={true}
-              playlist={episodes}
+              playlist={playlistsMap?.[ep.program_id] || []}
               isPlayer={false}
               totalTime={ep.duration}
               listenedDuration={playedDurations[ep.id] ?? ep.listened_duration}
