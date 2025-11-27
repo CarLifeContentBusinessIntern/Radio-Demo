@@ -4,9 +4,11 @@ import ListViewItem from '../components/ListViewItem';
 import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
+import { useTranslation } from 'react-i18next';
 
 function Search() {
   const { playedDurations } = usePlayer();
+  const { t } = useTranslation();
 
   const MAX_SEARCH_RESULTS = 4;
 
@@ -49,7 +51,7 @@ function Search() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-5">
-        <p className="text-lg">채널</p>
+        <p className="text-lg">{t('sections.channel')}</p>
 
         {isLoading ? (
           renderLoadingSkeleton(MAX_SEARCH_RESULTS, true)
@@ -70,7 +72,7 @@ function Search() {
       </div>
 
       <div className="flex flex-col gap-5">
-        <p className="text-lg">에피소드</p>
+        <p className="text-lg">{t('sections.episode')}</p>
 
         {isLoading ? (
           renderLoadingSkeleton(MAX_SEARCH_RESULTS, true)

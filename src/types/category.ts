@@ -3,6 +3,7 @@ import type { ProgramType } from './program';
 export type CategoryType = {
   id: number;
   title: string;
+  en_title: string;
   img_url: string;
   order: string;
   created_at: string;

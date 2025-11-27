@@ -6,6 +6,7 @@ import { useVersion } from '../contexts/VersionContext';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
+import { useTranslation } from 'react-i18next';
 
 interface PopularRadioInterface {
   programs: ProgramType;
@@ -14,6 +15,7 @@ interface PopularRadioInterface {
 
 function PopularChannelPage() {
   const { isRadioVersion } = useVersion();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { data: allPrograms = [], isLoading } = useQuery<PopularRadioInterface[]>({
@@ -78,7 +80,7 @@ function PopularChannelPage() {
                         },
                       });
                     } else {
-                      toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
+                      toast.error(t('toast.no-contents'), { toastId: item.programs.id });
                     }
                   }}
                 />

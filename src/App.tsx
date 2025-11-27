@@ -27,6 +27,7 @@ import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 import AIPick from './pages/AIPick.tsx';
+import { useTranslation } from 'react-i18next';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,6 +41,7 @@ const queryClient = new QueryClient({
 
 function AppRoutes() {
   const location = useLocation();
+  const { t } = useTranslation();
   const { isRadioVersion, isLiveVersion } = useVersion();
   const { resetPlayer } = usePlayer();
 
@@ -137,7 +139,7 @@ function AppRoutes() {
         element={
           <Layout
             defaultType="setting"
-            defaultTitle="설정"
+            defaultTitle={t('header.setting')}
             scrollbar={false}
             paddingX={false}
             paddingB={false}

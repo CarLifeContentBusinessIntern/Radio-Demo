@@ -4,8 +4,13 @@ import { useSection } from '../hooks/useSection';
 import type { SectionItemType } from '../types/section';
 import GridViewItem from './GridViewItem';
 import { useOEM } from '../contexts/OEMContext';
+import { useTranslation } from 'react-i18next';
 
-export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemType) => {
+export const handleClickSeries = (
+  navigate: NavigateFunction,
+  item: SectionItemType,
+  toastMessage: string
+) => {
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';
     navigate(`/episodes/${pathSegment}/${item.id}`, {
@@ -18,7 +23,7 @@ export const handleClickSeries = (navigate: NavigateFunction, item: SectionItemT
       },
     });
   } else {
-    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.id });
+    toast.error(toastMessage, { toastId: item.id });
   }
 };
 
@@ -26,10 +31,11 @@ function PicklePick() {
   const navigate = useNavigate();
   const { selectedOEM } = useOEM();
   const { data: sectionData, isLoading } = useSection(1, selectedOEM);
+  const { t } = useTranslation();
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">P!ckle P!ck</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.pickle-pick')}</div>
 
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
@@ -47,7 +53,7 @@ function PicklePick() {
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => handleClickSeries(navigate, item)}
+                onClick={() => handleClickSeries(navigate, item, t('toast.no-contents'))}
               />
             ))}
       </div>
