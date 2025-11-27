@@ -78,7 +78,7 @@ function RecentPage() {
                 isRound={true}
                 playlist={recentEpisodes}
                 totalTime={item.duration}
-                listenedDuration={playedDurations[item.id] ?? item.listened_duration}
+                listenedDuration={playedDurations[item.id] ?? (Number(item.listened_duration) || 0)}
               />
             );
           })}
