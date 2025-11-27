@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '../contexts/PlayerContext';
+import { useFetchRecentEpisodePlaylist } from '../hooks/useFetchRecentEpisodePlaylist';
 import type { EpisodeType } from '../types/episode';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
@@ -13,8 +13,11 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentSize, setParentSize] = useState(0);
   const navigate = useNavigate();
-
-  const { activePlaylist } = usePlayer();
+  const { data: playlist } = useFetchRecentEpisodePlaylist(
+    episode.origin_type,
+    episode.program_id,
+    episode.recent_series_id
+  );
 
   // 부모 크기 계산
   useLayoutEffect(() => {
@@ -40,13 +43,13 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
         replace: false,
         state: {
           isLive: false,
-          playlist: activePlaylist,
+          playlist: playlist,
           isPickle: true,
         },
       });
     } else {
       navigate(`/player/${episode.id}`, {
-        state: { isLive: false, playlist: activePlaylist },
+        state: { isLive: false, playlist: playlist },
       });
     }
   };
