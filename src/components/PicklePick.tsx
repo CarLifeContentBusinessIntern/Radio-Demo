@@ -9,11 +9,16 @@ import { useTranslation } from 'react-i18next';
 export const handleClickSeries = (
   navigate: NavigateFunction,
   item: SectionItemType,
-  toastMessage: string
+  toastMessage: string,
+  path: string
 ) => {
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';
-    navigate(`/episodes/${pathSegment}/${item.id}`, {
+    const url =
+      path === 'rectangle'
+        ? `/episodes/${pathSegment}/${item.id}/rectangle`
+        : `/episodes/${pathSegment}/${item.id}`;
+    navigate(url, {
       state: {
         isPodcast: true,
         isRound: false,
@@ -53,7 +58,9 @@ function PicklePick() {
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => handleClickSeries(navigate, item, t('toast.no-contents'))}
+                onClick={() =>
+                  handleClickSeries(navigate, item, t('toast.no-contents'), 'rectangle')
+                }
               />
             ))}
       </div>

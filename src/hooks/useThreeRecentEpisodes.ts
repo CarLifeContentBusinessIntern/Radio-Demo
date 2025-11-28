@@ -4,7 +4,7 @@ import type { EpisodeType } from '../types/episode';
 
 export function useThreeRecentEpisodes() {
   return useQuery<EpisodeType[]>({
-    queryKey: ['recent_episodes'],
+    queryKey: ['threeRecentEpisodes'],
     queryFn: async () => {
       const { data, error } = await supabase.rpc('get_recent_episodes');
       if (error) throw error;

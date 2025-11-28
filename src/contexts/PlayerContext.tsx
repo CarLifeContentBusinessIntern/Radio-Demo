@@ -628,7 +628,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       [episodeId]: currentTime,
     }));
 
-    queryClient.invalidateQueries({ queryKey: ['recentEpisodes'] });
+    queryClient.invalidateQueries({ queryKey: ['tenRecentEpisodes'] });
+    queryClient.invalidateQueries({ queryKey: ['threeRecentEpisodes'] });
+    queryClient.invalidateQueries({ queryKey: ['recentSeriesProgram'] });
   }
 
   return <PlayerContext.Provider value={contextValue}>{children}</PlayerContext.Provider>;

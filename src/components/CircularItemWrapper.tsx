@@ -57,7 +57,6 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
   return (
     <div ref={containerRef} className="relative w-full aspect-square ">
       {/* CircleViewItem 이미지 90% */}
-      {/* <div className="w-full h-full"> */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                     w-[90%] h-[90%] "
@@ -72,7 +71,7 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
       {/* CircularProgressBar를 위에 덮기 */}
       {parentSize > 0 && (
         <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-          <CircularProgressBar size={parentSize} episode={episode} />
+          <CircularProgressBar size={parentSize} episode={episode} isPickleLive={false} />
         </div>
       )}
 

@@ -4,7 +4,7 @@ import type { EpisodeType } from '../types/episode';
 
 export function useTenRecentEpisodes() {
   return useQuery<EpisodeType[]>({
-    queryKey: ['episodes'],
+    queryKey: ['tenRecentEpisodes'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('episodes')
@@ -16,5 +16,7 @@ export function useTenRecentEpisodes() {
       if (error) throw error;
       return data as EpisodeType[];
     },
+    refetchOnWindowFocus: true,
+    refetchInterval: 30000,
   });
 }
