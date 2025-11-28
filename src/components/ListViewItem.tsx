@@ -54,6 +54,7 @@ function ListViewItem({
   const location = useLocation();
   const isLive = location.state?.isLive ?? false;
   const isRecentPage = location.pathname === '/episodes/recent';
+  const isAIPickPage = location.pathname === '/ai-pick';
 
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
@@ -163,7 +164,7 @@ function ListViewItem({
               .join(' · ')}
           </div>
         </div>
-        {!isRecentPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
+        {!isRecentPage && !isAIPickPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
             <div
               className={`h-1 transition-width duration-100 ease-linear ${
@@ -184,6 +185,7 @@ function ListViewItem({
 
           return (
             !isRecentPage &&
+            !isAIPickPage &&
             shouldShowRemainingTime && (
               <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
                 - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}

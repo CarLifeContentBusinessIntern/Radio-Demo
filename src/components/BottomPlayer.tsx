@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
 
 type BottomPlayerProps = {
   id: number;
@@ -33,10 +34,22 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     handlePlayBarPrev,
   } = usePlayer();
 
+  const isOnAirEpisode = currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
+
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
+
+    if (isOnAirEpisode) {
+      navigate(`/player/live`, {
+        replace: false,
+        state: { isOnAir: true, playlist: activePlaylist, title: 'P!ckle On-Air 🔴' },
+      });
+
+      return;
+    }
+
     if (currentEpisodeType === 'podcast') {
       navigate(`/player/podcasts/${id}`, {
         replace: false,
@@ -103,7 +116,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="text-lg font-semibold truncate">
-          {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
+          {isOnAirEpisode
+            ? LIVE_STREAM_EPISODE.title
+            : isLive
+              ? currentEpisodeData?.programs?.title
+              : currentEpisodeData?.title}
         </p>
         <p className="text-base truncate">
           {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}

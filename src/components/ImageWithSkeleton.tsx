@@ -20,10 +20,25 @@ export default function ImageWithSkeleton({
   highlightColor = 'gray',
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [objectFit, setObjectFit] = useState<'object-contain' | 'object-cover'>('object-cover');
+
+  const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
+    const imageRatio = img.naturalWidth / img.naturalHeight;
+    const containerRatio = 16 / 9;
+
+    if (Math.abs(imageRatio - containerRatio) > 0.1) {
+      setObjectFit('object-contain');
+    } else {
+      setObjectFit('object-cover');
+    }
+
+    setIsLoaded(true);
+  };
 
   return (
     <div className={`relative overflow-hidden flex items-center justify-center ${className}`}>
-      {isLoaded && src && (
+      {isLoaded && src && objectFit === 'object-contain' && (
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl"
           style={{ backgroundImage: `url('${src}')` }}
@@ -43,8 +58,8 @@ export default function ImageWithSkeleton({
       <img
         src={src ?? ''}
         alt={alt}
-        onLoad={() => setIsLoaded(true)}
-        className={`relative w-fit object-cover transition-opacity duration-300 ${
+        onLoad={handleImageLoad}
+        className={`relative w-full h-full transition-opacity duration-300 ${objectFit} ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
       />

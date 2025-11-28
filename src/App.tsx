@@ -29,6 +29,8 @@ import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 import AIPick from './pages/AIPick.tsx';
 import { useTranslation } from 'react-i18next';
 import ListViewPage from './pages/ListViewPage.tsx';
+import PickleOnAir from './pages/PickleOnAir.tsx';
+import VoiceSearch from './pages/VoiceSearch.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -80,6 +82,11 @@ function AppRoutes() {
           <Route path="episodes/:type/:id" element={<ListViewPage />} />
           <Route path="episodes/:type/:id/rectangle" element={<PicklePickTemplate />} />
         </Route>
+      </Route>
+
+      <Route element={<Layout scrollbar={false} paddingX={false} paddingB={false} />}>
+        <Route path="player/live" element={<PickleOnAir />} />
+        <Route path="ai-pick/voice-search" element={<VoiceSearch />} />
       </Route>
 
       {/*}

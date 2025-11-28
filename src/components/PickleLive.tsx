@@ -1,8 +1,11 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import PickleLiveImage from '../assets/pickle_live.png';
+import { useNavigate } from 'react-router-dom';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
 function PickleLive() {
+  const navigate = useNavigate();
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentSize, setParentSize] = useState(0);
   // 부모 크기 계산
@@ -25,7 +28,11 @@ function PickleLive() {
   return (
     <div className="flex flex-col h-full">
       <div className="text-lg mb-7 font-medium h-7 flex ">P!ckle On-Air 🔴</div>
-      <div ref={containerRef} className="relative w-full aspect-square ">
+      <div
+        ref={containerRef}
+        className="relative w-full aspect-square"
+        onClick={() => navigate('/player/live', { state: { title: 'P!ckle On-Air 🔴' } })}
+      >
         {/* CircleViewItem 이미지 90% */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
