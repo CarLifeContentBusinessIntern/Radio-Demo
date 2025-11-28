@@ -1,22 +1,34 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate, type NavigateFunction } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import GridViewItem from '../components/GridViewItem';
 import ListViewItem from '../components/ListViewItem';
 import RecentEpisodeList from '../components/RecentEpisodeList';
+import useFetchRecentSeriesProgram from '../hooks/useFetchRecentSeriesProgram';
 import { useTenRecentEpisodes } from '../hooks/useTenRecentEpisodes';
-import type { EpisodeType } from '../types/episode';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '../lib/supabaseClient';
+import type { RecentSeriesProgramType } from '../types/recent';
 
 function RecentPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const { data: recentEpisodes = [], isLoading, error } = useTenRecentEpisodes();
-  if (error) {
-    console.log('❌ 최근 청취 조회 실패 :', error);
+  const {
+    data: recentSeriesPrograms,
+    isLoading: isSeriesProgramsLoading,
+    error: seriesProgramsError,
+  } = useFetchRecentSeriesProgram();
+
+  const {
+    data: recentEpisodes = [],
+    isLoading: isEpisodesLoading,
+    error: episodesError,
+  } = useTenRecentEpisodes();
+  if (episodesError || seriesProgramsError) {
+    console.log('❌ 최근 청취 조회 실패', episodesError || seriesProgramsError);
     return;
   }
 
-  if (isLoading) {
+  if (isSeriesProgramsLoading || isEpisodesLoading) {
     return (
       <div className="flex flex-col gap-y-1">
         {Array.from({ length: 8 }).map((_, index) => (
@@ -26,20 +38,37 @@ function RecentPage() {
     );
   }
 
+  const handleClickSeriesProgram = (
+    navigate: NavigateFunction,
+    item: RecentSeriesProgramType,
+    toastMessage: string
+  ) => {
+    if (item.episode) {
+      navigate(`/episodes/${item.episode.origin_type}/${item.id}`, {
+        state: {
+          title: item.title,
+        },
+      });
+    } else {
+      toast.error(toastMessage, { toastId: item.id });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-y-9 pr-11 pt-7">
       <p className="text-lg">{t('sections.curation-channel')}</p>
       <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
-        {recentEpisodes?.slice(0, 4).map((item) => {
-          const imgUrl = item.programs?.img_url ?? item.img_url;
+        {recentSeriesPrograms?.map((item) => {
+          const imgUrl = item.img_url ?? item.episode?.img_url;
 
           return (
             <GridViewItem
               key={item.id}
               img={imgUrl}
-              title={item.programs?.title}
-              subTitle={item.programs?.subtitle}
+              title={item.title}
+              subTitle={item.subtitle}
               isRounded={true}
+              onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
             />
           );
         })}

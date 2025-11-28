@@ -28,6 +28,7 @@ import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 import AIPick from './pages/AIPick.tsx';
 import { useTranslation } from 'react-i18next';
+import ListViewPage from './pages/ListViewPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -76,7 +77,8 @@ function AppRoutes() {
         element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
       >
         <Route element={<PlayerLayout />}>
-          <Route path="episodes/:type/:id" element={<PicklePickTemplate />} />
+          <Route path="episodes/:type/:id" element={<ListViewPage />} />
+          <Route path="episodes/:type/:id/rectangle" element={<PicklePickTemplate />} />
         </Route>
       </Route>
 
