@@ -59,14 +59,14 @@ function Preference() {
           </h1>
           <div className="flex gap-4">
             <button
-              className="flex gap-6 text-xl font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-between px-6 py-4"
+              className="flex gap-[6px] text-base font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-center px-3 py-3 w-[120px]"
               onClick={handleReset}
             >
-              <img src="/refresh.png" alt="초기화" width={34} height={25} />
+              <img src="/refresh.png" alt="초기화" className="w-6 h-4" />
               <span>초기화</span>
             </button>
             <button
-              className="flex gap-6 text-xl font-semibold rounded-full bg-[#5D3983] text-[#D5D5D5] items-center justify-between px-6 py-4"
+              className="flex text-base font-semibold rounded-full bg-[#5D3983] text-[#D5D5D5] items-center justify-center px-3 py-3 w-[120px]"
               onClick={handleSave}
             >
               <span>저장하기</span>
