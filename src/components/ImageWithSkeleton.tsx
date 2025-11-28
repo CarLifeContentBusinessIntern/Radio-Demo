@@ -44,7 +44,7 @@ export default function ImageWithSkeleton({
         src={src ?? ''}
         alt={alt}
         onLoad={() => setIsLoaded(true)}
-        className={`relative w-fit object-cover transition-opacity duration-300 ${
+        className={`relative scale-105 w-full transition-opacity duration-300 ${
           isLoaded ? 'opacity-100' : 'opacity-0'
         }`}
       />

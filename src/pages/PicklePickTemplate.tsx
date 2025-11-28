@@ -1,13 +1,7 @@
-import { useParams } from 'react-router-dom';
-import ListViewPage from './ListViewPage';
 import GridViewPage from './GridViewPage';
 
 function PicklePickTemplate() {
-  const { id } = useParams();
-
-  return (
-    <div>{id === '4' || id === '3' ? <GridViewPage rectangle={true} /> : <ListViewPage />}</div>
-  );
+  return <GridViewPage rectangle={true} />;
 }
 
 export default PicklePickTemplate;
