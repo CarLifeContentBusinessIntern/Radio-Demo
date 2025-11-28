@@ -28,6 +28,7 @@ import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
 import AIPick from './pages/AIPick.tsx';
 import { useTranslation } from 'react-i18next';
+import PickleOnAir from './pages/PickleOnAir.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -78,6 +79,10 @@ function AppRoutes() {
         <Route element={<PlayerLayout />}>
           <Route path="episodes/:type/:id" element={<PicklePickTemplate />} />
         </Route>
+      </Route>
+
+      <Route element={<Layout scrollbar={false} paddingX={false} paddingB={false} />}>
+        <Route path="player/live" element={<PickleOnAir />} />
       </Route>
 
       {/*}

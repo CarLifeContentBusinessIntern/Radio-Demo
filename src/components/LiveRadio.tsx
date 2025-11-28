@@ -63,13 +63,13 @@ function LiveRadio() {
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">ON-AIR 🔴</div>
+      <div className="text-lg mb-7 font-semibold">ON-AIR 🔴</div>
       <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
             ))
-          : liveData.map((item, index) => {
+          : liveData.slice(0, 8).map((item, index) => {
               const playableEpisodeInPlaylist = playlist.find(
                 (ep) => ep.programs?.id === item.id && ep.audio_file !== null
               );

@@ -13,6 +13,7 @@ import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 import { useQueryClient } from '@tanstack/react-query';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -21,6 +22,7 @@ interface PlayerState {
   duration: number;
   hasBeenActivated: boolean;
   isLive: boolean;
+  isOnAir: boolean;
   isPlaylistOpen: boolean;
   currentEpisodeType: 'radio' | 'podcast' | null;
   isLoading: boolean;
@@ -41,7 +43,8 @@ interface PlayerContextType extends PlayerState {
     liveStatus?: boolean,
     isPodcast?: boolean,
     originType?: 'program' | 'series' | null,
-    recentSeriesId?: number | null
+    recentSeriesId?: number | null,
+    isOnAir?: boolean
   ) => void;
   handleSeek: (time: number) => void;
   handleSkip: (seconds: number) => void;
@@ -65,6 +68,7 @@ const initialPlayerState: PlayerState = {
   duration: 0,
   hasBeenActivated: false,
   isLive: false,
+  isOnAir: false,
   isPlaylistOpen: false,
   currentEpisodeType: 'radio',
   isLoading: false,
@@ -103,7 +107,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
       } else if (data) {
-        setEpisodes(data);
+        setEpisodes([LIVE_STREAM_EPISODE, ...data]);
       }
     }
 
@@ -223,83 +227,90 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       liveStatus = false,
       isPodcast = false,
       originType: 'program' | 'series' | null = null,
-      recentSeriesId: number | null = null
+      recentSeriesId: number | null = null,
+      isOnAir = false
     ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
 
-      // 최신 데이터 가져오기 (최신 재생 시점을 위해)
-      const { data: freshEpisode } = await supabase
-        .from('episodes')
-        .select('*')
-        .eq('id', id)
-        .single();
+      let episode;
+      let startTime = 0;
 
-      const episode = freshEpisode ?? episodes.find((item) => item.id === id);
-      if (!episode) return;
+      if (id === LIVE_STREAM_EPISODE.id) {
+        episode = LIVE_STREAM_EPISODE;
+        startTime = 0;
+      } else {
+        // 최신 데이터 가져오기 (최신 재생 시점을 위해)
+        const { data: freshEpisode } = await supabase
+          .from('episodes')
+          .select('*')
+          .eq('id', id)
+          .single();
 
-      // 마지막 재생 시점 가져오기
-      let startTime = Number(episode?.listened_duration) || 0;
-
-      if (episode?.audio_file === null) return;
-
-      if (episode) {
-        const newDuration = getEpisodeDuration(episode);
-
-        // 마지막 재생 시점이 에피소드 길이보다 크면 0으로 초기화
-        if (startTime > newDuration - 1) {
-          startTime = 0;
+        episode = freshEpisode ?? episodes.find((item) => item.id === id);
+        if (episode) {
+          startTime = Number(episode?.listened_duration) || 0;
         }
+      }
 
-        setState((prevState) => {
-          const isNewEpisode = prevState.currentEpisodeId !== id;
+      if (!episode || episode?.audio_file === null) return;
 
-          const changes = {
-            isLive: liveStatus,
-            currentEpisodeType: type,
-            isLoading: liveStatus ? false : prevState.isLoading,
-          };
+      const newDuration = getEpisodeDuration(episode);
 
-          if (isNewEpisode) {
-            return {
-              ...prevState,
-              ...changes,
-              currentEpisodeId: id,
-              isPlaying: true,
-              currentTime: startTime,
-              duration: newDuration,
-              hasBeenActivated: true,
-              isLoading: liveStatus ? false : true,
-              isLive: liveStatus,
-              originType,
-              recentSeriesId,
-              isPlaylistOpen: false,
-            };
-          }
+      if (startTime > newDuration - 1) {
+        startTime = 0;
+      }
 
-          if (prevState.isPlaying) {
-            return {
-              ...prevState,
-              isLive: changes.isLive,
-              currentEpisodeType: changes.currentEpisodeType,
-              isLoading: changes.isLoading,
-              originType,
-              recentSeriesId,
-              isPlaylistOpen: false,
-            };
-          }
+      setState((prevState) => {
+        const isNewEpisode = prevState.currentEpisodeId !== id;
 
+        const changes = {
+          isLive: liveStatus,
+          isOnAir: isOnAir,
+          currentEpisodeType: type,
+          isLoading: isOnAir ? false : liveStatus ? false : prevState.isLoading,
+        };
+
+        if (isNewEpisode) {
           return {
             ...prevState,
-            isLive: changes.isLive,
-            currentEpisodeType: changes.currentEpisodeType,
+            ...changes,
+            currentEpisodeId: id,
             isPlaying: true,
-            isLoading: liveStatus ? false : true,
+            currentTime: startTime,
+            duration: newDuration,
+            hasBeenActivated: true,
+            isLoading: isOnAir ? false : liveStatus ? false : true,
+            isLive: liveStatus,
+            isOnAir: isOnAir,
             originType,
             recentSeriesId,
             isPlaylistOpen: false,
           };
-        });
-      }
+        }
+
+        if (prevState.isPlaying) {
+          return {
+            ...prevState,
+            isLive: changes.isLive,
+            currentEpisodeType: changes.currentEpisodeType,
+            isLoading: changes.isLoading,
+            originType,
+            recentSeriesId,
+            isPlaylistOpen: false,
+          };
+        }
+
+        return {
+          ...prevState,
+          isLive: changes.isLive,
+          currentEpisodeType: changes.currentEpisodeType,
+          isPlaying: true,
+          isLoading: isOnAir ? false : liveStatus ? false : true,
+          originType,
+          recentSeriesId,
+          isPlaylistOpen: false,
+        };
+      });
     },
     [episodes]
   );
@@ -338,6 +349,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
+          const isOnAir = nextEpisode.id === LIVE_STREAM_EPISODE.id;
 
           if (!isPlayBar) {
             if (isPodcast) {
@@ -349,6 +361,11 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
                   originType: state.originType,
                   recentSeriesId: state.recentSeriesId,
                 },
+              });
+            } else if (isOnAir) {
+              navigate(`/player/live`, {
+                replace: true,
+                state: { isOnAir: true, playlist: playlist },
               });
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {
@@ -372,7 +389,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
               state.isLive,
               isPodcast,
               state.originType,
-              state.recentSeriesId
+              state.recentSeriesId,
+              isOnAir
             );
           }
           return;
@@ -580,6 +598,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     recentSeriesId: number | null = null
   ) {
     if (!episodeId) return;
+    if (episodeId === LIVE_STREAM_EPISODE.id) return;
 
     const updateData: {
       listened_duration: number;
