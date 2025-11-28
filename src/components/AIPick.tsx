@@ -119,7 +119,7 @@ function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
   return (
     <div className="pt-7 pr-20 flex flex-col gap-8">
       <div
-        className="flex items-center gap-6"
+        className="flex items-center gap-6 cursor-pointer"
         onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
       >
         <ImageWithSkeleton

@@ -3,7 +3,7 @@ import animationData from '../assets/VoiceSearch_new.json';
 
 function VoiceSearch() {
   return (
-    <div className="flex flex-col h-full pb-10 justify-center items-center cursor-pointer">
+    <div className="flex flex-col h-full pb-10 justify-center items-center">
       <Lottie
         animationData={animationData}
         loop
