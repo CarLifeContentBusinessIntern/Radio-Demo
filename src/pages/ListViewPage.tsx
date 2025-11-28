@@ -77,7 +77,7 @@ function ListViewPage() {
         const subTitleText =
           item.type === 'podcast' ? (item.programs?.title ?? '') : `${broadcasting} ${channel}`;
 
-        const episodeId = 'id' in item ? item.id : 0;
+        const episodeId = item.id;
 
         return (
           <ListViewItem
