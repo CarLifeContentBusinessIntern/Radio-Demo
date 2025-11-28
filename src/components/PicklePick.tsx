@@ -10,7 +10,7 @@ export const handleClickSeries = (
   navigate: NavigateFunction,
   item: SectionItemType,
   toastMessage: string,
-  path: string
+  path?: string
 ) => {
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';
