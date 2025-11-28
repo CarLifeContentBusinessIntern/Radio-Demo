@@ -5,6 +5,7 @@ export type EpisodeType = {
   title: string;
   img_url: string;
   audio_file: string;
+  audioFile_dubbing?: string | null;
   date: string;
   duration: string;
   type: string;
@@ -12,6 +13,10 @@ export type EpisodeType = {
   program_id: number;
   order_recent: number;
   programs?: ProgramType;
+  origin_type?: 'program' | 'series' | null;
+  listened_at?: string;
+  listened_duration?: string;
+  recent_series_id?: number;
 };
 
 export type SeriesEpisodesType = {

@@ -7,6 +7,8 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
+import ImageWithSkeleton from './ImageWithSkeleton';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
 
 type BottomPlayerProps = {
   id: number;
@@ -32,10 +34,21 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     handlePlayBarPrev,
   } = usePlayer();
 
+  const isOnAirEpisode = currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
+
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
+
+    if (isOnAirEpisode) {
+      navigate(`/player/live`, {
+        replace: false,
+        state: { isOnAir: true, playlist: activePlaylist, title: 'P!ckle On-Air 🔴' },
+      });
+
+      return;
+    }
 
     if (currentEpisodeType === 'podcast') {
       navigate(`/player/podcasts/${id}`, {
@@ -44,12 +57,24 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           isLive: false,
           playlist: activePlaylist,
           playlistType: 'PickleEpisodeType',
+          originType: currentEpisodeData?.origin_type,
+          recentSeriesId: currentEpisodeData?.recent_series_id,
           isPickle: true,
         },
       });
+    } else if (isLive) {
+      navigate(`/player/${targetId}/live`, {
+        state: { isLive: true, playlist: activePlaylist, playlistType: 'EpisodeType' },
+      });
     } else {
       navigate(`/player/${targetId}`, {
-        state: { isLive: isLive, playlist: activePlaylist, playlistType: 'EpisodeType' },
+        state: {
+          isLive: isLive,
+          playlist: activePlaylist,
+          playlistType: 'EpisodeType',
+          originType: currentEpisodeData?.origin_type,
+          recentSeriesId: currentEpisodeData?.recent_series_id,
+        },
       });
     }
   };
@@ -64,7 +89,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   return (
     <div
-      className="relative w-full max-w-[1027px] h-[126px] flex items-center gap-[15px] py-[15px] px-[23px] cursor-pointer bg-[#121317]"
+      className="relative w-full h-24 flex items-center gap-4 py-4 px-6 cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
       <div className="absolute top-0 left-0 w-full h-[4px] bg-gray-600">
@@ -76,25 +101,34 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
       <div className="flex-shrink-0">
         {imageUrl ? (
-          <img src={imageUrl} alt={title} className={`w-24 h-24 rounded-[11px] object-cover`} />
+          <ImageWithSkeleton
+            src={imageUrl}
+            alt={title}
+            className="w-16 h-16 rounded-lg object-cover"
+            skeletonClassName="w-[224px] h-[224px]"
+            baseColor="#222"
+            highlightColor="#444"
+          />
         ) : (
-          <div className="w-24 h-24 rounded-md bg-gray-400"></div>
+          <div className="w-16 h-16 rounded-lg bg-gray-400"></div>
         )}
       </div>
 
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        <p className="font-semibold truncate text-[32px]">
-          {isLive ? currentEpisodeData?.programs?.title : currentEpisodeData?.title}
+        <p className="text-lg font-semibold truncate">
+          {isOnAirEpisode
+            ? LIVE_STREAM_EPISODE.title
+            : isLive
+              ? currentEpisodeData?.programs?.title
+              : currentEpisodeData?.title}
         </p>
-        <p className="text-[28px] truncate">
-          {currentEpisodeType === 'podcast'
-            ? `${currentEpisodeData?.programs?.title} ${currentEpisodeData?.date}`
-            : `${currentEpisodeData?.programs?.broadcastings?.title} ${currentEpisodeData?.programs?.broadcastings?.channel}`}
+        <p className="text-base truncate">
+          {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
         </p>
       </div>
 
-      <div className="flex gap-x-16 lg:gap-x-[105px] mr-10" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={30} onClick={handlePlayBarPrev} />
+      <div className="flex w-full justify-between max-w-60 mr-4" onClick={handleControlsClick}>
+        <TbPlayerSkipBackFilled size={25} onClick={handlePlayBarPrev} />
 
         <button
           className="relative w-6 h-6 disabled:cursor-not-allowed"
@@ -102,15 +136,15 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           disabled={isLoading}
         >
           {isLoading ? (
-            <AiOutlineLoading size={30} className="animate-spin" />
+            <AiOutlineLoading size={25} className="animate-spin" />
           ) : isPlaying ? (
-            <TbPlayerPauseFilled size={30} />
+            <TbPlayerPauseFilled size={25} />
           ) : (
-            <TbPlayerPlayFilled size={30} />
+            <TbPlayerPlayFilled size={25} />
           )}
         </button>
 
-        <TbPlayerSkipForwardFilled size={30} onClick={handlePlayBarNext} />
+        <TbPlayerSkipForwardFilled size={25} onClick={handlePlayBarNext} />
       </div>
     </div>
   );

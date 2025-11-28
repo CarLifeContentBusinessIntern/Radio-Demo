@@ -15,7 +15,7 @@ const PlayerLayout = () => {
         <Outlet />
       </main>
 
-      <div className="fixed bottom-4 left-0 right-0 flex justify-center items-center">
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[80%] max-w-[1027px]">
         <BottomPlayer id={id} title={title} imgUrl={img_url} />
       </div>
     </div>

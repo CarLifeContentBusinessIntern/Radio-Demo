@@ -1,10 +1,11 @@
 import Skeleton from 'react-loading-skeleton';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { usePlayer } from '../contexts/PlayerContext';
 import type { EpisodeType } from '../types/episode';
-import { formatTimeString } from '../utils/timeUtils';
+import { formatRemainingTime, formatTimeString, timeStringToSeconds } from '../utils/timeUtils';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { useTranslation } from 'react-i18next';
 
 type ListViewItemProps = {
   isLoading?: boolean;
@@ -12,7 +13,6 @@ type ListViewItemProps = {
   imgUrl?: string;
   title?: string;
   subTitle?: string;
-  playTime?: string;
   totalTime?: string;
   date?: string;
   hasAudio?: boolean;
@@ -20,6 +20,9 @@ type ListViewItemProps = {
   playlistType?: string;
   isRound?: boolean;
   isPlayer?: boolean;
+  originType?: 'program' | 'series';
+  recentSeriesId?: number;
+  listenedDuration?: number;
 };
 
 function ListViewItem({
@@ -28,30 +31,43 @@ function ListViewItem({
   imgUrl,
   title,
   subTitle,
-  playTime,
   totalTime,
   date,
   hasAudio,
   playlist,
   isRound,
   isPlayer = false,
+  originType,
+  recentSeriesId,
+  listenedDuration,
 }: ListViewItemProps) {
   const navigate = useNavigate();
   const {
-    hasBeenActivated,
     currentTime,
-    duration,
     currentEpisodeData,
     currentEpisodeId,
-    isLive,
-    formatTime,
     setPlaylist,
+    saveCurrentEpisodeProgress,
   } = usePlayer();
+  const { t } = useTranslation();
 
-  const progress = isLive ? 100 : duration > 0 ? (currentTime / duration) * 100 : 0;
-  const isHourDisplay = duration >= 3600;
+  const location = useLocation();
+  const isLive = location.state?.isLive ?? false;
+  const isRecentPage = location.pathname === '/episodes/recent';
+  const isAIPickPage = location.pathname === '/ai-pick';
+
   const isPlayingEpisode = currentEpisodeId === id;
   const isPodcast = currentEpisodeData?.type === 'podcast';
+
+  // 재생 중인 에피소드는 현재 재생 시간, 그렇지 않은 에피소드는 저장된 재생 시간 사용
+  const lastPlayedTime = isPlayingEpisode ? currentTime : listenedDuration || 0;
+
+  const totalTimeSeconds = timeStringToSeconds(totalTime || '');
+  const progressPercent = isLive
+    ? 100
+    : totalTimeSeconds > 0
+      ? (lastPlayedTime / totalTimeSeconds) * 100
+      : 0;
 
   if (isLoading) {
     return (
@@ -86,8 +102,11 @@ function ListViewItem({
 
   return (
     <div
-      className="flex items-center justify-between gap-8 md:gap-14 cursor-pointer"
+      className="flex items-center justify-between gap-8 cursor-pointer"
       onClick={() => {
+        // 기존 재생 중인 에피소드 저장
+        saveCurrentEpisodeProgress();
+
         setPlaylist(playlist ?? []);
         if (hasAudio) {
           if (isPodcast) {
@@ -96,16 +115,28 @@ function ListViewItem({
               state: {
                 isLive: false,
                 playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
               },
+            });
+          } else if (isLive) {
+            navigate(`/player/${id}/live`, {
+              replace: isPlayer ? true : false,
+              state: { isLive: true, playlist: playlist },
             });
           } else {
             navigate(`/player/${id}`, {
               replace: isPlayer ? true : false,
-              state: { isLive: isLive, playlist: playlist },
+              state: {
+                isLive: false,
+                playlist: playlist,
+                originType,
+                recentSeriesId: recentSeriesId,
+              },
             });
           }
         } else {
-          toast.error(`콘텐츠 준비 중입니다`, { toastId: id });
+          toast.error(t('toast.no-contents'), { toastId: id });
         }
       }}
     >
@@ -114,17 +145,17 @@ function ListViewItem({
           <ImageWithSkeleton
             src={imgUrl}
             alt={title}
-            className={`w-28 h-28 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
+            className={`w-24 h-24 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
             skeletonClassName="rounded-[11px]"
           />
         ) : (
           <div
-            className={`w-28 h-28 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
+            className={`w-24 h-24 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
           ></div>
         )}
       </div>
 
-      <div className="flex flex-col flex-grow text-[28px] min-w-0">
+      <div className="flex flex-col flex-grow text-lg min-w-0">
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">
@@ -133,23 +164,35 @@ function ListViewItem({
               .join(' · ')}
           </div>
         </div>
-        {hasBeenActivated && currentEpisodeId === id && (
+        {!isRecentPage && !isAIPickPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
           <div className="relative w-full h-[4px] bg-gray-600 mt-2">
             <div
-              className="h-[4px] bg-[#B76EEF] transition-width duration-100 ease-linear"
-              style={{ width: `${progress}%` }}
+              className={`h-1 transition-width duration-100 ease-linear ${
+                currentEpisodeId === id ? 'bg-[#B76EEF]' : 'bg-[#888888]'
+              }`}
+              style={{
+                width: `${Math.min(progressPercent, 100)}%`,
+              }}
             />
           </div>
         )}
       </div>
-
       <div className="hidden md:block">
-        {(!isPodcast || isPlayer) && isPlayingEpisode && !isLive && (
-          <p className="text-[28px] text-[#A6A6A9] w-[240px] text-right">
-            {playTime || formatTime(currentTime, isHourDisplay)}
-            {totalTime ? ` / ${totalTime}` : ``}
-          </p>
-        )}
+        {(() => {
+          const remainingSeconds = totalTimeSeconds - Math.floor(lastPlayedTime);
+          const shouldShowRemainingTime =
+            !isLive && remainingSeconds > 0 && (isPlayingEpisode || lastPlayedTime > 0);
+
+          return (
+            !isRecentPage &&
+            !isAIPickPage &&
+            shouldShowRemainingTime && (
+              <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
+                - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
+              </p>
+            )
+          );
+        })()}
       </div>
     </div>
   );

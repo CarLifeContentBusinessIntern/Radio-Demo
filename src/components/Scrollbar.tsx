@@ -102,7 +102,7 @@ function Scrollbar({ scrollableRef }: ScrollbarProps) {
   }, [onMouseMove, onMouseUp]);
 
   return (
-    <div className="w-[111px] h-[80%] max-h-[560px] flex flex-col items-center justify-between py-8 shrink-0">
+    <div className="w-20 h-[80%] flex flex-col items-center justify-between py-8 shrink-0">
       <button onClick={() => handleArrowClick('up')}>
         <FaChevronUp size={30} />
       </button>

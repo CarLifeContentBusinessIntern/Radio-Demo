@@ -2,14 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { useSection } from '../hooks/useSection';
 import GridViewItem from './GridViewItem';
 import { handleClickSeries } from './PicklePick';
+import { useTranslation } from 'react-i18next';
 
 function DriveMood() {
   const navigate = useNavigate();
   const { data: sectionData, isLoading } = useSection(3);
+  const { t } = useTranslation();
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">Drive Mood</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.drive-mood')}</div>
 
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
@@ -27,7 +29,7 @@ function DriveMood() {
                 title={item.title}
                 subTitle={item.subtitle}
                 img={item.img_url}
-                onClick={() => handleClickSeries(navigate, item)}
+                onClick={() => handleClickSeries(navigate, item, t('toast.no-contents'))}
               />
             ))}
       </div>

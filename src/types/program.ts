@@ -12,4 +12,6 @@ export type ProgramType = {
   broadcastings?: BroadcastingType;
   type: 'podcast' | 'radio';
   episodes?: EpisodeType[];
+  is_liked?: boolean;
+  series_id?: number;
 };

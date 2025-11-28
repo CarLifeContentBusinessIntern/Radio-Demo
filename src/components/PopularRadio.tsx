@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { supabase } from '../lib/supabaseClient';
 import type { ProgramType } from '../types/program';
 import type { ThemeType } from '../types/theme';
 import GridViewItem from './GridViewItem';
+import { useTranslation } from 'react-i18next';
 
 interface PopularRadioInterface {
   programs: ProgramType;
@@ -12,38 +13,36 @@ interface PopularRadioInterface {
 }
 
 function PopularRadio() {
-  const [popularRadios, setPopularRadios] = useState<PopularRadioInterface[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
 
-  async function fetchPopularRadios() {
-    const { data, error } = await supabase
-      .from('themes_programs')
-      .select(
-        `*,
+  const { data: popularRadios = [], isLoading } = useQuery<PopularRadioInterface[]>({
+    queryKey: ['popularRadios'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('themes_programs')
+        .select(
+          `*,
         programs(*,broadcastings(*), episodes(*, programs(*, broadcastings(*)))),
         themes!inner(*)
         `
-      )
-      .eq('theme_id', 1)
-      .order('title', { referencedTable: 'programs.episodes', ascending: false });
+        )
+        .eq('theme_id', 1)
+        .order('title', { referencedTable: 'programs.episodes', ascending: false });
 
-    if (error) {
-      console.error('Supabase 연결 실패:', error);
-    } else {
-      setPopularRadios(data as unknown as PopularRadioInterface[]);
-    }
-    setIsLoading(false);
-  }
+      if (error) {
+        console.error('Supabase 연결 실패:', error);
+        throw error;
+      }
 
-  useEffect(() => {
-    fetchPopularRadios();
-  }, []);
+      return data as PopularRadioInterface[];
+    },
+  });
 
   const navigate = useNavigate();
 
   return (
     <>
-      <div className="text-2xl mb-7 font-semibold">라디오 인기 채널</div>
+      <div className="text-lg mb-7 font-semibold">{t('sections.popular-radio')}</div>
       <div
         className="grid gap-x-4 gap-y-7 mb-16 px-1"
         style={{
@@ -65,10 +64,10 @@ function PopularRadio() {
 
                   if (firstEpisode && firstEpisode.audio_file !== null) {
                     navigate(`/player/${firstEpisode.id}`, {
-                      state: { playlist: item.programs.episodes },
+                      state: { playlist: item.programs.episodes, originType: 'program' },
                     });
                   } else {
-                    toast.error(`콘텐츠 준비 중입니다`, { toastId: item.programs.id });
+                    toast.error(t('toast.no-contents'), { toastId: item.programs.id });
                   }
                 }}
               />

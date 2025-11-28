@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import Scrollbar from '../components/Scrollbar';
 import type { HeaderType } from '../types';
 import { useVersion } from '../contexts/VersionContext';
+import { useZoom } from '../contexts/ZoomContext';
 
 interface LayoutProps {
   defaultType?: HeaderType;
@@ -27,6 +28,7 @@ function Layout({
   const type = state?.type || defaultType;
   const title = state?.title || defaultTitle;
   const { isLiveVersion } = useVersion();
+  const { selectedZoom } = useZoom();
   const scrollKey = `scroll-${pathname}-${type ?? 'default'}-${isLiveVersion}`;
 
   // 스크롤 위치 실시간 저장
@@ -37,7 +39,7 @@ function Layout({
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           sessionStorage.setItem(scrollKey, String(contentRef.current!.scrollTop));
-        }, 100); // 100ms 정도 기다렸다가 저장
+        }, 100);
       }
     };
 
@@ -56,22 +58,25 @@ function Layout({
       if (contentRef.current) {
         contentRef.current.scrollTo(0, saved ? Number(saved) : 0);
       }
-    }, 300); // 기다려 DOM 렌더링 후 scrollTo
+    }, 300);
   }, [pathname, scrollKey]);
 
   const mainContent = (
     <main
       ref={contentRef}
       className={`flex-1 h-full overflow-y-auto overflow-x-hidden scrollbar-hide ${
-        paddingB ? 'pb-[160px]' : ''
-      } ${paddingX ? 'px-[33px]' : ''} `}
+        paddingB ? 'pb-32' : ''
+      } ${paddingX ? 'px-6' : ''}`}
     >
       <Outlet />
     </main>
   );
 
+  // 확대 비율에 따른 실제 높이 계산
+  const actualHeight = `${100 / selectedZoom}vh`;
+
   return (
-    <div className="flex flex-col h-screen text-white">
+    <div className="flex flex-col text-white" style={{ height: actualHeight }}>
       <Header type={type} title={title} isPlayer={isPlayer} />
 
       {scrollbar ? (

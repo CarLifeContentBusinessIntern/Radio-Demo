@@ -1,46 +1,34 @@
-import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, type NavigateFunction } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import GridViewItem from '../components/GridViewItem';
 import ListViewItem from '../components/ListViewItem';
-import { supabase } from '../lib/supabaseClient';
-import type { EpisodeType, SeriesEpisodesType } from '../types/episode';
-import { useVersion } from '../contexts/VersionContext';
+import RecentEpisodeList from '../components/RecentEpisodeList';
+import useFetchRecentSeriesProgram from '../hooks/useFetchRecentSeriesProgram';
+import { useTenRecentEpisodes } from '../hooks/useTenRecentEpisodes';
+import type { RecentSeriesProgramType } from '../types/recent';
 
 function RecentPage() {
-  const [recentEpisodes, setRecentEpisodes] = useState<EpisodeType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
 
-  const { isRadioVersion } = useVersion();
+  const {
+    data: recentSeriesPrograms,
+    isLoading: isSeriesProgramsLoading,
+    error: seriesProgramsError,
+  } = useFetchRecentSeriesProgram();
 
-  useEffect(() => {
-    async function fetchRecentData() {
-      const { data, error } = await supabase
-        .from('series_episodes')
-        .select('*, episodes(*, programs(*, broadcastings(*)))')
-        .eq('series_id', 21)
-        .order('order', { ascending: true });
+  const {
+    data: recentEpisodes = [],
+    isLoading: isEpisodesLoading,
+    error: episodesError,
+  } = useTenRecentEpisodes();
+  if (episodesError || seriesProgramsError) {
+    console.log('❌ 최근 청취 조회 실패', episodesError || seriesProgramsError);
+    return;
+  }
 
-      if (error) {
-        console.log('❌ 최근 청취 조회 실패 :', error);
-        setIsLoading(false);
-        return;
-      }
-
-      const allEpisodes: EpisodeType[] = data
-        .map((item: SeriesEpisodesType) => item.episodes)
-        .filter((episode): episode is EpisodeType => episode !== null && episode !== undefined);
-
-      const finalEpisodes = isRadioVersion
-        ? allEpisodes
-        : allEpisodes.filter((episode) => episode.type === 'podcast');
-
-      setRecentEpisodes(finalEpisodes);
-
-      setIsLoading(false);
-    }
-
-    fetchRecentData();
-  }, [isRadioVersion]);
-
-  if (isLoading) {
+  if (isSeriesProgramsLoading || isEpisodesLoading) {
     return (
       <div className="flex flex-col gap-y-1">
         {Array.from({ length: 8 }).map((_, index) => (
@@ -50,27 +38,50 @@ function RecentPage() {
     );
   }
 
-  return (
-    <div className="flex flex-col gap-y-1 pr-11 pt-7">
-      {recentEpisodes?.map((item) => {
-        const subTitleText = item.programs?.title;
-        const imgUrl = item.img_url ?? item.programs?.img_url;
+  const handleClickSeriesProgram = (
+    navigate: NavigateFunction,
+    item: RecentSeriesProgramType,
+    toastMessage: string
+  ) => {
+    if (item.episode) {
+      navigate(`/episodes/${item.episode.origin_type}/${item.id}`, {
+        state: {
+          title: item.title,
+        },
+      });
+    } else {
+      toast.error(toastMessage, { toastId: item.id });
+    }
+  };
 
-        return (
-          <ListViewItem
-            key={item.id}
-            id={item.id}
-            imgUrl={imgUrl}
-            title={item.title}
-            subTitle={subTitleText}
-            totalTime={item.duration}
-            date={item.date}
-            hasAudio={!!item.audio_file}
-            playlist={recentEpisodes}
-            isRound={true}
-          />
-        );
-      })}
+  return (
+    <div className="flex flex-col gap-y-9 pr-11 pt-7">
+      <p className="text-lg">{t('sections.curation-channel')}</p>
+      <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
+        {recentSeriesPrograms?.map((item) => {
+          const imgUrl = item.img_url ?? item.episode?.img_url;
+
+          return (
+            <GridViewItem
+              key={item.id}
+              img={imgUrl}
+              title={item.title}
+              subTitle={item.subtitle}
+              isRounded={true}
+              onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
+            />
+          );
+        })}
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="text-lg">{t('sections.episode')}</p>
+        <div className="flex flex-col gap-y-1">
+          {recentEpisodes?.map((item) => (
+            <RecentEpisodeList key={item.id} item={item} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
