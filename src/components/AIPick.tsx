@@ -9,6 +9,7 @@ import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
+import { fetchRandomEpisodes } from '../api/randomEpisodes';
 
 const EPISODE_COUNT = 5;
 
@@ -19,13 +20,6 @@ interface AIPickProps {
 
 function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
   const { t } = useTranslation();
-
-  const fetchRandomEpisodes = async (): Promise<EpisodeType[]> => {
-    const { data, error } = await supabase.rpc('get_random_episodes', { count: EPISODE_COUNT });
-
-    if (error) throw error;
-    return data;
-  };
 
   const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
     const { data, error } = await supabase
@@ -55,10 +49,10 @@ function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
     queryKey: ['playlists', uniqueProgramIds],
     queryFn: async () => {
       const playlists = await Promise.all(uniqueProgramIds.map((id) => fetchPlaylist(id)));
-      return Object.fromEntries(uniqueProgramIds.map((id, idx) => [id, playlists[idx]])) as Record<
-        number,
-        EpisodeType[]
-      >;
+      return uniqueProgramIds.reduce<Record<number, EpisodeType[]>>((acc, id, idx) => {
+        acc[id] = playlists[idx];
+        return acc;
+      }, {});
     },
     enabled: uniqueProgramIds.length > 0,
   });

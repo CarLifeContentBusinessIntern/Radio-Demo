@@ -1,12 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { MdOutlinePlayCircle } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
+import { fetchRandomEpisodes } from '../api/randomEpisodes';
 import BannerBackground from '../assets/ai_pick_banner_background_after.png';
 import BannerIcon from '../assets/ai_pick_banner_dailymix_after.png';
-import AIPick, { EPISODE_COUNT } from './AIPick';
-import { useQuery } from '@tanstack/react-query';
-import type { EpisodeType } from '../types/episode';
-import { supabase } from '../lib/supabaseClient';
+import AIPick from './AIPick';
 
 function AIPickAfter() {
   const { t } = useTranslation();
@@ -14,11 +13,7 @@ function AIPickAfter() {
 
   const { data: episodes } = useQuery({
     queryKey: ['random-episodes'],
-    queryFn: async (): Promise<EpisodeType[]> => {
-      const { data, error } = await supabase.rpc('get_random_episodes', { count: EPISODE_COUNT });
-      if (error) throw error;
-      return data;
-    },
+    queryFn: fetchRandomEpisodes,
   });
 
   const bannerContent = (
