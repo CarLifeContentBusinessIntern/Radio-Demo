@@ -38,7 +38,7 @@ function RectangleGridViewItem({
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
-          className={`w-full aspect-[16/9] ${isRounded ? 'rounded-3xl' : ''} mb-4 object-cover`}
+          className={`w-full aspect-[16/9] ${isRounded ? 'rounded-3xl' : ''} mb-4`}
           skeletonClassName={`w-full aspect-[16/9] mb-4 ${isRounded ? 'rounded-3xl' : ''}`}
         />
       ) : (
