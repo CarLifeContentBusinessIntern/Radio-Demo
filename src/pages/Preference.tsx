@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { usePreference } from '../contexts/PreferenceContext';
+import { INIT_PREFERENCE_STATE, usePreference } from '../contexts/PreferenceContext';
 import { PREFERENCE_QUESTIONS } from '../constants/preferenceQuestions';
 import PreferenceSection from '../components/preference/PreferenceSection';
 import PreferenceButton from '../components/preference/PreferenceButton';
@@ -8,7 +8,7 @@ import type { PreferenceState } from '../types/preference';
 import { useNavigate } from 'react-router-dom';
 
 function Preference() {
-  const { preferences, updatePreference, resetPreferences } = usePreference();
+  const { preferences, updatePreference } = usePreference();
   const [localPreferences, setLocalPreferences] = useState<PreferenceState>(preferences);
   const navigate = useNavigate();
 
@@ -32,8 +32,7 @@ function Preference() {
   };
 
   const handleReset = () => {
-    resetPreferences();
-    setLocalPreferences(preferences);
+    setLocalPreferences(INIT_PREFERENCE_STATE);
   };
 
   const handleSave = () => {
