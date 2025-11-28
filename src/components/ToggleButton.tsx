@@ -28,18 +28,18 @@ function ToggleButton({
   };
 
   return (
-    <div className="box left-8 top-[20%] w-[158px] h-[268px] scale-[50%] rounded-full flex items-center justify-center">
+    <div className="box top-[25%] w-[10vh] h-[20vh] scale-50 rounded-full flex items-center justify-center">
       <button
         onClick={handleToggle}
-        className={`flex justify-center items-start p-2 w-[150px] h-[260px] rounded-full transition-colors duration-500 overflow-hidden ${isActivate ? 'bg-[#00000090]' : 'bg-[#FFFFFF75]'} relative z-10`}
+        className={`flex justify-center items-start p-[1vh] w-[10vh] h-[20vh] rounded-full transition-colors duration-500 overflow-hidden ${isActivate ? 'bg-[#00000090]' : 'bg-[#FFFFFF75]'} relative z-10`}
         style={
           {
-            '--toggle-container-height': '260px',
-            '--toggle-padding': '32px',
+            '--toggle-container-height': '20vh',
+            '--toggle-padding': '3vh',
           } as React.CSSProperties
         }
       >
-        <div className={`w-fit flex items-center justify-center my-2 ${action}`}>
+        <div className={`w-fit flex items-center justify-center my-[0.5vh] ${action}`}>
           <img
             src={imageSrc}
             alt="toggle button"
