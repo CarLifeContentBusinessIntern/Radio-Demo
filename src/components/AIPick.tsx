@@ -10,6 +10,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
+import { useNavigate } from 'react-router-dom';
 
 const EPISODE_COUNT = 5;
 
@@ -20,6 +21,7 @@ interface AIPickProps {
 
 function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
     const { data, error } = await supabase
@@ -116,7 +118,10 @@ function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
 
   return (
     <div className="pt-7 pr-20 flex flex-col gap-8">
-      <div className="flex items-center gap-6">
+      <div
+        className="flex items-center gap-6"
+        onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
+      >
         <ImageWithSkeleton
           src={PickleAIIcon}
           alt="Pickle AI"
