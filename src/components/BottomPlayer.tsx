@@ -45,7 +45,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     if (isOnAirEpisode) {
       navigate(`/player/live`, {
         replace: false,
-        state: { isOnAir: true, playlist: activePlaylist, title: 'P!ckle On-Air 🔴' },
+        state: { isOnAir: true, playlist: activePlaylist, title: 'Live P!ckle 🔴' },
       });
 
       return;
