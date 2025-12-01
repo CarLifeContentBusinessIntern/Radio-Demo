@@ -26,7 +26,7 @@ function TimeSlot() {
                 img={item.img_url}
                 onClick={() => {
                   if (item.has_episodes) {
-                    navigate(`/episodes/timeslot/${item.id}`, {
+                    navigate(`/episodes/series/${item.id}`, {
                       state: { title: item.title, originType: 'series' },
                     });
                   } else {
