@@ -15,6 +15,8 @@ function ListViewPage() {
   const { id, type } = useParams<{ id: string; type: 'series' | 'program' }>();
   const { setPlaylist, playedDurations } = usePlayer();
 
+  const isSeries = type === 'series';
+
   // 프로그램용 쿼리
   const programsQuery = useQuery<EpisodeType[]>({
     queryKey: ['episode', id],
@@ -32,21 +34,17 @@ function ListViewPage() {
   const seriesEpisodesQuery = useSeriesEpisodes(id);
 
   // 공통 데이터 선택
-  const {
-    data: rawData = [],
-    isLoading,
-    error,
-  } = type === 'series' ? seriesEpisodesQuery : programsQuery;
+  const { data: rawData = [], isLoading, error } = isSeries ? seriesEpisodesQuery : programsQuery;
 
   // episodes 배열 생성
   const episodes: EpisodeType[] = useMemo(() => {
-    if (type === 'series') {
+    if (isSeries) {
       const seriesData = rawData as SeriesEpisodesType[];
       return seriesData.map((se) => se.episodes).filter((ep): ep is EpisodeType => !!ep);
     } else {
       return rawData as EpisodeType[];
     }
-  }, [rawData, type]);
+  }, [rawData, isSeries]);
 
   // 플레이리스트 설정
   const currentPlaylist: EpisodeType[] = useMemo(() => episodes, [episodes]);
@@ -92,7 +90,7 @@ function ListViewPage() {
             playlist={currentPlaylist}
             isRound={isRound ?? true}
             originType={originType}
-            recentSeriesId={item.recent_series_id}
+            recentSeriesId={isSeries ? Number(id) : null}
             listenedDuration={playedDurations[episodeId] ?? item.listened_duration}
           />
         );

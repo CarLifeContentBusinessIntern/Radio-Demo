@@ -21,7 +21,7 @@ type ListViewItemProps = {
   isRound?: boolean;
   isPlayer?: boolean;
   originType?: 'program' | 'series';
-  recentSeriesId?: number;
+  recentSeriesId?: number | null;
   listenedDuration?: number;
 };
 

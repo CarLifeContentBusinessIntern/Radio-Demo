@@ -13,7 +13,7 @@ import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 import { useQueryClient } from '@tanstack/react-query';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -251,6 +251,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
 
+      // 재생하기 직전에 이전 에피소드의 시간 기록
+      if (currentEpisodeRef.current && audioRef.current) {
+        saveListeningHistory(
+          currentEpisodeRef.current,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
+
       let episode;
       let startTime = 0;
 
@@ -384,7 +394,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else if (isOnAir) {
               navigate(`/player/live`, {
                 replace: true,
-                state: { isOnAir: true, playlist: playlist },
+                state: { isOnAir: true, playlist: [] },
               });
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {
