@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { useLazyLoad } from '../hooks/useLazyLoad';
 
 interface ImageWithSkeletonProps {
   src: string | undefined;
@@ -10,6 +11,8 @@ interface ImageWithSkeletonProps {
   baseColor?: string;
   highlightColor?: string;
   isRecent?: boolean;
+  priority?: boolean;
+  rootMargin?: string;
 }
 
 export default function ImageWithSkeleton({
@@ -20,12 +23,19 @@ export default function ImageWithSkeleton({
   baseColor = '#444',
   highlightColor = 'gray',
   isRecent = false,
+  priority = false,
+  rootMargin = '300px',
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [objectFit, setObjectFit] = useState<'object-contain' | 'object-cover'>('object-cover');
   const [needsBlur, setNeedsBlur] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerRatio, setContainerRatio] = useState(1);
+
+  const { ref: lazyRef, isInView } = useLazyLoad({
+    priority,
+    rootMargin,
+  });
 
   useLayoutEffect(() => {
     const element = containerRef.current;
@@ -77,7 +87,10 @@ export default function ImageWithSkeleton({
 
   return (
     <div
-      ref={containerRef}
+      ref={(node) => {
+        containerRef.current = node;
+        lazyRef.current = node;
+      }}
       className={`relative overflow-hidden flex items-center justify-center ${className}`}
     >
       {/* 블러 배경 */}
@@ -99,7 +112,7 @@ export default function ImageWithSkeleton({
       )}
       {/* Image */}
       <img
-        src={src ?? ''}
+        src={isInView ? (src ?? '') : ''}
         alt={alt}
         onLoad={handleImageLoad}
         className={`relative w-full h-full transition-opacity duration-300 ${objectFit} ${

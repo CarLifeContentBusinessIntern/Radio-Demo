@@ -24,7 +24,7 @@ export function useLazyLoad(options?: UseLazyLoadOptions) {
         }
       },
       {
-        rootMargin: options?.rootMargin || '200px',
+        rootMargin: options?.rootMargin || '300px',
         threshold: options?.threshold || 0.01,
       }
     );
