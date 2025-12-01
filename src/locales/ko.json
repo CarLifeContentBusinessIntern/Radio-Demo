@@ -71,6 +71,10 @@
     "zoom": "화면 확대",
     "oem": "OEM 콘텐츠"
   },
+  "live": {
+    "rolling": "tvN D ENT와 함께 달리는 중",
+    "mcdrive": "오늘 맥드라이브 어때요?"
+  },
   "toast": {
     "no-contents": "콘텐츠 준비 중입니다"
   },

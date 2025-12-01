@@ -72,6 +72,10 @@
     "zoom": "Zoom",
     "oem": "OEM Contents"
   },
+  "live": {
+    "rolling": "Rollin’ with Team Coco",
+    "mcdrive": "McDrive anyone?"
+  },
   "toast": {
     "no-contents": "Preparing content"
   },

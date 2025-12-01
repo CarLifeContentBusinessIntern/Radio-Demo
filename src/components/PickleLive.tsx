@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
 import { useTranslation } from 'react-i18next';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+
 function PickleLive() {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isKorean = i18n.language === 'ko';
+  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentSize, setParentSize] = useState(0);
@@ -52,10 +55,8 @@ function PickleLive() {
         )}
         {/* 제목/부제목 */}
         <div style={{ top: parentSize }} className="absolute w-full ">
-          <p className="text-base mb-1 px-1 font-semibold truncate  mt-4">
-            {LIVE_STREAM_EPISODE.title}
-          </p>
-          <p className="text-sm text-gray-400 px-1 truncate">{LIVE_STREAM_EPISODE.subtitle}</p>
+          <p className="text-base mb-1 px-1 font-semibold truncate  mt-4">{liveEpisode.title}</p>
+          <p className="text-sm text-gray-400 px-1 truncate">{liveEpisode.subtitle}</p>
         </div>
       </div>
     </div>

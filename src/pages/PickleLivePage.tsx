@@ -3,43 +3,21 @@ import { useEffect, useRef } from 'react';
 import { TbPlayerPauseFilled, TbPlayerPlayFilled } from 'react-icons/tb';
 import soundWaveData from '../assets/sound-wave_darkmode.json';
 import { usePlayer } from '../contexts/PlayerContext';
-
-const LIVE_STREAM_EPISODE = {
-  id: 999999,
-  title:
-    '[#프리한19] 우리가 잘못 알고 있던 상식들, 모두 알려드림! 🎯 알아두면 쓸모 있는 상식 zip | #티전드',
-  subtitle: '차 안의 스튜디오, 지금 ON AIR',
-  creator: 'tvN D ENT',
-  img_url: '/tvN_channel_logo.png',
-  audio_file: 'https://pickle-demo.netlify.app/Live_tgend.mp3',
-  audioFile_dubbing: null,
-  date: null,
-  duration: '0',
-  type: 'radio',
-  created_at: null,
-  program_id: 1,
-  order_recent: 0,
-  programs: {
-    id: 1,
-    title: 'tvN D ENT',
-    img_url: '/tvN_channel_logo.png',
-    is_live: true,
-    created_at: null,
-    broadcasting_id: 1,
-    subtitle: 'Live Streaming',
-    type: 'radio',
-  },
-};
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+import { useTranslation } from 'react-i18next';
 
 function PickleLivePage() {
   const soundWaveRef = useRef<LottieRefCurrentProps | null>(null);
 
   const { isPlaying, currentEpisodeData, playEpisode, togglePlayPause } = usePlayer();
+  const { t, i18n } = useTranslation();
+  const isKorean = i18n.language === 'ko';
+  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
 
-  const isThisLivePlaying = isPlaying && currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
+  const isThisLivePlaying = isPlaying && currentEpisodeData?.id === liveEpisode.id;
 
   useEffect(() => {
-    playEpisode(LIVE_STREAM_EPISODE.id, true, false, null, null, true);
+    playEpisode(liveEpisode.id, true, false, null, null, true);
   }, []);
 
   useEffect(() => {
@@ -65,7 +43,7 @@ function PickleLivePage() {
     if (isThisLivePlaying) {
       togglePlayPause();
     } else {
-      playEpisode(LIVE_STREAM_EPISODE.id, true, false, null, null, true);
+      playEpisode(liveEpisode.id, true, false, null, null, true);
     }
   };
 
@@ -78,7 +56,7 @@ function PickleLivePage() {
 
           <h2 className="flex items-center gap-3 mb-1 font-medium text-md leading-9">
             <img src="/icn_car.png" alt="Car Icon" className="h-4 object-contain" />
-            tvN D ENT와 함께 달리는 중
+            {t('live.rolling')}
           </h2>
 
           {/* 왼쪽 하단 - 라이브 카드 */}
@@ -87,11 +65,9 @@ function PickleLivePage() {
               <div className="flex flex-col flex-1 justify-between p-5">
                 <div className="text-white">
                   <h2 className="mt-2 mb-2 font-medium text-lg leading-tight">
-                    {LIVE_STREAM_EPISODE.title}
+                    {liveEpisode.title}
                   </h2>
-                  <h3 className="font-light text-gray-400 text-sm">
-                    {LIVE_STREAM_EPISODE.creator}
-                  </h3>
+                  <h3 className="font-light text-gray-400 text-sm">{liveEpisode.creator}</h3>
                 </div>
 
                 {/* 하단 컨트롤 영역 */}
@@ -164,7 +140,7 @@ function PickleLivePage() {
           {/* 오른쪽 상단 - 제목 */}
 
           <div className="flex items-center gap-2 mb-1">
-            <h2 className="font-medium text-sm leading-9"> 오늘 맥드라이브 어때요?</h2>
+            <h2 className="font-medium text-sm leading-9">{t('live.mcdrive')}</h2>
             <span className="px-[6px] py-[1px] border border-white rounded-full text-[9px] text-white">
               AD
             </span>
@@ -183,12 +159,14 @@ function PickleLivePage() {
 
       {/* 하단 타임라인 이미지 - 전체 너비 */}
       <div className="-mx-6 mt-4">
-        <img src="/live_timeline.png" alt="Live Timeline" className="w-full h-auto object-cover" />
+        <img
+          src={isKorean ? '/live_timeline.png' : '/live_timeline_en.png'}
+          alt="Live Timeline"
+          className="w-full h-auto object-cover"
+        />
       </div>
     </div>
   );
 }
 
 export default PickleLivePage;
-
-export { LIVE_STREAM_EPISODE };
