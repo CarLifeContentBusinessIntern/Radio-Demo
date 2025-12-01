@@ -9,6 +9,7 @@ import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
 import ImageWithSkeleton from './ImageWithSkeleton';
 import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 type BottomPlayerProps = {
   id: number;
@@ -26,7 +27,6 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
-    duration,
     activePlaylist,
     hasBeenActivated,
     togglePlayPause,
@@ -36,8 +36,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   const isOnAirEpisode = currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
 
-  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
-
+  const totalTime = currentEpisodeData?.duration;
+  const totalTimeSeconds = timeStringToSeconds(totalTime!);
+  const progress = totalTime || 0 > 0 ? (isLive ? 100 : (currentTime / totalTimeSeconds) * 100) : 0;
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
 
