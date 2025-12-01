@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import type { PreferenceState } from '../types/preference';
-import { DEFAULT_PREFERENCE_STATE } from '../constants/preferenceQuestions';
 
 export const INIT_PREFERENCE_STATE = {
   age: '',

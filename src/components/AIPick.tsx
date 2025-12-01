@@ -17,9 +17,10 @@ const EPISODE_COUNT = 5;
 interface AIPickProps {
   bannerContent: React.ReactNode;
   sectionTitleKey: string;
+  moodPrefix?: string;
 }
 
-function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
+function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -39,7 +40,7 @@ function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
     isFetching,
     isLoading,
   } = useQuery({
-    queryKey: ['random-episodes'],
+    queryKey: ['random-episodes', moodPrefix],
     queryFn: fetchRandomEpisodes,
     refetchOnWindowFocus: false,
   });
@@ -138,7 +139,9 @@ function AIPick({ bannerContent, sectionTitleKey }: AIPickProps) {
       {bannerContent}
 
       <div className="flex flex-col gap-6">
-        <p className="text-base font-medium">{t(sectionTitleKey)}</p>
+        <p className="text-base font-medium">
+          {moodPrefix} {t(sectionTitleKey)}
+        </p>
 
         <div className="flex flex-col gap-3">
           {episodes?.map((ep) => (
