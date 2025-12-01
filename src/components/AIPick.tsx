@@ -126,14 +126,16 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
           className="flex items-center gap-6 cursor-pointer"
           onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
         >
-          <ImageWithSkeleton
-            src={PickleAIIcon}
-            alt="Pickle AI"
-            className="w-14 h-14"
-            skeletonClassName="rounded-full"
-            baseColor="#2A2A2E"
-            highlightColor="#3A3A3E"
-          />
+          <div>
+            <ImageWithSkeleton
+              src={PickleAIIcon}
+              alt="Pickle AI"
+              className="w-14 h-14"
+              skeletonClassName="rounded-full"
+              baseColor="#2A2A2E"
+              highlightColor="#3A3A3E"
+            />
+          </div>
           <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
             {t('placeholder.voice-search')}
           </div>

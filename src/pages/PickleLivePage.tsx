@@ -8,6 +8,7 @@ const LIVE_STREAM_EPISODE = {
   id: 999999,
   title:
     '[#프리한19] 우리가 잘못 알고 있던 상식들, 모두 알려드림! 🎯 알아두면 쓸모 있는 상식 zip | #티전드',
+  subtitle: '차 안의 스튜디오, 지금 ON AIR',
   creator: 'tvN D ENT',
   img_url: '/tvN_channel_logo.png',
   audio_file: 'https://pickle-demo.netlify.app/Live_tgend.mp3',
@@ -30,7 +31,7 @@ const LIVE_STREAM_EPISODE = {
   },
 };
 
-function PickleOnAir() {
+function PickleLivePage() {
   const soundWaveRef = useRef<LottieRefCurrentProps | null>(null);
 
   const { isPlaying, currentEpisodeData, playEpisode, togglePlayPause } = usePlayer();
@@ -188,6 +189,6 @@ function PickleOnAir() {
   );
 }
 
-export default PickleOnAir;
+export default PickleLivePage;
 
 export { LIVE_STREAM_EPISODE };

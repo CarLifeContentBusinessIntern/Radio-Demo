@@ -8,6 +8,7 @@ interface GridViewItemProps {
   img?: string;
   onClick?: () => void;
   isRounded?: boolean;
+  isRecent?: boolean;
 }
 
 function GridViewItem({
@@ -17,6 +18,7 @@ function GridViewItem({
   img,
   onClick,
   isRounded = true,
+  isRecent = false,
 }: GridViewItemProps) {
   if (isLoading) {
     return (
@@ -38,6 +40,7 @@ function GridViewItem({
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
+          isRecent={isRecent}
           className={`w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4 object-cover`}
           skeletonClassName={`w-full aspect-square mb-4 ${isRounded ? 'rounded-[11%]' : ''} `}
         />

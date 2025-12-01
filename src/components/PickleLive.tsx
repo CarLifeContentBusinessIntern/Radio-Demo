@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
 import { useTranslation } from 'react-i18next';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
 function PickleLive() {
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -52,10 +53,9 @@ function PickleLive() {
         {/* 제목/부제목 */}
         <div style={{ top: parentSize }} className="absolute w-full ">
           <p className="text-base mb-1 px-1 font-semibold truncate  mt-4">
-            [#프리한19] 우리가 잘못 알고 있던 상식들, 모두 알려드림! 🎯 알아두면 쓸모 있는 상식 zip
-            | #티전드
+            {LIVE_STREAM_EPISODE.title}
           </p>
-          <p className="text-sm text-gray-400 px-1 truncate">차 안의 스튜디오, 지금 ON AIR</p>
+          <p className="text-sm text-gray-400 px-1 truncate">{LIVE_STREAM_EPISODE.subtitle}</p>
         </div>
       </div>
     </div>
