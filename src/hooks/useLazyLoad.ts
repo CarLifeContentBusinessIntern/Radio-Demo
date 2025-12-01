@@ -6,12 +6,13 @@ interface UseLazyLoadOptions {
   priority?: boolean;
 }
 
-export function useLazyLoad(options?: UseLazyLoadOptions) {
-  const [isInView, setIsInView] = useState(options?.priority || false);
+export function useLazyLoad(options: UseLazyLoadOptions = {}) {
+  const { priority = false, rootMargin = '300px', threshold = 0.01 } = options;
+  const [isInView, setIsInView] = useState(priority);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (options?.priority) return;
+    if (priority) return;
 
     const element = ref.current;
     if (!element) return;
@@ -24,8 +25,8 @@ export function useLazyLoad(options?: UseLazyLoadOptions) {
         }
       },
       {
-        rootMargin: options?.rootMargin || '300px',
-        threshold: options?.threshold || 0.01,
+        rootMargin,
+        threshold,
       }
     );
 
@@ -34,7 +35,7 @@ export function useLazyLoad(options?: UseLazyLoadOptions) {
     return () => {
       observer.disconnect();
     };
-  }, [options?.priority, options?.rootMargin, options?.threshold]);
+  }, [priority, rootMargin, threshold]);
 
   return { ref, isInView };
 }
