@@ -43,10 +43,8 @@ function checkHasSelection(prefs: PreferenceState): boolean {
 }
 
 export function PreferenceProvider({ children }: { children: ReactNode }) {
-  const [preferences, setPreferences] = useState<PreferenceState>(DEFAULT_PREFERENCE_STATE);
-  const [hasAnySelection, setHasAnySelection] = useState(
-    checkHasSelection(DEFAULT_PREFERENCE_STATE)
-  );
+  const [preferences, setPreferences] = useState<PreferenceState>(INIT_PREFERENCE_STATE);
+  const [hasAnySelection, setHasAnySelection] = useState(checkHasSelection(INIT_PREFERENCE_STATE));
 
   const updatePreference = <K extends keyof PreferenceState>(key: K, value: PreferenceState[K]) => {
     setPreferences((prev) => {
