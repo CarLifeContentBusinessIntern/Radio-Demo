@@ -136,12 +136,18 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const currentAudioUrl = useMemo(() => {
     if (!currentEpisodeData) return null;
 
-    if (!state.useOriginalAudio && currentEpisodeData.audioFile_dubbing) {
-      return currentEpisodeData.audioFile_dubbing;
-    }
+    const audioUrl =
+      !state.useOriginalAudio && currentEpisodeData.audioFile_dubbing
+        ? currentEpisodeData.audioFile_dubbing
+        : currentEpisodeData.audio_file || null;
 
-    return currentEpisodeData.audio_file || null;
-  }, [currentEpisodeData, state.useOriginalAudio]);
+    return audioUrl;
+  }, [
+    state.currentEpisodeId,
+    state.useOriginalAudio,
+    currentEpisodeData?.audio_file,
+    currentEpisodeData?.audioFile_dubbing,
+  ]);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -192,18 +198,31 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const startTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    startTimeRef.current = state.currentTime;
+  }, [state.currentTime]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentAudioUrl) return;
 
-    if (audio.src !== currentAudioUrl) {
+    const isNewSource = audio.src !== currentAudioUrl;
+
+    if (isNewSource) {
       audio.src = currentAudioUrl;
-      audio.currentTime = state.currentTime; // 여기서 한 번만 startTime 반영
+      audio.currentTime = startTimeRef.current;
     }
 
-    if (state.isPlaying) audio.play();
-    else audio.pause();
-  }, [currentAudioUrl, state.isPlaying, state.currentTime]);
+    if (state.isPlaying) {
+      audio.play().catch((err) => {
+        console.error('Audio play failed:', err);
+      });
+    } else {
+      audio.pause();
+    }
+  }, [currentAudioUrl, state.isPlaying]);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
