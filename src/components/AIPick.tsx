@@ -129,7 +129,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
           <ImageWithSkeleton
             src={PickleAIIcon}
             alt="Pickle AI"
-            className="w-14 h-14"
+            className="w-14 h-14 "
             skeletonClassName="rounded-full"
             baseColor="#2A2A2E"
             highlightColor="#3A3A3E"
