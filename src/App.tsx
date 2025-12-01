@@ -24,6 +24,7 @@ const ChannelDetailViewPage = lazy(() => import('./pages/ChannelDetailViewPage.t
 const ListViewPage = lazy(() => import('./pages/ListViewPage.tsx'));
 const PickleLivePage = lazy(() => import('./pages/PickleLivePage.tsx'));
 const VoiceSearch = lazy(() => import('./pages/VoiceSearch.tsx'));
+const AudioDramaPage = lazy(() => import('./pages/AudioDramaPage.tsx'));
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
@@ -31,10 +32,6 @@ import { OEMProvider } from './contexts/OEMContext.tsx';
 import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
 import { useTranslation } from 'react-i18next';
-import ListViewPage from './pages/ListViewPage.tsx';
-import PickleLivePage from './pages/PickleLivePage.tsx';
-import VoiceSearch from './pages/VoiceSearch.tsx';
-import AudioDramaPage from './pages/AudioDramaPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
