@@ -51,7 +51,12 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
       });
     } else {
       navigate(`/player/${episode.id}`, {
-        state: { isLive: false, playlist: playlist },
+        state: {
+          isLive: false,
+          playlist: playlist,
+          originType: episode.origin_type,
+          recentSeriesId: episode.recent_series_id,
+        },
       });
     }
   };
