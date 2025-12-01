@@ -3,6 +3,7 @@ import { FaCaretDown } from 'react-icons/fa';
 import { useOEM } from '../contexts/OEMContext';
 import { useZoom } from '../contexts/ZoomContext';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface SettingItemProps {
   label: string;
@@ -93,6 +94,7 @@ const OEM_OPTIONS = [
 ];
 
 function SettingDemo() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { selectedZoom, setSelectedZoom } = useZoom();
   const [isZoomOpen, setIsZoomOpen] = useState(false);
@@ -119,7 +121,7 @@ function SettingDemo() {
   const settings = useMemo(
     () => [
       {
-        label: '화면 확대',
+        label: t('setting.zoom'),
         dropdownRef: zoomDropdownRef,
         isOpen: isZoomOpen,
         toggleOpen: () => setIsZoomOpen((prev) => !prev),
@@ -132,7 +134,7 @@ function SettingDemo() {
         options: ZOOM_OPTIONS,
       },
       {
-        label: 'OEM 콘텐츠',
+        label: t('setting.oem'),
         dropdownRef: OEMdropdownRef,
         isOpen: isOEMOpen,
         toggleOpen: () => setIsOEMOpen((prev) => !prev),

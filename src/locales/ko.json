@@ -64,7 +64,12 @@
     "version-info": "버전 정보",
     "setting-function": "기능 설정",
     "setting-demo": "데모 세팅",
-    "delete-account": "서비스 탈퇴"
+    "delete-account": "서비스 탈퇴",
+    "live": "Live",
+    "radio": "라디오",
+    "AI-voice-search": "AI 음성 검색",
+    "zoom": "화면 확대",
+    "oem": "OEM 콘텐츠"
   },
   "toast": {
     "no-contents": "콘텐츠 준비 중입니다"

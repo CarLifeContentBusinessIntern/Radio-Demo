@@ -65,7 +65,12 @@
     "version-info": "Version Information",
     "setting-function": "Feature Settings",
     "setting-demo": "Demo Settings",
-    "delete-account": "Delete Account"
+    "delete-account": "Delete Account",
+    "live": "Live",
+    "radio": "Radio",
+    "AI-voice-search": "AI Voice Search",
+    "zoom": "Zoom",
+    "oem": "OEM Contents"
   },
   "toast": {
     "no-contents": "Preparing content"

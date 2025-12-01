@@ -39,7 +39,7 @@ function SettingPage() {
     {
       id: 'demo',
       label: t('setting.setting-demo'),
-      onClick: () => navigate('/setting/demo', { state: { title: t('setting.set-demo') } }),
+      onClick: () => navigate('/setting/demo', { state: { title: t('setting.setting-demo') } }),
       textColor: 'text-gray-400',
     },
     {
