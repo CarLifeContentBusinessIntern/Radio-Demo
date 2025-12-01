@@ -14,7 +14,7 @@ function AIPickAfter() {
   const navigate = useNavigate();
   const { preferences } = usePreference();
 
-  const { data: episodes } = useQuery({
+  const { data: episodes, refetch } = useQuery({
     queryKey: ['random-episodes'],
     queryFn: fetchRandomEpisodes,
   });
@@ -25,6 +25,7 @@ function AIPickAfter() {
     <div
       className="relative w-full overflow-hidden cursor-pointer"
       onClick={() => {
+        refetch();
         navigate(`/player/${episodes?.[0].id}`, {
           state: { isLive: false, playlist: episodes, originType: 'program' },
         });
