@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -25,11 +25,24 @@ export default function ImageWithSkeleton({
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerRatio, setContainerRatio] = useState(1);
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setContainerRatio(width / height);
-    }
+  useLayoutEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const measure = () => {
+      const { width, height } = element.getBoundingClientRect();
+      if (height > 0) {
+        setContainerRatio(width / height);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(measure);
+    measure();
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {

@@ -15,7 +15,7 @@ function AIPickAfter() {
   const { preferences } = usePreference();
 
   const { data: episodes, refetch } = useQuery({
-    queryKey: ['random-episodes'],
+    queryKey: ['random-episodes', 'daily-mix'],
     queryFn: fetchRandomEpisodes,
   });
 
