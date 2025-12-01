@@ -33,11 +33,11 @@ function PickleLive() {
   }, []);
   return (
     <div className="flex flex-col h-full">
-      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')} 🔴</div>
+      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')}</div>
       <div
         ref={containerRef}
         className="relative w-full aspect-square"
-        onClick={() => navigate('/player/live', { state: { title: 'P!ckle On-Air 🔴' } })}
+        onClick={() => navigate('/player/live', { state: { title: t('sections.on-air') } })}
       >
         {/* CircleViewItem 이미지 90% */}
         <div
