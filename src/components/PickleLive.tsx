@@ -3,8 +3,10 @@ import PickleLiveImage from '../assets/pickle_live.png';
 import { useNavigate } from 'react-router-dom';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
+import { useTranslation } from 'react-i18next';
 function PickleLive() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentSize, setParentSize] = useState(0);
@@ -27,7 +29,7 @@ function PickleLive() {
   }, []);
   return (
     <div className="flex flex-col h-full">
-      <div className="text-lg mb-7 font-medium h-7 flex ">P!ckle On-Air 🔴</div>
+      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')} 🔴</div>
       <div
         ref={containerRef}
         className="relative w-full aspect-square"

@@ -8,7 +8,8 @@
     "setting": "설정"
   },
   "sections": {
-    "listening": "오비고님이 듣고 있는 에피소드",
+    "on-air": "P!ckle On-Air",
+    "recent": "의 최근 청취",
     "pickle-pick": "P!ckle P!ck",
     "monthly-pickle": "월간 픽클",
     "drive-mood": "Drive Mood",
@@ -26,7 +27,9 @@
   },
   "button": {
     "re-recomend": "다시 추천받기",
-    "loading-recomend": "추천 불러오는 중..."
+    "loading-recomend": "추천 불러오는 중...",
+    "reset": "초기화",
+    "save": "저장하기"
   },
   "placeholder": {
     "voice-search": "픽클! 지금 시간대에 들을만한 팟캐스트 있을까?",
@@ -50,6 +53,9 @@
     "banner-after-2-end": "를 준비했어요",
     "banner-after-3": "고를 필요 없이 바로 재생"
   },
+  "preference": {
+    "title": "AI 추천 정확도를 높이는 선택 옵션입니다. 자유롭게 선택해 주세요."
+  },
   "setting": {
     "logout": "로그아웃",
     "set-preference": "취향 관리",
@@ -62,5 +68,8 @@
   },
   "toast": {
     "no-contents": "콘텐츠 준비 중입니다"
+  },
+  "user": {
+    "name": "조이"
   }
 }

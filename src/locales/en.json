@@ -8,7 +8,8 @@
     "setting": "Setting"
   },
   "sections": {
-    "listening": "Episodes Obigo is listening to",
+    "on-air": "P!ckle On-Air",
+    "recent": "Recently Listened to",
     "pickle-pick": "P!ckle P!ck",
     "monthly-pickle": "Monthly Pickle",
     "drive-mood": "Drive Mood",
@@ -62,5 +63,8 @@
   },
   "toast": {
     "no-contents": "Preparing content"
+  },
+  "user": {
+    "name": "Joy"
   }
 }
