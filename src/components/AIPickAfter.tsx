@@ -6,20 +6,26 @@ import { fetchRandomEpisodes } from '../api/randomEpisodes';
 import BannerBackground from '../assets/ai_pick_banner_background_after.png';
 import BannerIcon from '../assets/ai_pick_banner_dailymix_after.png';
 import AIPick from './AIPick';
+import { usePreference } from '../contexts/PreferenceContext';
+import { MOOD_PREFIX } from '../constants/preferenceQuestions';
 
 function AIPickAfter() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { preferences } = usePreference();
 
-  const { data: episodes } = useQuery({
-    queryKey: ['random-episodes'],
+  const { data: episodes, refetch } = useQuery({
+    queryKey: ['random-episodes', 'daily-mix'],
     queryFn: fetchRandomEpisodes,
   });
+
+  const moodPrefix = preferences.purpose.length > 0 ? MOOD_PREFIX[preferences.purpose[0]] : '';
 
   const bannerContent = (
     <div
       className="relative w-full overflow-hidden cursor-pointer"
       onClick={() => {
+        refetch();
         navigate(`/player/${episodes?.[0].id}`, {
           state: { isLive: false, playlist: episodes, originType: 'program' },
         });
@@ -50,7 +56,13 @@ function AIPickAfter() {
     </div>
   );
 
-  return <AIPick bannerContent={bannerContent} sectionTitleKey="sections.ai-pick-after-recomend" />;
+  return (
+    <AIPick
+      bannerContent={bannerContent}
+      sectionTitleKey="sections.ai-pick-after-recomend"
+      moodPrefix={moodPrefix}
+    />
+  );
 }
 
 export default AIPickAfter;

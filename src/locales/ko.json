@@ -21,8 +21,8 @@
     "curation-channel": "큐레이션/채널",
     "episode": "에피소드",
     "channel": "채널",
-    "ai-pick-before-recomend": "최근 청취한 채널 유사한 채널 추천",
-    "ai-pick-after-recomend": "피곤한 조이님을 위한 추천"
+    "ai-pick-before-recomend": "최근 청취한 채널 유사한 에피소드 추천",
+    "ai-pick-after-recomend": "조이님을 위한 추천"
   },
   "button": {
     "re-recomend": "다시 추천받기",
