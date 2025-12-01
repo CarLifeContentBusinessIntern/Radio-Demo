@@ -126,8 +126,8 @@ function PickleLivePage() {
               {/* 카드 우측 - 이미지 영역 */}
               <div className="relative flex-shrink-0 self-stretch w-52">
                 <img
-                  src="/tvN_channel_logo.png"
-                  alt="tvN Channel Logo"
+                  src={isKorean ? '/tvN_channel_logo.png' : '/teamcoco_channel_logo.png'}
+                  alt="Channel Logo"
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -149,7 +149,7 @@ function PickleLivePage() {
           {/* 오른쪽 하단 - 이미지 카드 */}
           <div className="rounded-2xl h-52 overflow-hidden">
             <img
-              src="/mcdonald_ad.png"
+              src={isKorean ? '/mcdonald_ad.png' : '/mcdonald_ad_en.png'}
               alt="McDonald's Drive-thru Advertisement"
               className="w-full h-full object-cover"
             />
