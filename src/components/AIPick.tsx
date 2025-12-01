@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
 import { useNavigate } from 'react-router-dom';
+import { useVersion } from '../contexts/VersionContext';
 
 const EPISODE_COUNT = 5;
 
@@ -23,6 +24,7 @@ interface AIPickProps {
 function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { isAIVoiceSearchVersion } = useVersion();
 
   const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
     const { data, error } = await supabase
@@ -119,22 +121,24 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
 
   return (
     <div className="pt-7 pr-20 flex flex-col gap-8">
-      <div
-        className="flex items-center gap-6 cursor-pointer"
-        onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
-      >
-        <ImageWithSkeleton
-          src={PickleAIIcon}
-          alt="Pickle AI"
-          className="w-14 h-14"
-          skeletonClassName="rounded-full"
-          baseColor="#2A2A2E"
-          highlightColor="#3A3A3E"
-        />
-        <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
-          {t('placeholder.voice-search')}
+      {isAIVoiceSearchVersion && (
+        <div
+          className="flex items-center gap-6 cursor-pointer"
+          onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
+        >
+          <ImageWithSkeleton
+            src={PickleAIIcon}
+            alt="Pickle AI"
+            className="w-14 h-14"
+            skeletonClassName="rounded-full"
+            baseColor="#2A2A2E"
+            highlightColor="#3A3A3E"
+          />
+          <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
+            {t('placeholder.voice-search')}
+          </div>
         </div>
-      </div>
+      )}
 
       {bannerContent}
 
