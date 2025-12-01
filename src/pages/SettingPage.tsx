@@ -10,7 +10,8 @@ function SettingPage() {
     {
       id: 'preference',
       label: t('setting.set-preference'),
-      onClick: () => navigate('/setting/preference', { state: { title: '취향 설정' } }),
+      onClick: () =>
+        navigate('/setting/preference', { state: { title: t('setting.set-preference') } }),
       showArrow: true,
     },
     {
@@ -31,13 +32,14 @@ function SettingPage() {
     {
       id: 'function',
       label: t('setting.setting-function'),
-      onClick: () => navigate('/setting/function', { state: { title: '기능 설정' } }),
+      onClick: () =>
+        navigate('/setting/function', { state: { title: t('setting.setting-function') } }),
       showArrow: true,
     },
     {
       id: 'demo',
       label: t('setting.setting-demo'),
-      onClick: () => navigate('/setting/demo', { state: { title: '데모 세팅' } }),
+      onClick: () => navigate('/setting/demo', { state: { title: t('setting.set-demo') } }),
       textColor: 'text-gray-400',
     },
     {
