@@ -9,6 +9,7 @@ interface ImageWithSkeletonProps {
   skeletonClassName: string;
   baseColor?: string;
   highlightColor?: string;
+  isRecent?: boolean;
 }
 
 export default function ImageWithSkeleton({
@@ -18,6 +19,7 @@ export default function ImageWithSkeleton({
   skeletonClassName = '',
   baseColor = '#444',
   highlightColor = 'gray',
+  isRecent = false,
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [objectFit, setObjectFit] = useState<'object-contain' | 'object-cover'>('object-cover');
@@ -38,13 +40,13 @@ export default function ImageWithSkeleton({
 
   return (
     <div className={`relative overflow-hidden flex items-center justify-center ${className}`}>
-      {isLoaded && src && objectFit === 'object-contain' && (
+      {/* 최근 청취 큐레이션/채널에 쓰일 경우 배경 블러 추가하지 않기 */}
+      {!isRecent && isLoaded && src && objectFit === 'object-contain' && (
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl"
           style={{ backgroundImage: `url('${src}')` }}
         />
       )}
-
       {/* Skeleton */}
       {!isLoaded && (
         <Skeleton
@@ -53,7 +55,6 @@ export default function ImageWithSkeleton({
           highlightColor={highlightColor}
         />
       )}
-
       {/* Image */}
       <img
         src={src ?? ''}

@@ -60,7 +60,6 @@ function RecentPage() {
       <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
         {recentSeriesPrograms?.map((item) => {
           const imgUrl = item.img_url ?? item.episode?.img_url;
-
           return (
             <GridViewItem
               key={item.id}
@@ -68,6 +67,7 @@ function RecentPage() {
               title={item.title}
               subTitle={item.subtitle}
               isRounded={true}
+              isRecent={true}
               onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
             />
           );
