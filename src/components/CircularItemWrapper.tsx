@@ -45,6 +45,8 @@ function CircularItemWrapper({ episode }: CircularItemWrapperProps) {
           isLive: false,
           playlist: playlist,
           isPickle: true,
+          originType: episode.origin_type,
+          recentSeriesId: episode.recent_series_id,
         },
       });
     } else {
