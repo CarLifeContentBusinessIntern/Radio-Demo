@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import KR from '../assets/ko.png';
-import US from '../assets/en.png';
+import US from '../assets/us.png';
 
 interface Country {
   code: string;

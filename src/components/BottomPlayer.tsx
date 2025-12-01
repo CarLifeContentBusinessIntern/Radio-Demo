@@ -90,7 +90,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   if (!hasBeenActivated) return null;
 
-  const imageUrl = currentEpisodeData?.img_url || currentEpisodeData?.programs?.img_url;
+  const imageUrl = isOnAirEpisode
+    ? liveEpisode.img_url
+    : currentEpisodeData?.img_url || currentEpisodeData?.programs?.img_url;
 
   return (
     <div
