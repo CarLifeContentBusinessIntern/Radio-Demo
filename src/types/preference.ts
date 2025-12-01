@@ -16,11 +16,21 @@ export interface PreferenceOption {
   value: string;
 }
 
+export type Translation = {
+  ko: string;
+  en: string;
+};
+
+type Option = {
+  label: Translation;
+  value: string;
+};
+
 export interface PreferenceQuestion {
   id: keyof PreferenceState;
-  question: string;
+  question: Translation;
   type: 'single' | 'multiple' | 'slider';
-  options?: PreferenceOption[];
+  options?: Option[];
   min?: number;
   max?: number;
   step?: number;

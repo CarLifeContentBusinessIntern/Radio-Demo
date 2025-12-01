@@ -1,6 +1,7 @@
 import { PiToggleLeftLight, PiToggleRightFill } from 'react-icons/pi';
 import { useVersion } from '../contexts/VersionContext';
 import { memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SettingItemProps {
   label: string;
@@ -24,6 +25,8 @@ const SettingItem = memo(({ label, isEnabled, onToggle }: SettingItemProps) => (
 ));
 
 function SettingFunction() {
+  const { t } = useTranslation();
+
   const {
     isLiveVersion,
     toggleLiveVersion,
@@ -35,10 +38,10 @@ function SettingFunction() {
 
   const settings = useMemo(
     () => [
-      { label: 'Live', isEnabled: isLiveVersion, onToggle: toggleLiveVersion },
-      { label: '라디오', isEnabled: isRadioVersion, onToggle: toggleRadioVersion },
+      { label: t('setting.live'), isEnabled: isLiveVersion, onToggle: toggleLiveVersion },
+      { label: t('setting.radio'), isEnabled: isRadioVersion, onToggle: toggleRadioVersion },
       {
-        label: 'AI 음성 검색',
+        label: t('setting.AI-voice-search'),
         isEnabled: isAIVoiceSearchVersion,
         onToggle: toggleAIVoiceSearchVersion,
       },
@@ -50,6 +53,7 @@ function SettingFunction() {
       toggleLiveVersion,
       toggleRadioVersion,
       toggleAIVoiceSearchVersion,
+      t,
     ]
   );
 

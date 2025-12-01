@@ -8,7 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
 import ImageWithSkeleton from './ImageWithSkeleton';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { useTranslation } from 'react-i18next';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
 
 type BottomPlayerProps = {
   id: number;
@@ -34,7 +35,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     handlePlayBarPrev,
   } = usePlayer();
 
-  const isOnAirEpisode = currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
+  const { i18n } = useTranslation();
+  const isKorean = i18n.language === 'ko';
+  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+
+  const isOnAirEpisode = currentEpisodeData?.id === liveEpisode.id;
 
   const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
 
@@ -117,7 +122,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="text-lg font-semibold truncate">
           {isOnAirEpisode
-            ? LIVE_STREAM_EPISODE.title
+            ? liveEpisode.title
             : isLive
               ? currentEpisodeData?.programs?.title
               : currentEpisodeData?.title}
