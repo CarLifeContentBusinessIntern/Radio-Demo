@@ -10,7 +10,12 @@ function AIPickBefore() {
   const { t } = useTranslation();
 
   const bannerContent = (
-    <div className="relative w-full cursor-pointer" onClick={() => navigate('/setting/preference')}>
+    <div
+      className="relative w-full cursor-pointer"
+      onClick={() =>
+        navigate('/setting/preference', { state: { title: t('setting.set-preference') } })
+      }
+    >
       <img
         src={BannerBackground}
         className="cursor-pointer w-full h-40 rounded-3xl object-cover"

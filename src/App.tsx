@@ -1,32 +1,35 @@
-import { useEffect, useRef } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { PlayerProvider, usePlayer } from './contexts/PlayerContext.tsx';
 import { useVersion, VersionProvider } from './contexts/VersionContext.tsx';
 import Layout from './layouts/Layout.tsx';
 import PlayerLayout from './layouts/PlayerLayout.tsx';
-import CategoryAndRadioPage from './pages/CategoryAndRadioPage.tsx';
-import GridViewPage from './pages/GridViewPage.tsx';
-import HomePage from './pages/HomePage.tsx';
-import Player from './pages/Player.tsx';
-import Radio from './pages/Radio.tsx';
-import RecentPage from './pages/RecentPage.tsx';
-import Search from './pages/Search.tsx';
-import SettingPage from './pages/SettingPage.tsx';
-import PopularChannelPage from './pages/PopularChannelPage.tsx';
-// import LikedChannelViewPage from './pages/LikedChannelViewPage.tsx';
-// import LikedChannelPage from './pages/LikedChannelPage.tsx';
+
+const CategoryAndRadioPage = lazy(() => import('./pages/CategoryAndRadioPage.tsx'));
+const RecentPage = lazy(() => import('./pages/RecentPage.tsx'));
+const AIPick = lazy(() => import('./pages/AIPick.tsx'));
+const Search = lazy(() => import('./pages/Search.tsx'));
+const SettingPage = lazy(() => import('./pages/SettingPage.tsx'));
+const SettingFunction = lazy(() => import('./pages/SettingFunction.tsx'));
+const HomePage = lazy(() => import('./pages/HomePage.tsx'));
+const GridViewPage = lazy(() => import('./pages/GridViewPage.tsx'));
+const Player = lazy(() => import('./pages/Player.tsx'));
+const Radio = lazy(() => import('./pages/Radio.tsx'));
+const PopularChannelPage = lazy(() => import('./pages/PopularChannelPage.tsx'));
+const PicklePickTemplate = lazy(() => import('./pages/PicklePickTemplate.tsx'));
+const SettingDemo = lazy(() => import('./pages/SettingDemo.tsx'));
+const Preference = lazy(() => import('./pages/Preference.tsx'));
+const ChannelDetailViewPage = lazy(() => import('./pages/ChannelDetailViewPage.tsx'));
+const ListViewPage = lazy(() => import('./pages/ListViewPage.tsx'));
+const PickleLivePage = lazy(() => import('./pages/PickleLivePage.tsx'));
+const VoiceSearch = lazy(() => import('./pages/VoiceSearch.tsx'));
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
-import PicklePickTemplate from './pages/PicklePickTemplate.tsx';
-import SettingFunction from './pages/SettingFunction.tsx';
-import SettingDemo from './pages/SettingDemo.tsx';
-import Preference from './pages/Preference.tsx';
 import { OEMProvider } from './contexts/OEMContext.tsx';
 import { PreferenceProvider } from './contexts/PreferenceContext.tsx';
 import { ZoomProvider } from './contexts/ZoomContext.tsx';
-import ChannelDetailViewPage from './pages/ChannelDetailViewPage.tsx';
-import AIPick from './pages/AIPick.tsx';
 import { useTranslation } from 'react-i18next';
 import ListViewPage from './pages/ListViewPage.tsx';
 import PickleLivePage from './pages/PickleLivePage.tsx';
@@ -65,6 +68,34 @@ function AppRoutes() {
   useEffect(() => {
     toast.dismiss();
   }, [location.pathname]);
+
+  useEffect(() => {
+    const highPriorityTimer = setTimeout(() => {
+      import('./pages/Player.tsx');
+      import('./pages/Radio.tsx');
+      import('./pages/RecentPage.tsx');
+      import('./pages/AIPick.tsx');
+
+      const img1 = new Image();
+      img1.src = new URL('./assets/ai_pick_banner_background.png', import.meta.url).href;
+      const img2 = new Image();
+      img2.src = new URL('./assets/ai_pick_banner_icon.png', import.meta.url).href;
+      const img3 = new Image();
+      img3.src = new URL('./assets/ai_pick_banner_background_after.png', import.meta.url).href;
+      const img4 = new Image();
+      img4.src = new URL('./assets/ai_pick_banner_dailymix_after.png', import.meta.url).href;
+    }, 2000);
+
+    const mediumPriorityTimer = setTimeout(() => {
+      import('./pages/Search.tsx');
+      import('./pages/ChannelDetailViewPage.tsx');
+    }, 4000);
+
+    return () => {
+      clearTimeout(highPriorityTimer);
+      clearTimeout(mediumPriorityTimer);
+    };
+  }, []);
 
   return (
     <Routes>

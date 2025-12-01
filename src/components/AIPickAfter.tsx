@@ -19,7 +19,8 @@ function AIPickAfter() {
     queryFn: fetchRandomEpisodes,
   });
 
-  const moodPrefix = preferences.purpose.length > 0 ? MOOD_PREFIX[preferences.purpose[0]] : '';
+  const moodPrefix =
+    preferences.purpose.length > 0 ? MOOD_PREFIX[preferences.purpose[0]] : { ko: '', en: '' };
 
   const bannerContent = (
     <div

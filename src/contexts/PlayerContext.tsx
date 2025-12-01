@@ -13,7 +13,8 @@ import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 import { useQueryClient } from '@tanstack/react-query';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+import { useTranslation } from 'react-i18next';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -93,6 +94,10 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const activePlaylistRef = useRef<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
 
+  const { i18n } = useTranslation();
+  const isKorean = i18n.language === 'ko';
+  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,7 +112,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
       } else if (data) {
-        setEpisodes([LIVE_STREAM_EPISODE, ...data]);
+        setEpisodes([liveEpisode, ...data]);
       }
     }
 
@@ -264,8 +269,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       let episode;
       let startTime = 0;
 
-      if (id === LIVE_STREAM_EPISODE.id) {
-        episode = LIVE_STREAM_EPISODE;
+      if (id === liveEpisode.id) {
+        episode = liveEpisode;
         startTime = 0;
       } else {
         // 최신 데이터 가져오기 (최신 재생 시점을 위해)
@@ -378,7 +383,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
-          const isOnAir = nextEpisode.id === LIVE_STREAM_EPISODE.id;
+          const isOnAir = nextEpisode.id === liveEpisode.id;
 
           if (!isPlayBar) {
             if (isPodcast) {
@@ -628,7 +633,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   ) {
     if (!episodeId) return;
     if (originType === null) return;
-    if (episodeId === LIVE_STREAM_EPISODE.id) return;
+    if (episodeId === liveEpisode.id) return;
 
     const updateData: {
       listened_duration: number;

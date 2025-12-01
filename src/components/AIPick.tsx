@@ -12,19 +12,21 @@ import type { EpisodeType } from '../types/episode';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
 import { useNavigate } from 'react-router-dom';
 import { useVersion } from '../contexts/VersionContext';
+import type { Translation } from '../types/preference';
 
 const EPISODE_COUNT = 5;
 
 interface AIPickProps {
   bannerContent: React.ReactNode;
   sectionTitleKey: string;
-  moodPrefix?: string;
+  moodPrefix?: Translation;
 }
 
-function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps) {
-  const { t } = useTranslation();
+function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' } }: AIPickProps) {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isAIVoiceSearchVersion } = useVersion();
+  const isKorean = i18n.language === 'ko';
 
   const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
     const { data, error } = await supabase
@@ -126,14 +128,16 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
           className="flex items-center gap-6 cursor-pointer"
           onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
         >
-          <ImageWithSkeleton
-            src={PickleAIIcon}
-            alt="Pickle AI"
-            className="w-14 h-14"
-            skeletonClassName="rounded-full"
-            baseColor="#2A2A2E"
-            highlightColor="#3A3A3E"
-          />
+          <div>
+            <ImageWithSkeleton
+              src={PickleAIIcon}
+              alt="Pickle AI"
+              className="w-14 h-14"
+              skeletonClassName="rounded-full"
+              baseColor="#2A2A2E"
+              highlightColor="#3A3A3E"
+            />
+          </div>
           <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
             {t('placeholder.voice-search')}
           </div>
@@ -144,9 +148,10 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
 
       <div className="flex flex-col gap-6">
         <p className="text-base font-medium">
-          {moodPrefix} {t(sectionTitleKey)}
+          {isKorean
+            ? `${moodPrefix.ko} ${t(sectionTitleKey)}`
+            : `For ${moodPrefix.en} ${t(sectionTitleKey)}`}
         </p>
-
         <div className="flex flex-col gap-3">
           {episodes?.map((ep) => (
             <ListViewItem
@@ -166,7 +171,6 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = '' }: AIPickProps
             />
           ))}
         </div>
-
         <div>
           <button
             onClick={() => refetch()}
