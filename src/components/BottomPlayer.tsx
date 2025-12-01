@@ -128,7 +128,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       </div>
 
       <div className="flex w-full justify-between max-w-60 mr-4" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={25} onClick={handlePlayBarPrev} />
+        <TbPlayerSkipBackFilled size={25} onClick={() => !isOnAirEpisode && handlePlayBarPrev()} />
 
         <button
           className="relative w-6 h-6 disabled:cursor-not-allowed"
@@ -144,7 +144,10 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           )}
         </button>
 
-        <TbPlayerSkipForwardFilled size={25} onClick={handlePlayBarNext} />
+        <TbPlayerSkipForwardFilled
+          size={25}
+          onClick={() => !isOnAirEpisode && handlePlayBarNext()}
+        />
       </div>
     </div>
   );
