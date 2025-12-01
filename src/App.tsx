@@ -31,6 +31,7 @@ import { useTranslation } from 'react-i18next';
 import ListViewPage from './pages/ListViewPage.tsx';
 import PickleLivePage from './pages/PickleLivePage.tsx';
 import VoiceSearch from './pages/VoiceSearch.tsx';
+import AudioDramaPage from './pages/AudioDramaPage.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -191,6 +192,11 @@ function AppRoutes() {
           <Route path="/episodes/recent" element={<RecentPage />} />
           <Route path="/ai-pick" element={<AIPick />} />
           <Route path="/popular" element={<PopularChannelPage />} />
+        </Route>
+      </Route>
+      <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="/audio-drama" element={<AudioDramaPage />} />
         </Route>
       </Route>
     </Routes>
