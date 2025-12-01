@@ -232,6 +232,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
 
+      // 재생하기 직전에 이전 에피소드의 시간 기록
+      if (currentEpisodeRef.current && audioRef.current) {
+        saveListeningHistory(
+          currentEpisodeRef.current,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
+
       let episode;
       let startTime = 0;
 
