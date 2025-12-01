@@ -127,7 +127,9 @@ function PickleLivePage() {
               <div className="relative flex-shrink-0 self-stretch w-52">
                 <img
                   src={isKorean ? '/tvN_channel_logo.png' : '/teamcoco_channel_logo.png'}
-                  alt="Channel Logo"
+                  alt={
+                    isKorean ? t('live.tvn-channel-logo-alt') : t('live.teamcoco-channel-logo-alt')
+                  }
                   className="w-full h-full object-cover"
                 />
               </div>

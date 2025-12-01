@@ -138,7 +138,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
               highlightColor="#3A3A3E"
             />
           </div>
-          <div className="text-[#422525] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
+          <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
             {t('placeholder.voice-search')}
           </div>
         </div>
