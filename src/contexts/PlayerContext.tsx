@@ -13,7 +13,7 @@ import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 import { useQueryClient } from '@tanstack/react-query';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
 
 interface PlayerState {
   currentEpisodeId: number | null;

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePlayer } from '../contexts/PlayerContext';
 import { AiOutlineLoading } from 'react-icons/ai';
 import ImageWithSkeleton from './ImageWithSkeleton';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
 
 type BottomPlayerProps = {
   id: number;
