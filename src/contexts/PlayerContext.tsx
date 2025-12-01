@@ -13,7 +13,7 @@ import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { EpisodeType } from '../types/episode';
 import { useQueryClient } from '@tanstack/react-query';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleOnAir';
+import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -136,12 +136,18 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const currentAudioUrl = useMemo(() => {
     if (!currentEpisodeData) return null;
 
-    if (!state.useOriginalAudio && currentEpisodeData.audioFile_dubbing) {
-      return currentEpisodeData.audioFile_dubbing;
-    }
+    const audioUrl =
+      !state.useOriginalAudio && currentEpisodeData.audioFile_dubbing
+        ? currentEpisodeData.audioFile_dubbing
+        : currentEpisodeData.audio_file || null;
 
-    return currentEpisodeData.audio_file || null;
-  }, [currentEpisodeData, state.useOriginalAudio]);
+    return audioUrl;
+  }, [
+    state.currentEpisodeId,
+    state.useOriginalAudio,
+    currentEpisodeData?.audio_file,
+    currentEpisodeData?.audioFile_dubbing,
+  ]);
 
   useEffect(() => {
     audioRef.current = new Audio();
@@ -192,18 +198,31 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const startTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    startTimeRef.current = state.currentTime;
+  }, [state.currentTime]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentAudioUrl) return;
 
-    if (audio.src !== currentAudioUrl) {
+    const isNewSource = audio.src !== currentAudioUrl;
+
+    if (isNewSource) {
       audio.src = currentAudioUrl;
-      audio.currentTime = state.currentTime; // 여기서 한 번만 startTime 반영
+      audio.currentTime = startTimeRef.current;
     }
 
-    if (state.isPlaying) audio.play();
-    else audio.pause();
-  }, [currentAudioUrl, state.isPlaying, state.currentTime]);
+    if (state.isPlaying) {
+      audio.play().catch((err) => {
+        console.error('Audio play failed:', err);
+      });
+    } else {
+      audio.pause();
+    }
+  }, [currentAudioUrl, state.isPlaying]);
 
   useEffect(() => {
     if (state.currentEpisodeId === null && episodes.length > 0) {
@@ -231,6 +250,16 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       isOnAir = false
     ) => {
       const type: 'radio' | 'podcast' = isPodcast ? 'podcast' : 'radio';
+
+      // 재생하기 직전에 이전 에피소드의 시간 기록
+      if (currentEpisodeRef.current && audioRef.current) {
+        saveListeningHistory(
+          currentEpisodeRef.current,
+          audioRef.current.currentTime,
+          state.originType,
+          state.recentSeriesId
+        );
+      }
 
       let episode;
       let startTime = 0;
@@ -365,7 +394,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else if (isOnAir) {
               navigate(`/player/live`, {
                 replace: true,
-                state: { isOnAir: true, playlist: playlist },
+                state: { isOnAir: true, playlist: [] },
               });
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {

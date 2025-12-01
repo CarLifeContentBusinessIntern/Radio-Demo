@@ -142,3 +142,13 @@ export const DEFAULT_PREFERENCE_STATE = {
   companion: ['alone', 'friend', 'pet'],
   diversity: 50,
 };
+
+export const MOOD_PREFIX: Record<string, string> = {
+  mood_change: '기분전환이 필요한',
+  tired: '피곤한',
+  stress: '스트레스 받은',
+  relaxed: '여유로운',
+  tense: '긴장한',
+  focused: '집중한',
+  curious: '궁금한',
+};
