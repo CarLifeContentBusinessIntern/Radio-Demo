@@ -25,12 +25,16 @@ export default function ImageWithSkeleton({
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
     const imageRatio = img.naturalWidth / img.naturalHeight;
-    const containerRatio = 16 / 9;
 
-    if (Math.abs(imageRatio - containerRatio) > 0.1) {
-      setObjectFit('object-contain');
-    } else {
-      setObjectFit('object-cover');
+    const container = img.parentElement;
+    if (container) {
+      const containerRatio = container.clientWidth / container.clientHeight;
+
+      if (Math.abs(imageRatio - containerRatio) > 0.1) {
+        setObjectFit('object-contain');
+      } else {
+        setObjectFit('object-cover');
+      }
     }
 
     setIsLoaded(true);
