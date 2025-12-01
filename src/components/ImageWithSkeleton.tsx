@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -23,27 +23,69 @@ export default function ImageWithSkeleton({
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [objectFit, setObjectFit] = useState<'object-contain' | 'object-cover'>('object-cover');
+  const [needsBlur, setNeedsBlur] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerRatio, setContainerRatio] = useState(1);
+
+  useLayoutEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const measure = () => {
+      const { width, height } = element.getBoundingClientRect();
+      if (height > 0) {
+        setContainerRatio(width / height);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(measure);
+    measure();
+    resizeObserver.observe(element);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     const img = e.currentTarget;
     const imageRatio = img.naturalWidth / img.naturalHeight;
-    const containerRatio = 16 / 9;
 
-    if (Math.abs(imageRatio - containerRatio) > 0.1) {
-      setObjectFit('object-contain');
+    // 컨테이너가 정사각형인 경우 (1:1 비율)
+    if (Math.abs(containerRatio - 1) < 0.1) {
+      // 이미지가 정사각형이 아니면 블러 배경 표시
+      if (Math.abs(imageRatio - 1) > 0.1) {
+        setNeedsBlur(true);
+        setObjectFit('object-contain');
+      } else {
+        setNeedsBlur(false);
+        setObjectFit('object-cover');
+      }
     } else {
-      setObjectFit('object-cover');
+      // 컨테이너가 직사각형인 경우 (기존 로직)
+      if (Math.abs(imageRatio - containerRatio) > 0.1) {
+        setObjectFit('object-contain');
+        setNeedsBlur(true);
+      } else {
+        setObjectFit('object-cover');
+        setNeedsBlur(false);
+      }
     }
 
     setIsLoaded(true);
   };
 
   return (
-    <div className={`relative overflow-hidden flex items-center justify-center ${className}`}>
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden flex items-center justify-center ${className}`}
+    >
+      {/* 블러 배경 */}
       {/* 최근 청취 큐레이션/채널에 쓰일 경우 배경 블러 추가하지 않기 */}
-      {!isRecent && isLoaded && src && objectFit === 'object-contain' && (
+
+      {!isRecent && isLoaded && src && needsBlur && (
         <div
-          className="absolute inset-0 bg-cover bg-center blur-2xl"
+          className="absolute inset-0 bg-cover bg-center blur-2xl scale-110"
           style={{ backgroundImage: `url('${src}')` }}
         />
       )}
