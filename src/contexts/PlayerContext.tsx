@@ -394,7 +394,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             } else if (isOnAir) {
               navigate(`/player/live`, {
                 replace: true,
-                state: { isOnAir: true, playlist: {} },
+                state: { isOnAir: true, playlist: [] },
               });
             } else if (state.isLive) {
               navigate(`/player/${nextEpisode.id}/live`, {
