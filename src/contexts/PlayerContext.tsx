@@ -60,6 +60,8 @@ interface PlayerContextType extends PlayerState {
   setUseOriginalAudio: (useOriginal: boolean) => void;
   playedDurations: Record<number, number>;
   setPlayedDurations: (callback: (prev: Record<number, number>) => Record<number, number>) => void;
+  changeSpeed: () => void;
+  playbackRate: number;
 }
 
 const initialPlayerState: PlayerState = {
@@ -93,6 +95,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [episodes, setEpisodes] = useState<EpisodeType[]>([]);
   const activePlaylistRef = useRef<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
+  const [playbackRate, setPlaybackRate] = useState(1.0);
 
   const { isEnglish } = useIsEnglish();
   const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
@@ -597,6 +600,17 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }, 100);
   }, []);
 
+  const changeSpeed = () => {
+    const speeds = [1.0, 1.5, 2.0];
+    const idx = speeds.indexOf(playbackRate);
+    const next = speeds[(idx + 1) % speeds.length];
+    setPlaybackRate(next);
+
+    if (audioRef.current) {
+      audioRef.current.playbackRate = next;
+    }
+  };
+
   const [playedDurations, setPlayedDurations] = useState<Record<number, number>>({});
 
   const contextValue: PlayerContextType = {
@@ -621,6 +635,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     setUseOriginalAudio,
     playedDurations,
     setPlayedDurations,
+    changeSpeed,
+    playbackRate,
   };
 
   //최근 들은 시점 저장

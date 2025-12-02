@@ -15,7 +15,7 @@ function RecentEpisode() {
 
   return (
     <div>
-      <div className="text-lg mb-7 font-medium h-7 flex flex-wrap">
+      <div className="text-lg mb-5 font-medium h-7 flex flex-wrap">
         {isEnglish ? (
           <>
             {t('sections.recent')}
