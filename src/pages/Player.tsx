@@ -51,6 +51,8 @@ function Player() {
     closePlaylist,
     useOriginalAudio,
     setUseOriginalAudio,
+    playbackRate,
+    changeSpeed,
   } = usePlayer();
 
   const effectiveIsLive = isLive || liveStatus;
@@ -274,9 +276,12 @@ function Player() {
             </div>
 
             <div className="flex items-center justify-between px-[5%] z-20">
-              <button className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}>
+              <button
+                className={`text-gray-400 ${effectiveIsLive ? 'invisible' : ''}`}
+                onClick={changeSpeed}
+              >
                 <img src={speedIcon} />
-                <p className="text-[12px]">1.0x</p>
+                <p className="text-[12px]">{playbackRate}x</p>
               </button>
 
               <button onClick={handlePlayPrev}>
