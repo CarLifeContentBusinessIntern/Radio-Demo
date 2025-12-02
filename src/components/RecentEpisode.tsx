@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { useThreeRecentEpisodes } from '../hooks/useThreeRecentEpisodes';
 import CircularItemWrapper from './CircularItemWrapper';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 
 function RecentEpisode() {
-  const { t, i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
+  const { t } = useTranslation();
+  const { isEnglish } = useIsEnglish();
 
   const { data: recentEpisodes, error } = useThreeRecentEpisodes();
   if (error) {
@@ -15,16 +16,16 @@ function RecentEpisode() {
   return (
     <div>
       <div className="text-lg mb-7 font-medium h-7 flex flex-wrap">
-        {isKorean ? (
-          <>
-            <span className="font-bold whitespace-nowrap">{t('user.name')}</span>
-            {t('sections.recent')}
-          </>
-        ) : (
+        {isEnglish ? (
           <>
             {t('sections.recent')}
             {'\u00a0'}
             <span className="font-bold whitespace-nowrap">{t('user.name')}</span>
+          </>
+        ) : (
+          <>
+            <span className="font-bold whitespace-nowrap">{t('user.name')}</span>
+            {t('sections.recent')}
           </>
         )}
       </div>

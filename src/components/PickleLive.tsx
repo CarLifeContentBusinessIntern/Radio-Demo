@@ -1,16 +1,17 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import PickleLiveImage from '../assets/pickle_live.png';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import PickleLiveImage from '../assets/pickle_live.png';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 import CircleViewItem from './CircleViewItem';
 import CircularProgressBar from './CircularProgressBar';
-import { useTranslation } from 'react-i18next';
-import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
 
 function PickleLive() {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
-  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+  const { t } = useTranslation();
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
 
   const containerRef = useRef<HTMLDivElement>(null);
   const [parentSize, setParentSize] = useState(0);
@@ -33,11 +34,11 @@ function PickleLive() {
   }, []);
   return (
     <div className="flex flex-col h-full">
-      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')} 🔴</div>
+      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')}</div>
       <div
         ref={containerRef}
         className="relative w-full aspect-square"
-        onClick={() => navigate('/player/live', { state: { title: 'Live P!ckle 🔴' } })}
+        onClick={() => navigate('/player/live', { state: { title: t('sections.on-air') } })}
       >
         {/* CircleViewItem 이미지 90% */}
         <div
