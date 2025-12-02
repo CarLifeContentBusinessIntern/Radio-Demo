@@ -632,6 +632,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     recentSeriesId: number | null = null
   ) {
     if (!episodeId) return;
+    if (originType === null) return;
     if (episodeId === liveEpisode.id) return;
 
     const updateData: {

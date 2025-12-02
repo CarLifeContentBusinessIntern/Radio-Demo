@@ -37,7 +37,7 @@ function PickleLive() {
       <div
         ref={containerRef}
         className="relative w-full aspect-square"
-        onClick={() => navigate('/player/live', { state: { title: 'P!ckle On-Air 🔴' } })}
+        onClick={() => navigate('/player/live', { state: { title: 'Live P!ckle 🔴' } })}
       >
         {/* CircleViewItem 이미지 90% */}
         <div
