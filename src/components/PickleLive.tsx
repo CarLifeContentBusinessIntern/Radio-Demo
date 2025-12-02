@@ -52,7 +52,7 @@ function PickleLive() {
         {parentSize > 0 && (
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
             <CircularProgressBar size={parentSize} isPickleLive={true} />
-            <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-[2px] bg-[#666666]" />
+            <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-[1px] bg-[#333]" />
           </div>
         )}
         {/* 제목/부제목 div는 이미지 컨테이너 안에 없으므로 여기선 제거 */}
