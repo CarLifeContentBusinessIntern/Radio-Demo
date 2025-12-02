@@ -19,11 +19,7 @@ export const VersionProvider = ({ children }: { children: ReactNode }) => {
   const { isEnglish } = useIsEnglish();
 
   useEffect(() => {
-    if (isEnglish) {
-      setIsRadioVersion(false);
-    } else {
-      setIsRadioVersion(true);
-    }
+    setIsRadioVersion(!isEnglish);
   }, [isEnglish]);
 
   const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
