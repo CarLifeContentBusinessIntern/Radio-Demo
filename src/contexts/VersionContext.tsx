@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type VersionContext = {
   isLiveVersion: boolean;
@@ -15,6 +16,16 @@ export const VersionProvider = ({ children }: { children: ReactNode }) => {
   const [isLiveVersion, setIsLiveVersion] = useState(false);
   const [isRadioVersion, setIsRadioVersion] = useState(true);
   const [isAIVoiceSearchVersion, setIsAIVoiceSearchVersion] = useState(true);
+  const { i18n } = useTranslation();
+  const isEnglish = i18n.language === 'en';
+
+  useEffect(() => {
+    if (isEnglish) {
+      setIsRadioVersion(false);
+    } else {
+      setIsRadioVersion(true);
+    }
+  }, [isEnglish]);
 
   const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
   const toggleRadioVersion = () => setIsRadioVersion((prev) => !prev);
