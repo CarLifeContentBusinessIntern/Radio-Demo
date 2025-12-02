@@ -112,7 +112,7 @@ export default function ImageWithSkeleton({
       )}
       {/* Image */}
       <img
-        src={isInView ? (src ?? '') : ''}
+        src={isInView && src ? src : undefined}
         alt={alt}
         onLoad={handleImageLoad}
         className={`relative w-full h-full transition-opacity duration-300 ${objectFit} ${

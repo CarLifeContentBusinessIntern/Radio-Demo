@@ -24,6 +24,7 @@ const ChannelDetailViewPage = lazy(() => import('./pages/ChannelDetailViewPage.t
 const ListViewPage = lazy(() => import('./pages/ListViewPage.tsx'));
 const PickleLivePage = lazy(() => import('./pages/PickleLivePage.tsx'));
 const VoiceSearch = lazy(() => import('./pages/VoiceSearch.tsx'));
+const AudioDramaPage = lazy(() => import('./pages/AudioDramaPage.tsx'));
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useSaveProgressOnNavigate } from './hooks/useSaveProgressOnNavigate.tsx';
@@ -219,6 +220,11 @@ function AppRoutes() {
           <Route path="/episodes/recent" element={<RecentPage />} />
           <Route path="/ai-pick" element={<AIPick />} />
           <Route path="/popular" element={<PopularChannelPage />} />
+        </Route>
+      </Route>
+      <Route element={<Layout scrollbar={true} paddingX={false} paddingB={true} />}>
+        <Route element={<PlayerLayout />}>
+          <Route path="/audio-drama" element={<AudioDramaPage />} />
         </Route>
       </Route>
     </Routes>

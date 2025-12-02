@@ -10,6 +10,7 @@ import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEp
 import { usePlayer } from '../contexts/PlayerContext';
 import { useIsEnglish } from '../hooks/useIsEnglish';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 type BottomPlayerProps = {
   id: number;
@@ -27,7 +28,6 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
-    duration,
     activePlaylist,
     hasBeenActivated,
     togglePlayPause,
@@ -40,15 +40,17 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   const isOnAirEpisode = currentEpisodeData?.id === liveEpisode.id;
 
-  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
-
+  const totalTime = currentEpisodeData?.duration;
+  const totalTimeSeconds = totalTime ? timeStringToSeconds(totalTime) : 0;
+  const progress =
+    totalTimeSeconds > 0 ? (isLive ? 100 : (currentTime / totalTimeSeconds) * 100) : 0;
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
 
     if (isOnAirEpisode) {
       navigate(`/player/live`, {
         replace: false,
-        state: { isOnAir: true, playlist: activePlaylist, title: 'P!ckle On-Air 🔴' },
+        state: { isOnAir: true, playlist: activePlaylist, title: 'Live P!ckle 🔴' },
       });
 
       return;
