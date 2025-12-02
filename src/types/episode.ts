@@ -17,6 +17,7 @@ export type EpisodeType = {
   listened_at?: string;
   listened_duration?: string;
   recent_series_id?: number;
+  language: string | null;
 };
 
 export type SeriesEpisodesType = {
