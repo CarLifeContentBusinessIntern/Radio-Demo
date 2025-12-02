@@ -161,7 +161,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
               highlightColor="#444"
             />
           ) : (
-            <div className="w-16 h-16 rounded-lg bg-gray-400"></div>
+            <div className="w-12 h-12 rounded-lg bg-gray-400"></div>
           )}
         </div>
       </div>

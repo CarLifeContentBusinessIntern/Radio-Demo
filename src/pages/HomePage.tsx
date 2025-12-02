@@ -2,11 +2,8 @@ import DriveMood from '../components/DriveMood';
 import MonthlyPickle from '../components/MonthlyPickle';
 import PickleLiveAndRecent from '../components/PickleLiveAndRecent';
 import PicklePick from '../components/PicklePick';
-// import LikedChannel from '../components/LikedChannel';
 
 function HomePage() {
-  // const { isRadioVersion } = useVersion();
-
   return (
     <div className="pt-7 pr-20">
       {/* 실시간 픽클 및 최근 들은 에피소드 */}
