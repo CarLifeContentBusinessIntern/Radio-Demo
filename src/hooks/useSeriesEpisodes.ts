@@ -9,7 +9,8 @@ export function useSeriesEpisodes(id: string | undefined) {
       const { data, error } = await supabase
         .from('series_episodes')
         .select('*, episodes(*, programs(*, broadcastings(*)))')
-        .eq('series_id', id);
+        .eq('series_id', id)
+        .eq('is_active', true);
 
       if (error) throw error;
       return data as SeriesEpisodesType[];

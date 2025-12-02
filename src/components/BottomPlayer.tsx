@@ -1,3 +1,4 @@
+import { AiOutlineLoading } from 'react-icons/ai';
 import {
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
@@ -5,10 +6,11 @@ import {
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
 import { usePlayer } from '../contexts/PlayerContext';
-import { AiOutlineLoading } from 'react-icons/ai';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 import ImageWithSkeleton from './ImageWithSkeleton';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 type BottomPlayerProps = {
   id: number;
@@ -26,7 +28,6 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     currentEpisodeData,
     currentEpisodeType,
     currentTime,
-    duration,
     activePlaylist,
     hasBeenActivated,
     togglePlayPause,
@@ -34,17 +35,22 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     handlePlayBarPrev,
   } = usePlayer();
 
-  const isOnAirEpisode = currentEpisodeData?.id === LIVE_STREAM_EPISODE.id;
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
 
-  const progress = duration > 0 ? (isLive ? 100 : (currentTime / duration) * 100) : 0;
+  const isOnAirEpisode = currentEpisodeData?.id === liveEpisode.id;
 
+  const totalTime = currentEpisodeData?.duration;
+  const totalTimeSeconds = totalTime ? timeStringToSeconds(totalTime) : 0;
+  const progress =
+    totalTimeSeconds > 0 ? (isLive ? 100 : (currentTime / totalTimeSeconds) * 100) : 0;
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
 
     if (isOnAirEpisode) {
       navigate(`/player/live`, {
         replace: false,
-        state: { isOnAir: true, playlist: activePlaylist, title: 'P!ckle On-Air 🔴' },
+        state: { isOnAir: true, playlist: activePlaylist, title: 'Live P!ckle 🔴' },
       });
 
       return;
@@ -85,7 +91,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   if (!hasBeenActivated) return null;
 
-  const imageUrl = currentEpisodeData?.img_url || currentEpisodeData?.programs?.img_url;
+  const imageUrl = isOnAirEpisode
+    ? liveEpisode.img_url
+    : currentEpisodeData?.img_url || currentEpisodeData?.programs?.img_url;
 
   return (
     <div
@@ -117,7 +125,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
       <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
         <p className="text-lg font-semibold truncate">
           {isOnAirEpisode
-            ? LIVE_STREAM_EPISODE.title
+            ? liveEpisode.title
             : isLive
               ? currentEpisodeData?.programs?.title
               : currentEpisodeData?.title}

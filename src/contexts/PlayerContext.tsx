@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
   createContext,
   useCallback,
@@ -8,12 +9,12 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+import { useIsEnglish } from '../hooks/useIsEnglish';
+import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
-import { useQueryClient } from '@tanstack/react-query';
-import { LIVE_STREAM_EPISODE } from '../pages/PickleLivePage';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -93,6 +94,9 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const activePlaylistRef = useRef<EpisodeType[]>([]);
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
 
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -107,7 +111,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       if (error) {
         console.log('❌ Error fetching episodes data:', error.message);
       } else if (data) {
-        setEpisodes([LIVE_STREAM_EPISODE, ...data]);
+        setEpisodes([liveEpisode, ...data]);
       }
     }
 
@@ -264,8 +268,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
       let episode;
       let startTime = 0;
 
-      if (id === LIVE_STREAM_EPISODE.id) {
-        episode = LIVE_STREAM_EPISODE;
+      if (id === liveEpisode.id) {
+        episode = liveEpisode;
         startTime = 0;
       } else {
         // 최신 데이터 가져오기 (최신 재생 시점을 위해)
@@ -378,7 +382,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
 
         if (nextEpisode && nextEpisode.audio_file !== null) {
           const isPodcast = state.currentEpisodeType === 'podcast';
-          const isOnAir = nextEpisode.id === LIVE_STREAM_EPISODE.id;
+          const isOnAir = nextEpisode.id === liveEpisode.id;
 
           if (!isPlayBar) {
             if (isPodcast) {
@@ -627,7 +631,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     recentSeriesId: number | null = null
   ) {
     if (!episodeId) return;
-    if (episodeId === LIVE_STREAM_EPISODE.id) return;
+    if (originType === null) return;
+    if (episodeId === liveEpisode.id) return;
 
     const updateData: {
       listened_duration: number;

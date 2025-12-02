@@ -12,6 +12,15 @@ export const handleClickSeries = (
   toastMessage: string,
   path?: string
 ) => {
+  if (path === 'curation') {
+    navigate(`/audio-drama`, {
+      state: {
+        title: item.title,
+        id: item.id,
+      },
+    });
+    return;
+  }
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';
     const url =
@@ -37,7 +46,6 @@ function PicklePick() {
   const { selectedOEM } = useOEM();
   const { data: sectionData, isLoading } = useSection(1, selectedOEM);
   const { t } = useTranslation();
-
   return (
     <>
       <div className="text-lg mb-7 font-semibold">{t('sections.pickle-pick')}</div>
@@ -59,7 +67,10 @@ function PicklePick() {
                 subTitle={item.subtitle}
                 img={item.img_url}
                 onClick={() =>
-                  handleClickSeries(navigate, item, t('toast.no-contents'), 'rectangle')
+                  //오디오 드라마일 경우 그리드 뷰
+                  item.title === '오디오 드라마'
+                    ? handleClickSeries(navigate, item, t('toast.no-contents'), 'curation')
+                    : handleClickSeries(navigate, item, t('toast.no-contents'), 'rectangle')
                 }
               />
             ))}
