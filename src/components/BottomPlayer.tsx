@@ -97,7 +97,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
   return (
     <div
-      className="relative w-full h-24 flex items-center gap-4 py-4 px-6 cursor-pointer bg-[#121317]"
+      className="w-full flex items-center justify-center gap-4 py-2 px-6 cursor-pointer bg-[#121317]"
       onClick={handlePlayerClick}
     >
       <div className="absolute top-0 left-0 w-full h-[4px] bg-gray-600">
@@ -107,55 +107,63 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         />
       </div>
 
-      <div className="flex-shrink-0">
-        {imageUrl ? (
-          <ImageWithSkeleton
-            src={imageUrl}
-            alt={title}
-            className="w-16 h-16 rounded-lg object-cover"
-            skeletonClassName="w-[224px] h-[224px]"
-            baseColor="#222"
-            highlightColor="#444"
+      <div className="flex max-w-screen-xl items-center justify-center w-full">
+        {/* 컨트롤 버튼 */}
+        <div className="flex items-center gap-10 mr-8" onClick={handleControlsClick}>
+          <TbPlayerSkipBackFilled
+            size={25}
+            onClick={() => !isOnAirEpisode && handlePlayBarPrev()}
           />
-        ) : (
-          <div className="w-16 h-16 rounded-lg bg-gray-400"></div>
-        )}
-      </div>
 
-      <div className="flex flex-col flex-grow min-w-0 overflow-hidden">
-        <p className="text-lg font-semibold truncate">
-          {isOnAirEpisode
-            ? liveEpisode.title
-            : isLive
-              ? currentEpisodeData?.programs?.title
-              : currentEpisodeData?.title}
-        </p>
-        <p className="text-base truncate">
-          {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
-        </p>
-      </div>
+          <button
+            className="relative w-6 h-6 disabled:cursor-not-allowed"
+            onClick={togglePlayPause}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <AiOutlineLoading size={25} className="animate-spin" />
+            ) : isPlaying ? (
+              <TbPlayerPauseFilled size={25} />
+            ) : (
+              <TbPlayerPlayFilled size={25} />
+            )}
+          </button>
 
-      <div className="flex w-full justify-between max-w-60 mr-4" onClick={handleControlsClick}>
-        <TbPlayerSkipBackFilled size={25} onClick={() => !isOnAirEpisode && handlePlayBarPrev()} />
+          <TbPlayerSkipForwardFilled
+            size={25}
+            onClick={() => !isOnAirEpisode && handlePlayBarNext()}
+          />
+        </div>
 
-        <button
-          className="relative w-6 h-6 disabled:cursor-not-allowed"
-          onClick={togglePlayPause}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <AiOutlineLoading size={25} className="animate-spin" />
-          ) : isPlaying ? (
-            <TbPlayerPauseFilled size={25} />
+        {/* 에피소드 정보 */}
+        <div className="flex flex-col flex-grow min-w-0 overflow-hidden text-right mr-4">
+          <p className="text-base font-semibold truncate">
+            {isOnAirEpisode
+              ? liveEpisode.title
+              : isLive
+                ? currentEpisodeData?.programs?.title
+                : currentEpisodeData?.title}
+          </p>
+          <p className="text-sm truncate">
+            {currentEpisodeData?.programs?.title} {currentEpisodeData?.date}
+          </p>
+        </div>
+
+        {/* 썸네일 */}
+        <div className="flex-shrink-0">
+          {imageUrl ? (
+            <ImageWithSkeleton
+              src={imageUrl}
+              alt={title}
+              className="w-12 h-12 rounded-lg object-cover"
+              skeletonClassName="w-[224px] h-[224px]"
+              baseColor="#222"
+              highlightColor="#444"
+            />
           ) : (
-            <TbPlayerPlayFilled size={25} />
+            <div className="w-12 h-12 rounded-lg bg-gray-400"></div>
           )}
-        </button>
-
-        <TbPlayerSkipForwardFilled
-          size={25}
-          onClick={() => !isOnAirEpisode && handlePlayBarNext()}
-        />
+        </div>
       </div>
     </div>
   );

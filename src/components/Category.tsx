@@ -40,8 +40,8 @@ function Category({ title, type }: CategoryInterface) {
 
   return (
     <>
-      {title && <div className="text-lg mb-7 font-semibold">{t('sections.category')}</div>}
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
+      {title && <div className="text-lg mb-5 font-semibold">{t('sections.category')}</div>}
+      <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <ItemComponent isLoading={true} key={index} />
