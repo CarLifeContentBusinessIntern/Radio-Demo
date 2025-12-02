@@ -13,6 +13,7 @@ import { fetchRandomEpisodes } from '../api/randomEpisodes';
 import { useNavigate } from 'react-router-dom';
 import { useVersion } from '../contexts/VersionContext';
 import type { Translation } from '../types/preference';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 
 const EPISODE_COUNT = 5;
 
@@ -23,10 +24,10 @@ interface AIPickProps {
 }
 
 function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' } }: AIPickProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { isAIVoiceSearchVersion } = useVersion();
-  const isKorean = i18n.language === 'ko';
+  const { isEnglish } = useIsEnglish();
 
   const fetchPlaylist = async (id: number): Promise<EpisodeType[]> => {
     const { data, error } = await supabase
@@ -148,9 +149,9 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
 
       <div className="flex flex-col gap-6">
         <p className="text-base font-medium">
-          {isKorean
-            ? `${moodPrefix.ko} ${t(sectionTitleKey)}`
-            : `For ${moodPrefix.en} ${t(sectionTitleKey)}`}
+          {isEnglish
+            ? `For ${moodPrefix.en} ${t(sectionTitleKey)}`
+            : `${moodPrefix.ko} ${t(sectionTitleKey)}`}
         </p>
         <div className="flex flex-col gap-3">
           {episodes?.map((ep) => (

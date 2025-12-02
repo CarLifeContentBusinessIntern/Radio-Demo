@@ -1,3 +1,4 @@
+import { AiOutlineLoading } from 'react-icons/ai';
 import {
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
@@ -5,11 +6,10 @@ import {
   TbPlayerSkipForwardFilled,
 } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
-import { usePlayer } from '../contexts/PlayerContext';
-import { AiOutlineLoading } from 'react-icons/ai';
-import ImageWithSkeleton from './ImageWithSkeleton';
-import { useTranslation } from 'react-i18next';
 import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
+import { usePlayer } from '../contexts/PlayerContext';
+import { useIsEnglish } from '../hooks/useIsEnglish';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 type BottomPlayerProps = {
   id: number;
@@ -35,9 +35,8 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
     handlePlayBarPrev,
   } = usePlayer();
 
-  const { i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
-  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
 
   const isOnAirEpisode = currentEpisodeData?.id === liveEpisode.id;
 

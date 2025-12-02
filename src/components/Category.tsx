@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 import { supabase } from '../lib/supabaseClient';
 import type { CategoryType } from '../types/category';
 import CircleViewItem from './CircleViewItem';
 import GridViewItem from './GridViewItem';
-import { useTranslation } from 'react-i18next';
 
 interface CategoryInterface {
   title: boolean;
@@ -14,8 +15,8 @@ interface CategoryInterface {
 
 function Category({ title, type }: CategoryInterface) {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
+  const { t } = useTranslation();
+  const { isEnglish } = useIsEnglish();
 
   const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
     queryKey: ['categories', type],
@@ -49,13 +50,13 @@ function Category({ title, type }: CategoryInterface) {
               <ItemComponent
                 key={item.id}
                 isLoading={false}
-                title={isKorean ? item.title : item.en_title || item.title}
+                title={isEnglish ? item.en_title || item.title : item.title}
                 img={item.img_url}
                 onClick={() => {
                   if (item.programs?.length > 0) {
                     navigate(`/curation/${item.id}`, {
                       state: {
-                        title: isKorean ? item.title : item.en_title || item.title,
+                        title: isEnglish ? item.en_title || item.title : item.title,
                         type: `${type}_category`,
                       },
                     });
