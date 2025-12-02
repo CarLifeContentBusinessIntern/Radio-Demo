@@ -1,18 +1,19 @@
 import Lottie, { type LottieRefCurrentProps } from 'lottie-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TbPlayerPauseFilled, TbPlayerPlayFilled } from 'react-icons/tb';
 import soundWaveData from '../assets/sound-wave_darkmode.json';
-import { usePlayer } from '../contexts/PlayerContext';
 import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
-import { useTranslation } from 'react-i18next';
+import { usePlayer } from '../contexts/PlayerContext';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 
 function PickleLivePage() {
   const soundWaveRef = useRef<LottieRefCurrentProps | null>(null);
 
   const { isPlaying, currentEpisodeData, playEpisode, togglePlayPause } = usePlayer();
-  const { t, i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
-  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+  const { t } = useTranslation();
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
 
   const isThisLivePlaying = isPlaying && currentEpisodeData?.id === liveEpisode.id;
 
@@ -126,9 +127,9 @@ function PickleLivePage() {
               {/* 카드 우측 - 이미지 영역 */}
               <div className="relative flex-shrink-0 self-stretch w-52">
                 <img
-                  src={isKorean ? '/tvN_channel_logo.png' : '/teamcoco_channel_logo.png'}
+                  src={isEnglish ? '/teamcoco_channel_logo.png' : '/tvN_channel_logo.png'}
                   alt={
-                    isKorean ? t('live.tvn-channel-logo-alt') : t('live.teamcoco-channel-logo-alt')
+                    isEnglish ? t('live.teamcoco-channel-logo-alt') : t('live.tvn-channel-logo-alt')
                   }
                   className="w-full h-full object-cover"
                 />
@@ -151,7 +152,7 @@ function PickleLivePage() {
           {/* 오른쪽 하단 - 이미지 카드 */}
           <div className="rounded-2xl h-52 overflow-hidden">
             <img
-              src={isKorean ? '/mcdonald_ad.png' : '/mcdonald_ad_en.png'}
+              src={isEnglish ? '/mcdonald_ad_en.png' : '/mcdonald_ad.png'}
               alt="McDonald's Drive-thru Advertisement"
               className="w-full h-full object-cover"
             />
@@ -162,7 +163,7 @@ function PickleLivePage() {
       {/* 하단 타임라인 이미지 - 전체 너비 */}
       <div className="-mx-6 mt-4">
         <img
-          src={isKorean ? '/live_timeline.png' : '/live_timeline_en.png'}
+          src={isEnglish ? '/live_timeline_en.png' : '/live_timeline.png'}
           alt="Live Timeline"
           className="w-full h-auto object-cover"
         />

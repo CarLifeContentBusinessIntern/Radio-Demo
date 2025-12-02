@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
   createContext,
   useCallback,
@@ -8,13 +9,12 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import { timeStringToSeconds } from '../utils/timeUtils';
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { EpisodeType } from '../types/episode';
-import { useQueryClient } from '@tanstack/react-query';
 import { LIVE_STREAM_EPISODE, LIVE_STREAM_EPISODE_EN } from '../constants/liveEpisode';
-import { useTranslation } from 'react-i18next';
+import { useIsEnglish } from '../hooks/useIsEnglish';
+import { supabase } from '../lib/supabaseClient';
+import type { EpisodeType } from '../types/episode';
+import { timeStringToSeconds } from '../utils/timeUtils';
 
 interface PlayerState {
   currentEpisodeId: number | null;
@@ -97,9 +97,8 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   const [activePlaylist, setActivePlaylist] = useState<EpisodeType[]>([]);
   const [playbackRate, setPlaybackRate] = useState(1.0);
 
-  const { i18n } = useTranslation();
-  const isKorean = i18n.language === 'ko';
-  const liveEpisode = isKorean ? LIVE_STREAM_EPISODE : LIVE_STREAM_EPISODE_EN;
+  const { isEnglish } = useIsEnglish();
+  const liveEpisode = isEnglish ? LIVE_STREAM_EPISODE_EN : LIVE_STREAM_EPISODE;
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const navigate = useNavigate();

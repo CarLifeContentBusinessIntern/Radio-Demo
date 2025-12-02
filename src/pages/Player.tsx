@@ -189,7 +189,11 @@ function Player() {
           <div className="flex items-center justify-between w-[100%]">
             <div className="w-[10%] flex items-center justify-center">
               {currentEpisodeData.audioFile_dubbing && (
-                <ToggleButton isActivate={useOriginalAudio} setIsActivate={setUseOriginalAudio} />
+                <ToggleButton
+                  language={currentEpisodeData.language}
+                  isActivate={useOriginalAudio}
+                  setIsActivate={setUseOriginalAudio}
+                />
               )}
             </div>
             <div className="flex items-center justify-center h-fit gap-[5%] w-[60%]">

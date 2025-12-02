@@ -1,19 +1,20 @@
 import { useState } from 'react';
-import { INIT_PREFERENCE_STATE, usePreference } from '../contexts/PreferenceContext';
-import { PREFERENCE_QUESTIONS } from '../constants/preferenceQuestions';
-import PreferenceSection from '../components/preference/PreferenceSection';
-import PreferenceButton from '../components/preference/PreferenceButton';
-import PreferenceSlider from '../components/preference/PreferenceSlider';
-import type { PreferenceState } from '../types/preference';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import PreferenceButton from '../components/preference/PreferenceButton';
+import PreferenceSection from '../components/preference/PreferenceSection';
+import PreferenceSlider from '../components/preference/PreferenceSlider';
+import { PREFERENCE_QUESTIONS } from '../constants/preferenceQuestions';
+import { INIT_PREFERENCE_STATE, usePreference } from '../contexts/PreferenceContext';
+import { useIsEnglish } from '../hooks/useIsEnglish';
+import type { PreferenceState } from '../types/preference';
 
 function Preference() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { preferences, updatePreference } = usePreference();
   const [localPreferences, setLocalPreferences] = useState<PreferenceState>(preferences);
   const navigate = useNavigate();
-  const isKorean = i18n.language === 'ko';
+  const { isEnglish } = useIsEnglish();
 
   const handleUpdateLocal = <K extends keyof PreferenceState>(
     key: K,
@@ -78,14 +79,14 @@ function Preference() {
           {PREFERENCE_QUESTIONS.map((question) => (
             <PreferenceSection
               key={question.id}
-              question={isKorean ? question.question.ko : question.question.en}
+              question={isEnglish ? question.question.en : question.question.ko}
             >
               {question.type === 'single' && question.options && (
                 <>
                   {question.options.map((option) => (
                     <PreferenceButton
                       key={option.value}
-                      label={isKorean ? option.label.ko : option.label.en}
+                      label={isEnglish ? option.label.en : option.label.ko}
                       selected={localPreferences[question.id] === option.value}
                       onClick={() => handleUpdateLocal(question.id, option.value)}
                     />
@@ -98,7 +99,7 @@ function Preference() {
                   {question.options.map((option) => (
                     <PreferenceButton
                       key={option.value}
-                      label={isKorean ? option.label.ko : option.label.en}
+                      label={isEnglish ? option.label.en : option.label.ko}
                       selected={(localPreferences[question.id] as string[]).includes(option.value)}
                       onClick={() => handleToggleLocal(question.id, option.value)}
                     />
