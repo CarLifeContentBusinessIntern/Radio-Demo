@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 function ToggleButton({
-  langauge,
+  language,
   isActivate,
   setIsActivate,
 }: {
-  langauge: string | null;
+  language: string | null;
   isActivate: boolean;
   setIsActivate: (isActivate: boolean) => void;
 }) {
@@ -17,7 +17,7 @@ function ToggleButton({
       setIsActivate(false);
       setAction('animate-toggle-off');
       setTimeout(() => {
-        setImageSrc(`/${langauge}.png`);
+        setImageSrc(`/${language}.png`);
       }, 100);
     }
     if (!isActivate) {

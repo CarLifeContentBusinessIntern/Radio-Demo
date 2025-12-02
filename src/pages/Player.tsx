@@ -188,7 +188,7 @@ function Player() {
             <div className="w-[10%] flex items-center justify-center">
               {currentEpisodeData.audioFile_dubbing && (
                 <ToggleButton
-                  langauge={currentEpisodeData.language}
+                  language={currentEpisodeData.language}
                   isActivate={useOriginalAudio}
                   setIsActivate={setUseOriginalAudio}
                 />
