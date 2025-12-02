@@ -64,7 +64,7 @@ function PicklePick() {
               <GridViewItem
                 key={`${item.type} - ${item.id}`}
                 title={item.title}
-                subTitle={item.subtitle}
+                // subTitle={item.subtitle}
                 img={item.img_url}
                 onClick={() =>
                   //오디오 드라마일 경우 그리드 뷰

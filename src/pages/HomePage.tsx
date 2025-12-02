@@ -1,13 +1,11 @@
-import Category from '../components/Category';
 import DriveMood from '../components/DriveMood';
 import MonthlyPickle from '../components/MonthlyPickle';
 import PickleLiveAndRecent from '../components/PickleLiveAndRecent';
 import PicklePick from '../components/PicklePick';
-import { useVersion } from '../contexts/VersionContext';
 // import LikedChannel from '../components/LikedChannel';
 
 function HomePage() {
-  const { isRadioVersion } = useVersion();
+  // const { isRadioVersion } = useVersion();
 
   return (
     <div className="pt-7 pr-20">
@@ -28,7 +26,7 @@ function HomePage() {
       <DriveMood />
 
       {/* 라디오 버전인 경우에만 카테고리 섹션 */}
-      {isRadioVersion && <Category title={true} type="podcast" />}
+      {/* {isRadioVersion && <Category title={true} type="podcast" />} */}
     </div>
   );
 }

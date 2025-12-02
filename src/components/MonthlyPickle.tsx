@@ -27,7 +27,7 @@ function MonthlyPickle() {
               <CircleViewItem
                 key={`${item.type} - ${item.id}`}
                 title={item.title}
-                subTitle={item.subtitle}
+                // subTitle={item.subtitle}
                 img={item.img_url}
                 onClick={() => handleClickSeries(navigate, item, t('toast.no-contents'))}
               />
