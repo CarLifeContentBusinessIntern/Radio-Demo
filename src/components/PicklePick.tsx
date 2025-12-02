@@ -19,6 +19,7 @@ export const handleClickSeries = (
         id: item.id,
       },
     });
+    return;
   }
   if (item.has_episodes) {
     const pathSegment = item.type === 'series' ? 'series' : 'themes';

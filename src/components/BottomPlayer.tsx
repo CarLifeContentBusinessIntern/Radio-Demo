@@ -42,8 +42,9 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
   const isOnAirEpisode = currentEpisodeData?.id === liveEpisode.id;
 
   const totalTime = currentEpisodeData?.duration;
-  const totalTimeSeconds = timeStringToSeconds(totalTime!);
-  const progress = totalTime || 0 > 0 ? (isLive ? 100 : (currentTime / totalTimeSeconds) * 100) : 0;
+  const totalTimeSeconds = totalTime ? timeStringToSeconds(totalTime) : 0;
+  const progress =
+    totalTimeSeconds > 0 ? (isLive ? 100 : (currentTime / totalTimeSeconds) * 100) : 0;
   const handlePlayerClick = () => {
     const targetId = currentEpisodeId !== null ? currentEpisodeId : id;
 
