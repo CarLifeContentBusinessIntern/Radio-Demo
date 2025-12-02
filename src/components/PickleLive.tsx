@@ -32,18 +32,19 @@ function PickleLive() {
       resizeObserver.disconnect();
     };
   }, []);
+
   return (
     <div className="flex flex-col h-full">
-      <div className="text-lg mb-7 font-medium h-7 flex ">{t('sections.on-air')}</div>
+      <div className="text-lg mb-5 font-medium h-7 flex ">{t('sections.on-air')}</div>
       <div
         ref={containerRef}
-        className="relative w-full aspect-square"
+        className="relative w-full aspect-square" // 이 div가 이미지/프로그레스바의 컨테이너가 됨
         onClick={() => navigate('/player/live', { state: { title: t('sections.on-air') } })}
       >
         {/* CircleViewItem 이미지 90% */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                    w-[90%] h-[90%] "
+                 w-[90%] h-[90%] "
         >
           <CircleViewItem img={PickleLiveImage} onClick={() => {}} isRecentEpisode={true} />
         </div>
@@ -54,11 +55,14 @@ function PickleLive() {
             <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-[2px] bg-[#666666]" />
           </div>
         )}
-        {/* 제목/부제목 */}
-        <div style={{ top: parentSize }} className="absolute w-full ">
-          <p className="text-base mb-1 px-1 font-semibold truncate  mt-4">{liveEpisode.title}</p>
-          <p className="text-sm text-gray-400 px-1 truncate">{liveEpisode.subtitle}</p>
-        </div>
+        {/* 제목/부제목 div는 이미지 컨테이너 안에 없으므로 여기선 제거 */}
+      </div>
+
+      {/* *변경: 제목/부제목을 이미지 컨테이너 div 바깥, flex-col 흐름에 맞게 배치* */}
+      {/* 이제 이 div는 containerRef (이미지 컨테이너)의 형제 요소가 됩니다. */}
+      <div className="w-full mt-4">
+        <p className="text-base mb-1 px-1 font-semibold truncate">{liveEpisode.title}</p>
+        <p className="text-sm text-gray-400 px-1 truncate">{liveEpisode.subtitle}</p>
       </div>
     </div>
   );
