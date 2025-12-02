@@ -1,28 +1,30 @@
 import { useState } from 'react';
 
 function ToggleButton({
+  langauge,
   isActivate,
   setIsActivate,
 }: {
+  langauge: string | null;
   isActivate: boolean;
   setIsActivate: (isActivate: boolean) => void;
 }) {
   const [action, setAction] = useState('');
-  const [imageSrc, setImageSrc] = useState('/toggle_off.png');
+  const [imageSrc, setImageSrc] = useState('/en.png');
 
   const handleToggle = () => {
     if (isActivate) {
       setIsActivate(false);
       setAction('animate-toggle-off');
       setTimeout(() => {
-        setImageSrc('/toggle_on.png');
+        setImageSrc(`/${langauge}.png`);
       }, 100);
     }
     if (!isActivate) {
       setIsActivate(true);
       setAction('animate-toggle-on');
       setTimeout(() => {
-        setImageSrc('/toggle_off.png');
+        setImageSrc('/en.png');
       }, 100);
     }
   };

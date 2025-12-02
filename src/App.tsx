@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useRef } from 'react';
+import { lazy, useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { PlayerProvider, usePlayer } from './contexts/PlayerContext.tsx';
