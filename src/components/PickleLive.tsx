@@ -35,7 +35,7 @@ function PickleLive() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="text-lg mb-5 font-medium h-7 flex ">{t('sections.on-air')}</div>
+      <div className="text-lg mb-3 font-medium h-7 flex ">{t('sections.on-air')}</div>
       <div
         ref={containerRef}
         className="relative w-full aspect-square" // 이 div가 이미지/프로그레스바의 컨테이너가 됨
@@ -52,7 +52,7 @@ function PickleLive() {
         {parentSize > 0 && (
           <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
             <CircularProgressBar size={parentSize} isPickleLive={true} />
-            <div className="absolute  h-[80%] right-[-9px] top-[10%] bottom-0 w-[1px] bg-[#333]" />
+            <div className="absolute  h-[80%] right-[-4.5px] top-[10%] bottom-0 w-[0.5px] bg-[#333]" />
           </div>
         )}
         {/* 제목/부제목 div는 이미지 컨테이너 안에 없으므로 여기선 제거 */}

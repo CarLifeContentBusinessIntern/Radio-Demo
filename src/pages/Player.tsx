@@ -149,7 +149,6 @@ function Player() {
       state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
-
   return (
     <div className="relative overflow-hidden h-full">
       {imgUrl && (

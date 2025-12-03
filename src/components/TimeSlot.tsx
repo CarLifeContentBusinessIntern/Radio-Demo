@@ -12,8 +12,8 @@ function TimeSlot() {
 
   return (
     <div>
-      <div className="text-lg mb-5 font-semibold">{t('sections.timeslot')}</div>
-      <div className="grid gap-x-4 gap-y-7 mb-10 px-1 grid-cols-4">
+      <div className="text-lg mb-3 font-semibold">{t('sections.timeslot')}</div>
+      <div className="grid gap-x-2 gap-y-7 mb-10 px-1 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <CircleViewItem isLoading={true} key={index} />

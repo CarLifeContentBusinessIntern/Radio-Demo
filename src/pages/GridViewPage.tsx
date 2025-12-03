@@ -84,7 +84,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
   return (
     <div className="pr-20">
       {!rectangle ? (
-        <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
+        <div className="grid gap-x-2 gap-y-7 mb-16 px-1 grid-cols-4">
           {data.map((item, index) => (
             <GridViewItem
               key={item.id}
@@ -94,11 +94,14 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
-                if (allSeriesEpisodes[index].audio_file.length === 0) {
-                  toast.error(t('toast.no-contents'), { toastId: item.id });
-                  return;
-                }
                 if (isSeriesEpisodes) {
+                  if (
+                    !allSeriesEpisodes[index]?.audio_file ||
+                    allSeriesEpisodes[index].audio_file.length === 0
+                  ) {
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
+                    return;
+                  }
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
                     state: {
@@ -124,7 +127,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
           ))}
         </div>
       ) : (
-        <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-3">
+        <div className="grid gap-x-2 gap-y-7 mb-16 px-1 grid-cols-3">
           {data.map((item, index) => (
             <RectangleGridViewItem
               key={item.id}
@@ -134,11 +137,14 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
-                if (allSeriesEpisodes[index].audio_file.length === 0) {
-                  toast.error(t('toast.no-contents'), { toastId: item.id });
-                  return;
-                }
                 if (isSeriesEpisodes) {
+                  if (
+                    !allSeriesEpisodes[index]?.audio_file ||
+                    allSeriesEpisodes[index].audio_file.length === 0
+                  ) {
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
+                    return;
+                  }
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
                     state: {

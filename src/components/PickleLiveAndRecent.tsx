@@ -3,7 +3,7 @@ import RecentEpisode from './RecentEpisode';
 
 function PickleLiveAndRecent() {
   return (
-    <div className="grid grid-cols-4 gap-4 mb-10">
+    <div className="grid grid-cols-4 gap-2 mb-10">
       <div className="col-span-1 h-full">
         <PickleLive />
       </div>

@@ -14,7 +14,7 @@ function DriveMood() {
       <div className="text-lg mb-5 font-semibold">{t('sections.drive-mood')}</div>
 
       <div
-        className="grid gap-x-4 gap-y-7 px-1"
+        className="grid gap-x-2 gap-y-7 px-1"
         style={{
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         }}

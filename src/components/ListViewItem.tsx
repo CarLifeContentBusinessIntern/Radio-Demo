@@ -102,7 +102,7 @@ function ListViewItem({
 
   return (
     <div
-      className="flex items-center justify-between gap-8 cursor-pointer"
+      className="flex items-center gap-8 cursor-pointer"
       onClick={() => {
         // 기존 재생 중인 에피소드 저장
         saveCurrentEpisodeProgress();
@@ -140,22 +140,24 @@ function ListViewItem({
         }
       }}
     >
-      <div className="flex-shrink-0">
+      {/* 썸네일 이미지 */}
+      <div className="flex-shrink-0 w-[92px] h-[92px]">
         {imgUrl ? (
           <ImageWithSkeleton
             src={imgUrl}
             alt={title}
-            className={`w-24 h-24 ${isRound ? 'rounded-[11px]' : 'rounded-none'} object-cover`}
-            skeletonClassName="rounded-[11px]"
+            className={`w-full h-full ${isRound ? 'rounded-[10px]' : 'rounded-none'} object-cover`}
+            skeletonClassName="rounded-[10px]"
           />
         ) : (
           <div
-            className={`w-24 h-24 bg-gray-400 ${isRound ? 'rounded-[11px]' : 'rounded-none'}`}
+            className={`w-full h-full bg-gray-400 ${isRound ? 'rounded-[10px]' : 'rounded-none'}`}
           ></div>
         )}
       </div>
 
-      <div className="flex flex-col flex-grow text-lg min-w-0">
+      {/* 에피소드 내용 */}
+      <div className="flex-1 min-w-0 text-lg">
         <div className="font-semibold truncate">{title}</div>
         <div className="flex gap-5">
           <div className="text-[#A6A6A9] truncate">
@@ -164,36 +166,40 @@ function ListViewItem({
               .join(' · ')}
           </div>
         </div>
-        {!isRecentPage && !isAIPickPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
-          <div className="relative w-full h-[4px] bg-gray-600 mt-2">
-            <div
-              className={`h-1 transition-width duration-100 ease-linear ${
-                currentEpisodeId === id ? 'bg-[#B76EEF]' : 'bg-[#888888]'
-              }`}
-              style={{
-                width: `${Math.min(progressPercent, 100)}%`,
-              }}
-            />
-          </div>
-        )}
-      </div>
-      <div className="hidden md:block">
-        {(() => {
-          const remainingSeconds = totalTimeSeconds - Math.floor(lastPlayedTime);
-          const shouldShowRemainingTime =
-            !isLive && remainingSeconds > 0 && (isPlayingEpisode || lastPlayedTime > 0);
 
-          return (
-            !isRecentPage &&
-            !isAIPickPage &&
-            shouldShowRemainingTime && (
-              <p className="w-fit whitespace-nowrap text-lg text-[#A6A6A9] text-right">
-                - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
-              </p>
-            )
-          );
-        })()}
+        {/* 프로그래스바 */}
+        <div className="w-full h-[2px] mt-2">
+          {!isRecentPage && !isAIPickPage && (lastPlayedTime > 0 || isPlayingEpisode) && (
+            <div className="w-full h-[2px] bg-gray-600">
+              <div
+                className={`h-[2px] transition-width duration-100 ease-linear ${
+                  currentEpisodeId === id ? 'bg-[#B76EEF]' : 'bg-[#888888]'
+                }`}
+                style={{
+                  width: `${Math.min(progressPercent, 100)}%`,
+                }}
+              />
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* 남은 시간 */}
+      {(() => {
+        const remainingSeconds = totalTimeSeconds - Math.floor(lastPlayedTime);
+        const shouldShowRemainingTime =
+          !isLive && remainingSeconds > 0 && (isPlayingEpisode || lastPlayedTime > 0);
+
+        return (
+          !isRecentPage &&
+          !isAIPickPage &&
+          shouldShowRemainingTime && (
+            <p className="flex-shrink-0 w-20 text-right text-lg text-[#A6A6A9]">
+              - {formatRemainingTime(lastPlayedTime, totalTimeSeconds)}
+            </p>
+          )
+        );
+      })()}
     </div>
   );
 }

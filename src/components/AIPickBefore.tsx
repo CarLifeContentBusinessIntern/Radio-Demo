@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useNavigate } from 'react-router-dom';
-import BannerBackground from '../assets/ai_pick_banner_background.png';
-import BannerIcon from '../assets/ai_pick_banner_icon.png';
 import AIPick from './AIPick';
+import ImageWithSkeleton from './ImageWithSkeleton';
+import { BannerBackgroundBefore, BannerIconBefore } from './AIPickAfter';
 
 function AIPickBefore() {
   const navigate = useNavigate();
@@ -16,16 +16,24 @@ function AIPickBefore() {
         navigate('/setting/preference', { state: { title: t('setting.set-preference') } })
       }
     >
-      <img
-        src={BannerBackground}
-        className="cursor-pointer w-full h-40 rounded-3xl object-cover"
+      <ImageWithSkeleton
+        src={BannerBackgroundBefore}
         alt="AI Pick Banner"
+        className={`cursor-pointer w-full h-[172px] rounded-3xl object-cover`}
+        skeletonClassName={`w-full h-[172px] rounded-3xl object-cover`}
+        isCover={true}
       />
 
-      <div className="absolute w-full top-6">
+      <div className="absolute w-full top-[30px]">
         <div className="flex justify-center items-center">
           <div className="flex items-center justify-between w-full max-w-[700px] px-10">
-            <img src={BannerIcon} className="w-30 h-28" alt="Banner Icon" />
+            <ImageWithSkeleton
+              src={BannerIconBefore}
+              alt="AI Pick Banner Icon"
+              className="w-30 h-28"
+              skeletonClassName="w-30 h-28"
+              isBlur={false}
+            />
 
             <div className="text-white">
               <p className="font-normal text-2xl">{t('ai-pick.banner-before-1')}</p>

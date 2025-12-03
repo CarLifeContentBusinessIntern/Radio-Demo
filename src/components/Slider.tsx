@@ -100,7 +100,7 @@ function Slider({ images }: SliderProps) {
               <img
                 src={image.background}
                 alt={`배너 배경 ${index}`}
-                className="w-full h-40 object-cover"
+                className="w-full h-[172px] object-cover"
               />
 
               {image.content}

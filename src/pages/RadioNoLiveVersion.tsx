@@ -7,7 +7,7 @@ import TimeSlot from '../components/TimeSlot';
 
 function RadioNoLiveVersion() {
   return (
-    <div className="pr-28 pt-7">
+    <div className="pr-20 pt-5">
       {/* 인기채널 */}
       <PopularRadio />
 
