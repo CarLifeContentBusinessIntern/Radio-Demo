@@ -272,7 +272,7 @@ function Player() {
                 onClick={changeSpeed}
               >
                 <img src={speedIcon} />
-                <p className="text-[12px]">{playbackRate}x</p>
+                <p className="text-[12px]">{playbackRate.toFixed(1)}x</p>
               </button>
 
               <button onClick={handlePlayPrev}>
