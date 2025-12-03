@@ -84,7 +84,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
   return (
     <div className="pr-20">
       {!rectangle ? (
-        <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
+        <div className="grid gap-x-2 gap-y-7 mb-16 px-1 grid-cols-4">
           {data.map((item) => (
             <GridViewItem
               key={item.id}
@@ -120,7 +120,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
           ))}
         </div>
       ) : (
-        <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-3">
+        <div className="grid gap-x-2 gap-y-7 mb-16 px-1 grid-cols-3">
           {data.map((item) => (
             <RectangleGridViewItem
               key={item.id}

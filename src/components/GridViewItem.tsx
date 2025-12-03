@@ -1,5 +1,6 @@
 import Skeleton from 'react-loading-skeleton';
 import ImageWithSkeleton from './ImageWithSkeleton';
+import { useLocation } from 'react-router-dom';
 
 interface GridViewItemProps {
   isLoading?: boolean;
@@ -20,6 +21,9 @@ function GridViewItem({
   isRounded = true,
   isRecent = false,
 }: GridViewItemProps) {
+  const location = useLocation();
+  const isAudioDrama = location.state?.isAudioDrama;
+
   if (isLoading) {
     return (
       <div>
@@ -41,15 +45,15 @@ function GridViewItem({
           src={img}
           alt="썸네일"
           isRecent={isRecent}
-          className={`w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4 object-cover`}
-          skeletonClassName={`w-full aspect-square mb-4 ${isRounded ? 'rounded-[11%]' : ''} `}
+          className={`w-full aspect-square ${isRounded ? (isAudioDrama ? 'rounded-[10px]' : 'rounded-[20px]') : ''} mb-2 object-cover`}
+          skeletonClassName={`w-full aspect-square mb-2 ${isRounded ? (isAudioDrama ? 'rounded-[10px]' : 'rounded-[20px]') : ''} `}
         />
       ) : (
         <div
-          className={`bg-gray-600 w-full aspect-square ${isRounded ? 'rounded-[11%]' : ''} mb-4`}
+          className={`bg-gray-600 w-full aspect-square ${isRounded ? (isAudioDrama ? 'rounded-[10px]' : 'rounded-[20px]') : ''} mb-2`}
         />
       )}
-      <p className="text-base mb-1 px-1 font-semibold truncate">{title}</p>
+      <p className="text-base px-1 font-semibold truncate">{title}</p>
       <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );

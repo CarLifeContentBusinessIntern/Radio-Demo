@@ -15,7 +15,7 @@ function RecentEpisode() {
 
   return (
     <div>
-      <div className="text-lg mb-5 font-medium h-7 flex flex-wrap">
+      <div className="text-lg mb-3 font-medium h-7 flex flex-wrap">
         {isEnglish ? (
           <>
             {t('sections.recent')}
@@ -29,7 +29,7 @@ function RecentEpisode() {
           </>
         )}
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2">
         {recentEpisodes?.slice(0, 3).map((episode) => {
           return <CircularItemWrapper key={episode.id} episode={episode} />;
         })}

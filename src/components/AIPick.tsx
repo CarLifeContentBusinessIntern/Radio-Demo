@@ -3,7 +3,7 @@ import { FiRefreshCcw } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import PickleAIIcon from '../assets/ic_pickle_ai.png';
+import PickleAIIcon from '../assets/pickle_ai_logo.webp';
 import ListViewItem from '../components/ListViewItem';
 import ImageWithSkeleton from '../components/ImageWithSkeleton';
 import { usePlayer } from '../contexts/PlayerContext';
@@ -69,7 +69,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
 
   if (isLoading) {
     return (
-      <div className="pt-7 pr-20 flex flex-col gap-8">
+      <div className="pt-5 pr-20 flex flex-col gap-8">
         {/* AI 아이콘 + 검색창 스켈레톤 */}
         <div className="flex items-center gap-6">
           <Skeleton circle width={56} height={56} baseColor="#2A2A2E" highlightColor="#3A3A3E" />
@@ -123,10 +123,10 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
   }
 
   return (
-    <div className="pt-7 pr-20 flex flex-col gap-8">
+    <div className="pt-5 pr-20 flex flex-col gap-4">
       {isAIVoiceSearchVersion && (
         <div
-          className="flex items-center gap-6 cursor-pointer"
+          className="flex items-center gap-3 cursor-pointer"
           onClick={() => navigate('/ai-pick/voice-search', { state: { title: 'P!ckle AI' } })}
         >
           <div>
@@ -139,7 +139,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
               highlightColor="#3A3A3E"
             />
           </div>
-          <div className="text-[#666666] bg-[#202026] px-10 py-4 rounded-full w-full cursor-pointer">
+          <div className="text-[#666666] bg-[#202026] px-5 py-3 rounded-full w-full cursor-pointer">
             {t('placeholder.voice-search')}
           </div>
         </div>
@@ -147,13 +147,13 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
 
       {bannerContent}
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
         <p className="text-base font-medium">
           {isEnglish
             ? `For ${moodPrefix.en} ${t(sectionTitleKey)}`
             : `${moodPrefix.ko} ${t(sectionTitleKey)}`}
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-[6px]">
           {episodes?.map((ep) => (
             <ListViewItem
               key={ep.id}

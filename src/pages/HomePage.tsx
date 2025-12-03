@@ -5,7 +5,7 @@ import PicklePick from '../components/PicklePick';
 
 function HomePage() {
   return (
-    <div className="pt-7 pr-20">
+    <div className="pt-5 pr-20">
       {/* 실시간 픽클 및 최근 들은 에피소드 */}
       <PickleLiveAndRecent />
 

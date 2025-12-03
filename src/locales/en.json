@@ -23,7 +23,7 @@
     "curation-channel": "Curation/Channel",
     "episode": "Episode",
     "channel": "Channel",
-    "ai-pick-before-recomend": "Channels similar to recently listened channels",
+    "ai-pick-before-recomend": "AI Episode Recommendations",
     "ai-pick-after-recomend": "Joy's Recommendations"
   },
   "button": {
@@ -52,7 +52,7 @@
     "banner-after-2-start": "I've prepared a ",
     "banner-after-2-highlight": "Daily Mix",
     "banner-after-2-end": " just for Joy",
-    "banner-after-3": "Just press play"
+    "banner-after-3": "AI Streaming"
   },
   "preference": {
     "title": "These options help improve the accuracy of AI recommendations. Please feel free to choose."

@@ -18,12 +18,12 @@ function AIPickBefore() {
       <ImageWithSkeleton
         src="https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_background.webp"
         alt="AI Pick Banner"
-        className={`cursor-pointer w-full h-40 rounded-3xl object-cover`}
-        skeletonClassName={`w-full h-40 rounded-3xl object-cover`}
+        className={`cursor-pointer w-full h-[172px] rounded-3xl object-cover`}
+        skeletonClassName={`w-full h-[172px] rounded-3xl object-cover`}
         isCover={true}
       />
 
-      <div className="absolute w-full top-6">
+      <div className="absolute w-full top-[30px]">
         <div className="flex justify-center items-center">
           <div className="flex items-center justify-between w-full max-w-[700px] px-10">
             <ImageWithSkeleton

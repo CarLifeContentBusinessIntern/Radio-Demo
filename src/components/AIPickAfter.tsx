@@ -34,20 +34,17 @@ function AIPickAfter() {
       <ImageWithSkeleton
         src="https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_background_after.webp"
         alt="AI Pick Banner"
-        className={`cursor-pointer w-full h-40 rounded-3xl object-cover`}
-        skeletonClassName={`w-full h-40 rounded-3xl object-cover`}
+        className={`cursor-pointer w-full h-[180px] rounded-3xl object-cover`}
+        skeletonClassName={`w-full h-[180px] rounded-3xl object-cover`}
         isCover={true}
       />
 
-      <div className="absolute w-full -top-8">
+      <div className="absolute w-full -top-9">
         <div className="flex justify-center items-center">
           <div className="flex items-center justify-between w-full max-w-[800px] px-4">
-            <ImageWithSkeleton
+            <img
               src="https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_dailymix_after.webp"
-              alt="AI Pick Banner Icon"
-              className="w-1/2 max-w-[360px] h-[230px]"
-              skeletonClassName="w-1/2 max-w-[360px] h-[230px]"
-              isBlur={false}
+              className="w-2/3 max-w-[420px] h-[260px]"
             />
 
             <div className="text-white gap-y1">

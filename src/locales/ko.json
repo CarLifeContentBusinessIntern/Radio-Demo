@@ -22,7 +22,7 @@
     "curation-channel": "큐레이션/채널",
     "episode": "에피소드",
     "channel": "채널",
-    "ai-pick-before-recomend": "최근 청취한 채널 유사한 에피소드 추천",
+    "ai-pick-before-recomend": "AI 에피소드 추천",
     "ai-pick-after-recomend": "조이님을 위한 추천"
   },
   "button": {
@@ -51,7 +51,7 @@
     "banner-after-2-start": "조이님을위한 ",
     "banner-after-2-highlight": "데일리 믹스",
     "banner-after-2-end": "를 준비했어요",
-    "banner-after-3": "고를 필요 없이 바로 재생"
+    "banner-after-3": "AI 스트리밍"
   },
   "preference": {
     "title": "AI 추천 정확도를 높이는 선택 옵션입니다. 자유롭게 선택해 주세요."
