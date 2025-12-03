@@ -36,7 +36,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
         .map((item) => item.episodes)
         .filter((ep) => ep !== undefined)
     : [];
-  console.log(allSeriesEpisodes);
+
   const data: ProgramType[] = isSeriesEpisodes
     ? (rawData as SeriesEpisodesType[]).map((item) => ({
         id: item.episodes?.id || 0,
@@ -50,7 +50,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
         type: 'podcast' as const,
       }))
     : (rawData as ProgramType[]);
-  console.log('data:', data);
+
   if (isError) {
     return (
       <div className="pr-28 pt-3 p-4">
