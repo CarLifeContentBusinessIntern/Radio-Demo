@@ -133,7 +133,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
 
           <div
             className="h-full aspect-[3/2] flex items-center justify-center"
-            onClick={() => !isOnAirEpisode && handlePlayBarPrev()}
+            onClick={() => !isOnAirEpisode && handlePlayBarNext()}
           >
             <TbPlayerSkipForwardFilled size={25} />
           </div>
