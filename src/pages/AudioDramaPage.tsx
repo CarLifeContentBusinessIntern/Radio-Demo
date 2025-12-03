@@ -40,7 +40,7 @@ function AudioDramaPage() {
   }
   return (
     <div className="pr-20">
-      <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
+      <div className="grid gap-x-2 gap-y-7 mb-16 px-1 grid-cols-4">
         {data?.map((item) => {
           const program = item.programs;
           return (
@@ -50,7 +50,7 @@ function AudioDramaPage() {
               title={program.title}
               subTitle={program.subtitle}
               img={program.img_url}
-              isRounded={false}
+              isRounded={true}
               onClick={() => {
                 toast.error(t('toast.no-contents'), { toastId: item.id });
               }}

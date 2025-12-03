@@ -601,7 +601,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const changeSpeed = () => {
-    const speeds = [1.0, 1.5, 2.0];
+    const speeds = [1.0, 1.2, 1.5, 1.8, 2.0, 0.5, 0.8];
     const idx = speeds.indexOf(playbackRate);
     const next = speeds[(idx + 1) % speeds.length];
     setPlaybackRate(next);

@@ -105,7 +105,9 @@ function AppRoutes() {
       </Route>
 
       <Route
-        element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
+        element={
+          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
+        }
       >
         <Route element={<PlayerLayout />}>
           <Route path="episodes/:type/:id" element={<ListViewPage />} />

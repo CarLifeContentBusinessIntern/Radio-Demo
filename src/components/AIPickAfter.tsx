@@ -1,13 +1,18 @@
-import BannerBackground from '../assets/ai_pick_banner_background_after.png';
-import BannerIcon from '../assets/ai_pick_banner_dailymix_after.png';
-import BannerBackgroundBefore from '../assets/ai_pick_banner_background.png';
-import BannerIconBefore from '../assets/ai_pick_banner_icon.png';
-import AIPick from './AIPick';
-import { usePreference } from '../contexts/PreferenceContext';
-import { MOOD_PREFIX } from '../constants/preferenceQuestions';
-import Slider from './Slider';
 import { useTranslation } from 'react-i18next';
 import { MdOutlinePlayCircle } from 'react-icons/md';
+import { MOOD_PREFIX } from '../constants/preferenceQuestions';
+import { usePreference } from '../contexts/PreferenceContext';
+import AIPick from './AIPick';
+import Slider from './Slider';
+
+const BannerBackgroundBefore =
+  'https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_background.webp';
+const BannerBackground =
+  'https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_background_after.webp';
+const BannerIcon =
+  'https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_dailymix_after.webp';
+const BannerIconBefore =
+  'https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_icon.webp';
 
 function AIPickAfter() {
   const { preferences } = usePreference();
@@ -47,7 +52,7 @@ function AIPickAfter() {
       background: BannerBackgroundBefore,
       icon: BannerIconBefore,
       content: (
-        <div className="absolute w-full top-6">
+        <div className="absolute w-full top-[30px]">
           <div className="flex justify-center items-center">
             <div className="flex items-center justify-between w-full max-w-[700px] px-10">
               <img src={BannerIconBefore} className="w-30 h-28" alt="Banner Icon" />
@@ -75,3 +80,5 @@ function AIPickAfter() {
 }
 
 export default AIPickAfter;
+
+export { BannerBackgroundBefore, BannerBackground, BannerIcon, BannerIconBefore };
