@@ -217,31 +217,18 @@ function Player() {
                   {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
                 </p>
                 <p className="text-[#A6A6A9] text-[2vh]">
-                  {currentEpisodeType === 'podcast' ? (
-                    <>
-                      <button
-                        onClick={() =>
-                          handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
-                        }
-                      >
-                        {currentEpisodeData.programs?.title}
-                      </button>{' '}
-                      · {currentEpisodeData.date}
-                    </>
-                  ) : (
-                    <>
-                      {currentEpisodeData.programs?.broadcastings?.title}
-                      <button
-                        onClick={() =>
-                          handleToggleChannelList(
-                            currentEpisodeData.programs?.broadcastings?.channel ?? ''
-                          )
-                        }
-                      >
-                        {currentEpisodeData.programs?.broadcastings?.channel}
-                      </button>
-                    </>
-                  )}
+                  <button
+                    onClick={() =>
+                      handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
+                    }
+                  >
+                    {currentEpisodeData.programs?.title}
+                  </button>
+                  {currentEpisodeType === 'podcast'
+                    ? currentEpisodeData.date
+                      ? ` · ${currentEpisodeData.date}`
+                      : ''
+                    : ` · ${currentEpisodeData.programs?.broadcastings?.title} ${currentEpisodeData.programs?.broadcastings?.channel} `}
                 </p>
                 <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[1.5vh]`}>
                   {effectiveIsLive
