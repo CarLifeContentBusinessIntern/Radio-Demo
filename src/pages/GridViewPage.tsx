@@ -85,7 +85,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
     <div className="pr-20">
       {!rectangle ? (
         <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-4">
-          {data.map((item) => (
+          {data.map((item, index) => (
             <GridViewItem
               key={item.id}
               isLoading={false}
@@ -94,6 +94,10 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
+                if (allSeriesEpisodes[index].audio_file.length === 0) {
+                  toast.error(t('toast.no-contents'), { toastId: item.id });
+                  return;
+                }
                 if (isSeriesEpisodes) {
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
@@ -121,7 +125,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
         </div>
       ) : (
         <div className="grid gap-x-4 gap-y-7 mb-16 px-1 grid-cols-3">
-          {data.map((item) => (
+          {data.map((item, index) => (
             <RectangleGridViewItem
               key={item.id}
               isLoading={false}
@@ -130,6 +134,10 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
+                if (allSeriesEpisodes[index].audio_file.length === 0) {
+                  toast.error(t('toast.no-contents'), { toastId: item.id });
+                  return;
+                }
                 if (isSeriesEpisodes) {
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
