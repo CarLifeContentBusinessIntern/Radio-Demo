@@ -217,7 +217,7 @@ function Player() {
                   {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
                 </p>
                 <p className="text-[#A6A6A9] text-[2vh]">
-                  {currentEpisodeType === 'podcast' ? (
+                  {currentEpisodeType === 'podcast' || currentEpisodeType === null ? (
                     <>
                       <button
                         onClick={() =>
@@ -225,8 +225,8 @@ function Player() {
                         }
                       >
                         {currentEpisodeData.programs?.title}
-                      </button>{' '}
-                      · {currentEpisodeData.date}
+                      </button>
+                      {currentEpisodeData.date ? ` · ${currentEpisodeData.date}` : ''}
                     </>
                   ) : (
                     <>
