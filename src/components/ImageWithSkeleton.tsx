@@ -13,6 +13,8 @@ interface ImageWithSkeletonProps {
   isRecent?: boolean;
   priority?: boolean;
   rootMargin?: string;
+  isCover?: boolean;
+  isBlur?: boolean;
 }
 
 export default function ImageWithSkeleton({
@@ -25,6 +27,8 @@ export default function ImageWithSkeleton({
   isRecent = false,
   priority = false,
   rootMargin = '300px',
+  isCover = false,
+  isBlur = true,
 }: ImageWithSkeletonProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [objectFit, setObjectFit] = useState<'object-contain' | 'object-cover'>('object-cover');
@@ -96,7 +100,7 @@ export default function ImageWithSkeleton({
       {/* 블러 배경 */}
       {/* 최근 청취 큐레이션/채널에 쓰일 경우 배경 블러 추가하지 않기 */}
 
-      {!isRecent && isLoaded && src && needsBlur && (
+      {!isRecent && isLoaded && src && needsBlur && isBlur && (
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl scale-110"
           style={{ backgroundImage: `url('${src}')` }}
@@ -117,7 +121,7 @@ export default function ImageWithSkeleton({
         onLoad={handleImageLoad}
         className={`relative w-full h-full transition-opacity duration-300 ${objectFit} ${
           isLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${isCover ? 'object-cover' : ''}`}
       />
     </div>
   );

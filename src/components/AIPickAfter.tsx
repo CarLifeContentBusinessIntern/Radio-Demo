@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { MdOutlinePlayCircle } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
-import BannerBackground from '../assets/ai_pick_banner_background_after.png';
-import BannerIcon from '../assets/ai_pick_banner_dailymix_after.png';
-import AIPick from './AIPick';
-import { usePreference } from '../contexts/PreferenceContext';
 import { MOOD_PREFIX } from '../constants/preferenceQuestions';
+import { usePreference } from '../contexts/PreferenceContext';
+import AIPick from './AIPick';
+import ImageWithSkeleton from './ImageWithSkeleton';
 
 function AIPickAfter() {
   const { t } = useTranslation();
@@ -32,12 +31,24 @@ function AIPickAfter() {
         });
       }}
     >
-      <img src={BannerBackground} className="cursor-pointer w-full h-40 rounded-3xl object-cover" />
+      <ImageWithSkeleton
+        src="https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_background_after.webp"
+        alt="AI Pick Banner"
+        className={`cursor-pointer w-full h-40 rounded-3xl object-cover`}
+        skeletonClassName={`w-full h-40 rounded-3xl object-cover`}
+        isCover={true}
+      />
 
       <div className="absolute w-full -top-8">
         <div className="flex justify-center items-center">
           <div className="flex items-center justify-between w-full max-w-[800px] px-4">
-            <img src={BannerIcon} className="w-1/2 max-w-[360px] h-[230px]" />
+            <ImageWithSkeleton
+              src="https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/pickle-ai-pick/ai_pick_banner_dailymix_after.webp"
+              alt="AI Pick Banner Icon"
+              className="w-1/2 max-w-[360px] h-[230px]"
+              skeletonClassName="w-1/2 max-w-[360px] h-[230px]"
+              isBlur={false}
+            />
 
             <div className="text-white gap-y1">
               <p className="font-bold text-2xl">{t('ai-pick.banner-after-1')}</p>
