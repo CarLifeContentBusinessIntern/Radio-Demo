@@ -73,7 +73,9 @@ function ListViewPage() {
         const broadcasting = item.programs?.broadcastings?.title ?? '';
         const channel = item.programs?.broadcastings?.channel ?? '';
         const subTitleText =
-          item.type === 'podcast' ? (item.programs?.title ?? '') : `${broadcasting} ${channel}`;
+          item.type === 'podcast' || item.type === null
+            ? (item.programs?.title ?? '')
+            : `${broadcasting} ${channel}`;
 
         const episodeId = item.id;
 
