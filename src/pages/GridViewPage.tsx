@@ -94,11 +94,14 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
-                if (allSeriesEpisodes[index].audio_file.length === 0) {
-                  toast.error(t('toast.no-contents'), { toastId: item.id });
-                  return;
-                }
                 if (isSeriesEpisodes) {
+                  if (
+                    !allSeriesEpisodes[index]?.audio_file ||
+                    allSeriesEpisodes[index].audio_file.length === 0
+                  ) {
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
+                    return;
+                  }
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
                     state: {
@@ -134,11 +137,14 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               img={item.img_url}
               isRounded={type !== 'podcast_category'}
               onClick={() => {
-                if (allSeriesEpisodes[index].audio_file.length === 0) {
-                  toast.error(t('toast.no-contents'), { toastId: item.id });
-                  return;
-                }
                 if (isSeriesEpisodes) {
+                  if (
+                    !allSeriesEpisodes[index]?.audio_file ||
+                    allSeriesEpisodes[index].audio_file.length === 0
+                  ) {
+                    toast.error(t('toast.no-contents'), { toastId: item.id });
+                    return;
+                  }
                   const validPlaylist = allSeriesEpisodes.filter((ep) => ep.audio_file !== null);
                   navigate(`/player/${item.id}`, {
                     state: {
