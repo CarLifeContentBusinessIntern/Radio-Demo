@@ -55,28 +55,30 @@ function RecentPage() {
   };
 
   return (
-    <div className="flex flex-col gap-y-9 pr-11 pt-7">
-      <p className="text-lg">{t('sections.curation-channel')}</p>
-      <div className="grid gap-x-4 gap-y-7 px-1 grid-cols-4">
-        {recentSeriesPrograms?.map((item) => {
-          const imgUrl = item.img_url ?? item.episode?.img_url;
-          return (
-            <GridViewItem
-              key={item.id}
-              img={imgUrl}
-              title={item.title}
-              subTitle={item.subtitle}
-              isRounded={true}
-              isRecent={true}
-              onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
-            />
-          );
-        })}
+    <div className="flex flex-col gap-y-7 mr-20 pt-5">
+      <div className="flex flex-col gap-y-3">
+        <p className="text-lg">{t('sections.curation-channel')}</p>
+        <div className="grid gap-x-2 gap-y-7 grid-cols-4">
+          {recentSeriesPrograms?.map((item) => {
+            const imgUrl = item.img_url ?? item.episode?.img_url;
+            return (
+              <GridViewItem
+                key={item.id}
+                img={imgUrl}
+                title={item.title}
+                subTitle={item.subtitle}
+                isRounded={true}
+                isRecent={true}
+                onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
+              />
+            );
+          })}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <p className="text-lg">{t('sections.episode')}</p>
-        <div className="flex flex-col gap-y-1">
+        <div className="flex flex-col gap-y-[6px]">
           {recentEpisodes?.map((item) => (
             <RecentEpisodeList key={item.id} item={item} />
           ))}

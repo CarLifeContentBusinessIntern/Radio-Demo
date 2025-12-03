@@ -68,7 +68,7 @@ function ListViewPage() {
   if (episodes.length === 0) return <div>데이터가 없습니다</div>;
 
   return (
-    <div className="flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-[6px] mr-20">
       {episodes.map((item) => {
         const broadcasting = item.programs?.broadcastings?.title ?? '';
         const channel = item.programs?.broadcastings?.channel ?? '';

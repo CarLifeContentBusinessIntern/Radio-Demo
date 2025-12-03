@@ -38,15 +38,15 @@ function RectangleGridViewItem({
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
-          className={`w-full aspect-[16/9] ${isRounded ? 'rounded-3xl' : ''} mb-4`}
-          skeletonClassName={`w-full aspect-[16/9] mb-4 ${isRounded ? 'rounded-3xl' : ''}`}
+          className={`w-full aspect-[16/9] ${isRounded ? 'rounded-[10px]' : ''} mb-[6px]`}
+          skeletonClassName={`w-full aspect-[16/9] mb-[6px] ${isRounded ? 'rounded-[10px]' : ''}`}
         />
       ) : (
         <div
-          className={`bg-gray-600 w-full aspect-[16/9] ${isRounded ? 'rounded-3xl' : ''} mb-4`}
+          className={`bg-gray-600 w-full aspect-[16/9] ${isRounded ? 'rounded-[10px]' : ''} mb-[6px]`}
         />
       )}
-      <p className="text-lg mb-1 px-1 font-semibold truncate">{title}</p>
+      <p className="text-lg px-1 font-semibold truncate">{title}</p>
       <p className="text-base text-gray-400 px-1 truncate">{subTitle}</p>
     </div>
   );

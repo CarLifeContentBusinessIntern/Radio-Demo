@@ -40,16 +40,16 @@ function CircleViewItem({
           <ImageWithSkeleton
             src={img}
             alt={title}
-            className="w-full aspect-square rounded-full mb-4 flex items-center justify-center overflow-hidden"
+            className="w-full aspect-square rounded-full mb-[6px] flex items-center justify-center overflow-hidden"
             skeletonClassName="absolute inset-0 rounded-full"
           />
         ) : (
-          <div className="bg-gray-600 w-full rounded-full aspect-square mb-4" />
+          <div className="bg-gray-600 w-full rounded-full aspect-square mb-[6px]" />
         )}
       </div>
       {!isRecentEpisode && (
         <>
-          <p className="text-base mb-1 px-1 font-semibold truncate">{trimedTitle}</p>
+          <p className="text-base px-1 font-semibold truncate">{trimedTitle}</p>
           <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
         </>
       )}

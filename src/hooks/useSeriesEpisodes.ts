@@ -10,7 +10,8 @@ export function useSeriesEpisodes(id: string | undefined) {
         .from('series_episodes')
         .select('*, episodes(*, programs(*, broadcastings(*)))')
         .eq('series_id', id)
-        .eq('is_active', true);
+        .eq('is_active', true)
+        .order('order', { ascending: true });
 
       if (error) throw error;
       return data as SeriesEpisodesType[];

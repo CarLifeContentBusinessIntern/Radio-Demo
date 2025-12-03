@@ -67,9 +67,9 @@ function RadioMix() {
 
   return (
     <div>
-      <div className="text-lg mb-5 font-semibold">{t('sections.radio-mix')}</div>
+      <div className="text-lg mb-3 font-semibold">{t('sections.radio-mix')}</div>
       <div
-        className="grid gap-x-4 gap-y-7 mb-10 px-1"
+        className="grid gap-x-2 gap-y-7 mb-10 px-1"
         style={{
           gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
         }}
