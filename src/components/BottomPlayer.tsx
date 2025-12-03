@@ -107,16 +107,18 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         />
       </div>
 
-      <div className="flex max-w-screen-xl items-center justify-center w-full">
+      <div className="flex max-w-screen-xl items-stretch justify-center w-full">
         {/* 컨트롤 버튼 */}
-        <div className="flex items-center gap-10 mr-8" onClick={handleControlsClick}>
-          <TbPlayerSkipBackFilled
-            size={25}
+        <div className="flex items-center gap-2 mr-8 self-stretch" onClick={handleControlsClick}>
+          <div
+            className="h-full aspect-[3/2] flex items-center justify-center"
             onClick={() => !isOnAirEpisode && handlePlayBarPrev()}
-          />
+          >
+            <TbPlayerSkipBackFilled size={25} />
+          </div>
 
           <button
-            className="relative w-6 h-6 disabled:cursor-not-allowed"
+            className="relative h-full aspect-[3/2] flex items-center justify-center disabled:cursor-not-allowed"
             onClick={togglePlayPause}
             disabled={isLoading}
           >
@@ -129,10 +131,12 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
             )}
           </button>
 
-          <TbPlayerSkipForwardFilled
-            size={25}
+          <div
+            className="h-full aspect-[3/2] flex items-center justify-center"
             onClick={() => !isOnAirEpisode && handlePlayBarNext()}
-          />
+          >
+            <TbPlayerSkipForwardFilled size={25} />
+          </div>
         </div>
 
         {/* 에피소드 정보 */}
