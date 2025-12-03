@@ -74,13 +74,13 @@ function AppRoutes() {
       import('./pages/AIPick.tsx');
 
       const img1 = new Image();
-      img1.src = new URL('./assets/ai_pick_banner_background.png', import.meta.url).href;
+      img1.src = new URL('./assets/ai_pick_banner_background.webp', import.meta.url).href;
       const img2 = new Image();
-      img2.src = new URL('./assets/ai_pick_banner_icon.png', import.meta.url).href;
+      img2.src = new URL('./assets/ai_pick_banner_icon.webp', import.meta.url).href;
       const img3 = new Image();
-      img3.src = new URL('./assets/ai_pick_banner_background_after.png', import.meta.url).href;
+      img3.src = new URL('./assets/ai_pick_banner_background_after.webp', import.meta.url).href;
       const img4 = new Image();
-      img4.src = new URL('./assets/ai_pick_banner_dailymix_after.png', import.meta.url).href;
+      img4.src = new URL('./assets/ai_pick_banner_dailymix_after.webp', import.meta.url).href;
     }, 2000);
 
     const mediumPriorityTimer = setTimeout(() => {

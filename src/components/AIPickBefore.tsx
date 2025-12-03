@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useNavigate } from 'react-router-dom';
-import BannerBackground from '../assets/ai_pick_banner_background.png';
-import BannerIcon from '../assets/ai_pick_banner_icon.png';
+import BannerBackground from '../assets/ai_pick_banner_background.webp';
+import BannerIcon from '../assets/ai_pick_banner_icon.webp';
 import AIPick from './AIPick';
 
 function AIPickBefore() {
