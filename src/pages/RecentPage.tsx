@@ -47,6 +47,7 @@ function RecentPage() {
       navigate(`/episodes/${item.episode.origin_type}/${item.id}`, {
         state: {
           title: item.title,
+          originType: item.episode.origin_type,
         },
       });
     } else {
@@ -68,7 +69,6 @@ function RecentPage() {
                 title={item.title}
                 subTitle={item.subtitle}
                 isRounded={true}
-                isRecent={true}
                 onClick={() => handleClickSeriesProgram(navigate, item, t('toast.no-contents'))}
               />
             );
