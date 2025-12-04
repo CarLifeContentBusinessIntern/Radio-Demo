@@ -30,7 +30,7 @@ function ToggleButton({
   };
 
   return (
-    <div className="box top-[25%] w-[10vh] h-[20vh] scale-65 rounded-full flex items-center justify-center">
+    <div className="box top-[25%] w-[10vh] h-[20vh] scale-[70%] rounded-full flex items-center justify-center">
       <button
         onClick={handleToggle}
         className={`flex justify-center items-start p-[1vh] w-[10vh] h-[20vh] rounded-full transition-colors duration-500 overflow-hidden ${isActivate ? 'bg-[#00000090]' : 'bg-[#FFFFFF75]'} relative z-10`}
