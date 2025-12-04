@@ -6,7 +6,6 @@ import type { SectionItemType } from '../types/section';
 export function useSection(sectionId: number, selectedOEM?: string) {
   const { i18n } = useTranslation();
   const currentLanguage = i18n.language.startsWith('en') ? 'en' : 'ko';
-  console.log(i18n.language);
 
   const {
     data = [],
