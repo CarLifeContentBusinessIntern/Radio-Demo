@@ -20,6 +20,7 @@ function Slider({ images }: SliderProps) {
   const [touchStart, setTouchStart] = useState(0);
   const [touchPosition, setTouchPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [hasSwiped, setHasSwiped] = useState(false);
 
   const { data: episodes, refetch } = useQuery({
     queryKey: ['random-episodes', 'daily-mix'],
@@ -41,6 +42,7 @@ function Slider({ images }: SliderProps) {
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(true);
+    setHasSwiped(false);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
@@ -49,12 +51,16 @@ function Slider({ images }: SliderProps) {
     const currentTouch = e.targetTouches[0].clientX;
     const diff = currentTouch - touchStart;
     setTouchPosition(diff);
+
+    if (Math.abs(diff) > 10) {
+      setHasSwiped(true);
+    }
   };
 
   const onTouchEnd = () => {
     setIsDragging(false);
 
-    const threshold = window.innerWidth * 0.3;
+    const threshold = window.innerWidth * 0.03;
 
     if (touchPosition < -threshold && currentIndex < 1) {
       nextSlide();
@@ -91,6 +97,8 @@ function Slider({ images }: SliderProps) {
               key={index}
               className="relative w-full flex-shrink-0 overflow-hidden cursor-pointer"
               onClick={() => {
+                if (hasSwiped) return;
+
                 refetch();
                 navigate(`/player/${episodes?.[0].id}`, {
                   state: { isLive: false, playlist: episodes, originType: 'program' },
