@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
@@ -20,11 +19,7 @@ function Slider({ images }: SliderProps) {
   const [touchStart, setTouchStart] = useState(0);
   const [touchPosition, setTouchPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-
-  const { data: episodes, refetch } = useQuery({
-    queryKey: ['random-episodes', 'daily-mix'],
-    queryFn: fetchRandomEpisodes,
-  });
+  const [hasSwiped, setHasSwiped] = useState(false);
 
   const prevSlide = () => {
     if (currentIndex > 0) {
@@ -38,9 +33,25 @@ function Slider({ images }: SliderProps) {
     }
   };
 
+  const handleSlideEnd = () => {
+    setIsDragging(false);
+
+    // threshold: 슬라이드 이동을 결정하는 최소 거리
+    const threshold = window.innerWidth * 0.03;
+
+    if (touchPosition < -threshold && currentIndex < sliderLength - 1) {
+      nextSlide();
+    } else if (touchPosition > threshold && currentIndex > 0) {
+      prevSlide();
+    }
+
+    setTouchPosition(0);
+  };
+
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(true);
+    setHasSwiped(false);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
@@ -49,20 +60,45 @@ function Slider({ images }: SliderProps) {
     const currentTouch = e.targetTouches[0].clientX;
     const diff = currentTouch - touchStart;
     setTouchPosition(diff);
+
+    if (Math.abs(diff) > 10) {
+      setHasSwiped(true);
+    }
   };
 
   const onTouchEnd = () => {
-    setIsDragging(false);
+    handleSlideEnd();
+  };
 
-    const threshold = window.innerWidth * 0.3;
+  const onMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setTouchStart(e.clientX);
+    setIsDragging(true);
+    setHasSwiped(false);
+  };
 
-    if (touchPosition < -threshold && currentIndex < 1) {
-      nextSlide();
-    } else if (touchPosition > threshold && currentIndex > 0) {
-      prevSlide();
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+
+    const currentMouse = e.clientX;
+    const diff = currentMouse - touchStart;
+    setTouchPosition(diff);
+
+    if (Math.abs(diff) > 10) {
+      setHasSwiped(true);
     }
+  };
 
-    setTouchPosition(0);
+  const onMouseUp = () => {
+    if (!isDragging) return;
+
+    handleSlideEnd();
+  };
+
+  const onMouseLeave = () => {
+    if (isDragging) {
+      onMouseUp();
+    }
   };
 
   const getTransform = () => {
@@ -74,6 +110,18 @@ function Slider({ images }: SliderProps) {
     return baseTransform;
   };
 
+  const handleBannerClick = async (index: number) => {
+    const reset = index === 0;
+
+    const freshEpisodes = await fetchRandomEpisodes({ reset });
+
+    if (freshEpisodes && freshEpisodes.length > 0) {
+      navigate(`/player/${freshEpisodes[0].id}`, {
+        state: { isLive: false, playlist: freshEpisodes, originType: 'program' },
+      });
+    }
+  };
+
   return (
     <div className="relative">
       <div
@@ -81,6 +129,10 @@ function Slider({ images }: SliderProps) {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
       >
         <div
           className={`flex ${isDragging ? '' : 'transition-transform duration-500 ease-out'}`}
@@ -91,16 +143,20 @@ function Slider({ images }: SliderProps) {
               key={index}
               className="relative w-full flex-shrink-0 overflow-hidden cursor-pointer"
               onClick={() => {
-                refetch();
-                navigate(`/player/${episodes?.[0].id}`, {
-                  state: { isLive: false, playlist: episodes, originType: 'program' },
-                });
+                if (hasSwiped) return;
+
+                if (index > 0) {
+                  navigate(`/setting/preference`);
+                } else {
+                  handleBannerClick(index);
+                }
               }}
             >
               <img
                 src={image.background}
                 alt={`배너 배경 ${index}`}
                 className="w-full h-[172px] object-cover"
+                draggable={false}
               />
 
               {image.content}
@@ -113,7 +169,7 @@ function Slider({ images }: SliderProps) {
             <span
               key={index}
               className={`w-2 h-2 rounded-full transition-colors ${
-                currentIndex === index ? 'bg-gray-300' : 'bg-gray-400'
+                currentIndex === index ? 'bg-black/50' : 'bg-black/25'
               }`}
             />
           ))}

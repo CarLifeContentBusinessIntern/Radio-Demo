@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 import defaultTheme from 'tailwindcss/defaultTheme';
-import { transform } from 'typescript';
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+        sans: ['Pretendard', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'toggle-off': {
@@ -26,8 +25,8 @@ export default {
         },
       },
       animation: {
-        'toggle-on': 'toggle-on 0.3s ease-out forwards',
-        'toggle-off': 'toggle-off 0.3s ease-out forwards',
+        'toggle-on': 'toggle-on 0.25s ease-out forwards',
+        'toggle-off': 'toggle-off 0.25s ease-out forwards',
       },
     },
   },

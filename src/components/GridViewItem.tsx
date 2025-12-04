@@ -9,7 +9,6 @@ interface GridViewItemProps {
   img?: string;
   onClick?: () => void;
   isRounded?: boolean;
-  isRecent?: boolean;
 }
 
 function GridViewItem({
@@ -19,7 +18,6 @@ function GridViewItem({
   img,
   onClick,
   isRounded = true,
-  isRecent = false,
 }: GridViewItemProps) {
   const location = useLocation();
   const isAudioDrama = location.state?.isAudioDrama;
@@ -44,7 +42,6 @@ function GridViewItem({
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
-          isRecent={isRecent}
           className={`w-full aspect-square ${isRounded ? (isAudioDrama ? 'rounded-[10px]' : 'rounded-[20px]') : ''} mb-2 object-cover`}
           skeletonClassName={`w-full aspect-square mb-2 ${isRounded ? (isAudioDrama ? 'rounded-[10px]' : 'rounded-[20px]') : ''} `}
         />

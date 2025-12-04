@@ -1,9 +1,16 @@
-import { EPISODE_COUNT } from '../components/AIPick';
 import { supabase } from '../lib/supabaseClient';
 import type { EpisodeType } from '../types/episode';
 
-export const fetchRandomEpisodes = async (): Promise<EpisodeType[]> => {
-  const { data, error } = await supabase.rpc('get_random_episodes', { count: EPISODE_COUNT });
+interface FetchRandomEpisodesParams {
+  count?: number;
+  reset?: boolean;
+}
+
+export const fetchRandomEpisodes = async ({
+  count = 5,
+  reset = false,
+}: FetchRandomEpisodesParams): Promise<EpisodeType[]> => {
+  const { data, error } = await supabase.rpc('get_random_episodes', { count, reset });
 
   if (error) throw error;
   return data;

@@ -151,7 +151,7 @@ function SettingDemo() {
   );
 
   return (
-    <div className="px-6">
+    <div className="px-9">
       {settings.map((setting, index) => (
         <>
           <SettingItem key={setting.label} {...setting} />

@@ -34,7 +34,6 @@ function Player() {
 
   const {
     currentEpisodeData,
-    currentEpisodeType,
     currentTime,
     isPlaying,
     isLive,
@@ -149,22 +148,25 @@ function Player() {
       state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
-
   return (
     <div className="relative overflow-hidden h-full">
       {imgUrl && (
-        <div
-          className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{ backgroundImage: `url('${imgUrl}')` }}
-        >
+        <>
+          {/* 블러 처리된 배경 이미지 */}
           <div
-            className="absolute inset-0 backdrop-blur-lg"
+            className="fixed inset-0 -z-10 bg-contain bg-no-repeat blur-lg"
+            style={{ backgroundImage: `url('${imgUrl}')` }}
+          />
+
+          {/* 그라디언트 오버레이 */}
+          <div
+            className="fixed inset-0 -z-10"
             style={{
               background:
-                'radial-gradient(ellipse 35% 60% at 5% 50%, rgba(255, 255, 255, 0.15) 10%, black 100%)',
+                'radial-gradient(ellipse 70vh 80vh at 0% 50%, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.85) 75%, black 100%)',
             }}
           />
-        </div>
+        </>
       )}
 
       <div
@@ -212,11 +214,11 @@ function Player() {
                 )}
               </div>
 
-              <div className="flex flex-col flex-grow justify-between gap-[1vh] text-center md:text-left">
-                <p className="line-clamp-2 leading-snug text-[3vh]">
+              <div className="flex flex-col flex-grow justify-between gap-[0.7vh] text-center md:text-left">
+                <p className="line-clamp-2 leading-snug text-[4vh]">
                   {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
                 </p>
-                <p className="text-[#A6A6A9] text-[2vh]">
+                <p className="text-[#A6A6A9] text-[3vh]">
                   <button
                     onClick={() =>
                       handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
@@ -224,13 +226,13 @@ function Player() {
                   >
                     {currentEpisodeData.programs?.title}
                   </button>
-                  {currentEpisodeType === 'podcast'
+                  {currentEpisodeData.type === 'podcast' || currentEpisodeData.type === null
                     ? currentEpisodeData.date
                       ? ` · ${currentEpisodeData.date}`
                       : ''
                     : ` · ${currentEpisodeData.programs?.broadcastings?.title} ${currentEpisodeData.programs?.broadcastings?.channel} `}
                 </p>
-                <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[1.5vh]`}>
+                <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[2.5vh]`}>
                   {effectiveIsLive
                     ? 'LIVE'
                     : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}

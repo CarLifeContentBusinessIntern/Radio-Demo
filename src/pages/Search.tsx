@@ -15,6 +15,7 @@ function Search() {
   const fetchRandomData = async (): Promise<EpisodeType[]> => {
     const { data, error } = await supabase.rpc('get_random_episodes', {
       count: 8,
+      reset: false,
     });
 
     if (error) throw error;

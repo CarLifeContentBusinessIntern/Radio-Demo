@@ -6,15 +6,9 @@ export function useTenRecentEpisodes() {
   return useQuery<EpisodeType[]>({
     queryKey: ['tenRecentEpisodes'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('episodes')
-        .select('*, programs(*, broadcastings(*))')
-        .not('listened_at', 'is', null)
-        .filter('listened_duration', 'gt', '0')
-        .order('listened_at', { ascending: false })
-        .limit(10);
+      const { data, error } = await supabase.rpc('get_ten_recent_episodes');
       if (error) throw error;
-      return data as EpisodeType[];
+      return data;
     },
     refetchOnWindowFocus: true,
     refetchInterval: 30000,

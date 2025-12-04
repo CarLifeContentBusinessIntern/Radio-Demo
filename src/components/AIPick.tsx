@@ -46,7 +46,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
     isLoading,
   } = useQuery({
     queryKey: ['random-episodes', moodPrefix],
-    queryFn: fetchRandomEpisodes,
+    queryFn: () => fetchRandomEpisodes({ count: 5, reset: false }),
     refetchOnWindowFocus: false,
   });
 
@@ -133,7 +133,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
             <ImageWithSkeleton
               src={PickleAIIcon}
               alt="Pickle AI"
-              className="w-14 h-14"
+              className="w-10 h-10"
               skeletonClassName="rounded-full"
               baseColor="#2A2A2E"
               highlightColor="#3A3A3E"
@@ -176,7 +176,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="bg-[#202026] w-full rounded-full flex justify-center items-center gap-6 py-5 hover:bg-[#2A2A2E] transition-colors disabled:opacity-50"
+            className="bg-[#202026] w-full rounded-full flex justify-center items-center gap-6 py-3 hover:bg-[#2A2A2E] transition-colors disabled:opacity-50"
           >
             <div className={isFetching ? 'animate-spin' : ''}>
               <FiRefreshCcw size={20} color="#A1A1A1" />

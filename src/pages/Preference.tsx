@@ -54,11 +54,11 @@ function Preference() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-[90%] mx-auto">
+    <div className="min-h-screen bg-black text-white mx-9">
+      <div className="w-full mx-auto">
         <div className="flex justify-between items-center leading-none sticky top-0 bg-black z-10 py-2">
-          <h1 className="text-xl font-bold">{t('preference.title')}</h1>
-          <div className="flex gap-4">
+          <h1 className="text-lg font-bold">{t('preference.title')}</h1>
+          <div className="flex gap-2">
             <button
               className="flex gap-[6px] text-base font-semibold rounded-full bg-[#202026] text-[#A1A1A1] items-center justify-center px-3 py-3 w-[120px]"
               onClick={handleReset}

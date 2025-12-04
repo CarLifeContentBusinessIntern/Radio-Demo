@@ -28,6 +28,8 @@ function RecentEpisodeList({ item }: { item: EpisodeType }) {
       playlist={playlist}
       totalTime={item.duration}
       listenedDuration={playedDurations[item.id] ?? (Number(item.listened_duration) || 0)}
+      originType={item.origin_type!}
+      recentSeriesId={item.recent_series_id}
     />
   );
 }
