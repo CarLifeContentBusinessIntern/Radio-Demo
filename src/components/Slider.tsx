@@ -33,6 +33,21 @@ function Slider({ images }: SliderProps) {
     }
   };
 
+  const handleSlideEnd = () => {
+    setIsDragging(false);
+
+    // threshold: 슬라이드 이동을 결정하는 최소 거리
+    const threshold = window.innerWidth * 0.03;
+
+    if (touchPosition < -threshold && currentIndex < sliderLength - 1) {
+      nextSlide();
+    } else if (touchPosition > threshold && currentIndex > 0) {
+      prevSlide();
+    }
+
+    setTouchPosition(0);
+  };
+
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchStart(e.targetTouches[0].clientX);
     setIsDragging(true);
@@ -52,17 +67,7 @@ function Slider({ images }: SliderProps) {
   };
 
   const onTouchEnd = () => {
-    setIsDragging(false);
-
-    const threshold = window.innerWidth * 0.03;
-
-    if (touchPosition < -threshold && currentIndex < 1) {
-      nextSlide();
-    } else if (touchPosition > threshold && currentIndex > 0) {
-      prevSlide();
-    }
-
-    setTouchPosition(0);
+    handleSlideEnd();
   };
 
   const onMouseDown = (e: React.MouseEvent) => {
@@ -87,17 +92,7 @@ function Slider({ images }: SliderProps) {
   const onMouseUp = () => {
     if (!isDragging) return;
 
-    setIsDragging(false);
-
-    const threshold = window.innerWidth * 0.03;
-
-    if (touchPosition < -threshold && currentIndex < 1) {
-      nextSlide();
-    } else if (touchPosition > threshold && currentIndex > 0) {
-      prevSlide();
-    }
-
-    setTouchPosition(0);
+    handleSlideEnd();
   };
 
   const onMouseLeave = () => {
