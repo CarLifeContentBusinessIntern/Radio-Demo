@@ -34,7 +34,6 @@ function Player() {
 
   const {
     currentEpisodeData,
-    currentEpisodeType,
     currentTime,
     isPlaying,
     isLive,
@@ -149,7 +148,6 @@ function Player() {
       state: { ...location.state, title: title, program_id: currentEpisodeData.program_id },
     });
   };
-
   return (
     <div className="relative overflow-hidden h-full">
       {imgUrl && (
@@ -228,7 +226,7 @@ function Player() {
                   >
                     {currentEpisodeData.programs?.title}
                   </button>
-                  {currentEpisodeType === 'podcast'
+                  {currentEpisodeData.type === 'podcast' || currentEpisodeData.type === null
                     ? currentEpisodeData.date
                       ? ` · ${currentEpisodeData.date}`
                       : ''

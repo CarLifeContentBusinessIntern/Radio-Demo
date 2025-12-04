@@ -73,7 +73,7 @@ const initialPlayerState: PlayerState = {
   isLive: false,
   isOnAir: false,
   isPlaylistOpen: false,
-  currentEpisodeType: 'radio',
+  currentEpisodeType: null,
   isLoading: false,
   originType: null,
   recentSeriesId: null,
@@ -388,17 +388,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
           const isOnAir = nextEpisode.id === liveEpisode.id;
 
           if (!isPlayBar) {
-            if (isPodcast) {
-              navigate(`/player/podcasts/${nextEpisode.id}`, {
-                replace: true,
-                state: {
-                  isLive: false,
-                  playlist: playlist,
-                  originType: state.originType,
-                  recentSeriesId: state.recentSeriesId,
-                },
-              });
-            } else if (isOnAir) {
+            if (isOnAir) {
               navigate(`/player/live`, {
                 replace: true,
                 state: { isOnAir: true, playlist: [] },
