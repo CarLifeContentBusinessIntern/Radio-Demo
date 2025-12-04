@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import RightArrowIcon from '../assets/rightArrowIcon.svg';
 import { useTranslation } from 'react-i18next';
+import PickleLogo from '../assets/pickle_logo.png';
 
 function SettingPage() {
   const { t } = useTranslation();
@@ -46,7 +47,7 @@ function SettingPage() {
       id: 'withdrawal',
       label: t('setting.delete-account'),
       textColor: 'text-gray-400',
-      height: 'h-[120px]',
+      height: 'h-[80px]',
       justify: 'justify-center',
     },
   ];
@@ -55,7 +56,7 @@ function SettingPage() {
     <div>
       <div className="flex justify-between items-center bg-gray-800 h-36 pl-16 pr-8">
         <div className="flex items-center">
-          <div className="w-24 h-24 rounded-full bg-gray-300 mr-7" />
+          <img src={PickleLogo} className="w-24 h-24 rounded-full mr-7" />
           <p className="text-base text-[#979DA9] font-bold">pickle@obigo.com</p>
         </div>
         <button className="bg-gray-500 rounded-xl h-16 px-16 flex items-center justify-center cursor-pointer">
