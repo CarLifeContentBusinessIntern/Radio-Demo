@@ -113,7 +113,7 @@ function Slider({ images }: SliderProps) {
             <span
               key={index}
               className={`w-2 h-2 rounded-full transition-colors ${
-                currentIndex === index ? 'bg-gray-300' : 'bg-gray-400'
+                currentIndex === index ? 'bg-black/50' : 'bg-black/25'
               }`}
             />
           ))}
