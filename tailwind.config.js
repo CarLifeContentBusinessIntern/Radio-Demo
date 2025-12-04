@@ -26,8 +26,8 @@ export default {
         },
       },
       animation: {
-        'toggle-on': 'toggle-on 0.3s ease-out forwards',
-        'toggle-off': 'toggle-off 0.3s ease-out forwards',
+        'toggle-on': 'toggle-on 0.25s ease-out forwards',
+        'toggle-off': 'toggle-off 0.25s ease-out forwards',
       },
     },
   },
