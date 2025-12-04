@@ -10,7 +10,6 @@ interface ImageWithSkeletonProps {
   skeletonClassName: string;
   baseColor?: string;
   highlightColor?: string;
-  isRecent?: boolean;
   priority?: boolean;
   rootMargin?: string;
   isCover?: boolean;
@@ -24,7 +23,6 @@ export default function ImageWithSkeleton({
   skeletonClassName = '',
   baseColor = '#444',
   highlightColor = 'gray',
-  isRecent = false,
   priority = false,
   rootMargin = '300px',
   isCover = false,
@@ -100,7 +98,7 @@ export default function ImageWithSkeleton({
       {/* 블러 배경 */}
       {/* 최근 청취 큐레이션/채널에 쓰일 경우 배경 블러 추가하지 않기 */}
 
-      {!isRecent && isLoaded && src && needsBlur && isBlur && (
+      {isLoaded && src && needsBlur && isBlur && (
         <div
           className="absolute inset-0 bg-cover bg-center blur-2xl scale-110"
           style={{ backgroundImage: `url('${src}')` }}
