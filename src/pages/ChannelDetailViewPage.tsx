@@ -46,7 +46,7 @@ function ChannelDetailViewPage() {
         ? Array.from({ length: 8 }).map((_, index) => <ListViewItem isLoading={true} key={index} />)
         : programData?.episodes?.map((episode) => {
             const subTitleText =
-              episode.type === 'podcast'
+              episode.type !== 'radio'
                 ? `${programData.title}`
                 : `${programData.broadcastings?.title} ${programData.broadcastings?.channel}`;
 
