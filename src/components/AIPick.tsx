@@ -46,7 +46,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
     isLoading,
   } = useQuery({
     queryKey: ['random-episodes', moodPrefix],
-    queryFn: fetchRandomEpisodes,
+    queryFn: () => fetchRandomEpisodes({ count: 5, reset: false }),
     refetchOnWindowFocus: false,
   });
 

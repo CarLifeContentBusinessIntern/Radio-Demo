@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
@@ -20,11 +19,6 @@ function Slider({ images }: SliderProps) {
   const [touchStart, setTouchStart] = useState(0);
   const [touchPosition, setTouchPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-
-  const { data: episodes, refetch } = useQuery({
-    queryKey: ['random-episodes', 'daily-mix'],
-    queryFn: fetchRandomEpisodes,
-  });
 
   const prevSlide = () => {
     if (currentIndex > 0) {
@@ -74,6 +68,18 @@ function Slider({ images }: SliderProps) {
     return baseTransform;
   };
 
+  const handleBannerClick = async (index: number) => {
+    const reset = index === 0;
+
+    const freshEpisodes = await fetchRandomEpisodes({ reset });
+
+    if (freshEpisodes && freshEpisodes.length > 0) {
+      navigate(`/player/${freshEpisodes[0].id}`, {
+        state: { isLive: false, playlist: freshEpisodes, originType: 'program' },
+      });
+    }
+  };
+
   return (
     <div className="relative">
       <div
@@ -90,12 +96,7 @@ function Slider({ images }: SliderProps) {
             <div
               key={index}
               className="relative w-full flex-shrink-0 overflow-hidden cursor-pointer"
-              onClick={() => {
-                refetch();
-                navigate(`/player/${episodes?.[0].id}`, {
-                  state: { isLive: false, playlist: episodes, originType: 'program' },
-                });
-              }}
+              onClick={() => handleBannerClick(index)}
             >
               <img
                 src={image.background}

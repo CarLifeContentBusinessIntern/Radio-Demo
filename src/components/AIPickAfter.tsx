@@ -26,12 +26,12 @@ function AIPickAfter() {
       background: BannerBackground,
       icon: BannerIcon,
       content: (
-        <div className="absolute w-full -top-8">
+        <div className="absolute w-full -top-10">
           <div className="flex justify-center items-center">
-            <div className="flex items-center justify-between w-full max-w-[800px] px-4">
-              <img src={BannerIcon} className="w-1/2 max-w-[360px] h-[230px]" />
+            <div className="flex items-center justify-between w-full max-w-[900px] px-4">
+              <img src={BannerIcon} className="w-1/2 max-w-[400px] h-[260px]" />
 
-              <div className="text-white gap-y1">
+              <div className="text-white gap-y1 w-1/2 max-w-[400px]">
                 <p className="font-bold text-2xl">{t('ai-pick.banner-after-1')}</p>
                 <p className="font-medium text-lg my-2">
                   {t('ai-pick.banner-after-2-start')}
