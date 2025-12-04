@@ -106,8 +106,28 @@ input[type='range']::-webkit-slider-thumb {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  padding: 3px;
-  background: linear-gradient(150deg, #797979 0%, #797979 35%, #ffffff 100%);
+  padding: 2px;
+  background: linear-gradient(130deg, #505050 0%, #d9d9d9 10%, #c6c6c6 20%, #bababa 50%, #d9d9d9 90%, #707070 99%, #2a2a2a 100%);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.box-active {
+  position: relative;
+}
+
+.box-active::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  padding: 2px;
+  background: linear-gradient(150deg, #2e2e2e 0%, #bababa96 10%, #6e6e6e 20%,#3e3e3e 50%, #3a3a3a80 80%, #1b1b1b96 90%, #2b2b2b 100%);
   -webkit-mask:
     linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);

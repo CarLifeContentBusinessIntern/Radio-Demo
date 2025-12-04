@@ -216,11 +216,11 @@ function Player() {
                 )}
               </div>
 
-              <div className="flex flex-col flex-grow justify-between gap-[1vh] text-center md:text-left">
-                <p className="line-clamp-2 leading-snug text-[3vh]">
+              <div className="flex flex-col flex-grow justify-between gap-[0.7vh] text-center md:text-left">
+                <p className="line-clamp-2 leading-snug text-[4vh]">
                   {isLive ? currentEpisodeData.programs?.title : currentEpisodeData.title}
                 </p>
-                <p className="text-[#A6A6A9] text-[2vh]">
+                <p className="text-[#A6A6A9] text-[3vh]">
                   <button
                     onClick={() =>
                       handleToggleChannelList(currentEpisodeData.programs?.title ?? '')
@@ -234,7 +234,7 @@ function Player() {
                       : ''
                     : ` · ${currentEpisodeData.programs?.broadcastings?.title} ${currentEpisodeData.programs?.broadcastings?.channel} `}
                 </p>
-                <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[1.5vh]`}>
+                <p className={`text-[#A6A6A9] ${isLoading ? 'invisible' : ''} text-[2.5vh]`}>
                   {effectiveIsLive
                     ? 'LIVE'
                     : `${formatTime(currentTime, isHourDisplay)} / ${formatTime(totalTimeSeconds, isHourDisplay)}`}
