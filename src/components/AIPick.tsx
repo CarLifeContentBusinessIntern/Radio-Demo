@@ -176,7 +176,7 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
           <button
             onClick={() => refetch()}
             disabled={isFetching}
-            className="bg-[#202026] w-full rounded-full flex justify-center items-center gap-6 py-5 hover:bg-[#2A2A2E] transition-colors disabled:opacity-50"
+            className="bg-[#202026] w-full rounded-full flex justify-center items-center gap-6 py-3 hover:bg-[#2A2A2E] transition-colors disabled:opacity-50"
           >
             <div className={isFetching ? 'animate-spin' : ''}>
               <FiRefreshCcw size={20} color="#A1A1A1" />
