@@ -151,18 +151,22 @@ function Player() {
   return (
     <div className="relative overflow-hidden h-full">
       {imgUrl && (
-        <div
-          className="fixed inset-0 -z-10 bg-contain bg-no-repeat rounded-lg"
-          style={{ backgroundImage: `url('${imgUrl}')` }}
-        >
+        <>
+          {/* 블러 처리된 배경 이미지 */}
           <div
-            className="absolute inset-0 backdrop-blur-lg"
+            className="fixed inset-0 -z-10 bg-contain bg-no-repeat blur-lg"
+            style={{ backgroundImage: `url('${imgUrl}')` }}
+          />
+
+          {/* 그라디언트 오버레이 */}
+          <div
+            className="fixed inset-0 -z-10"
             style={{
               background:
-                'radial-gradient(ellipse 35% 60% at 5% 50%, rgba(255, 255, 255, 0.15) 10%, black 100%)',
+                'radial-gradient(ellipse 70vh 80vh at 0% 50%, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.3) 30%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.85) 75%, black 100%)',
             }}
           />
-        </div>
+        </>
       )}
 
       <div

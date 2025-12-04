@@ -53,7 +53,7 @@ function SettingPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center bg-gray-800 h-40 pl-16 pr-8">
+      <div className="flex justify-between items-center bg-gray-800 h-36 pl-16 pr-8">
         <div className="flex items-center">
           <div className="w-24 h-24 rounded-full bg-gray-300 mr-7" />
           <p className="text-base text-[#979DA9] font-bold">pickle@obigo.com</p>
@@ -67,7 +67,7 @@ function SettingPage() {
         {menuItems.map((item, index) => (
           <div key={item.id}>
             <div
-              className={`flex px-4 items-center ${item.height || 'h-32'} ${item.justify || 'justify-between'} ${item.textColor || ''} ${item.onClick ? 'cursor-pointer' : ''}`}
+              className={`flex px-4 items-center ${item.height || 'h-[90px]'} ${item.justify || 'justify-between'} ${item.textColor || ''} ${item.onClick ? 'cursor-pointer' : ''}`}
               onClick={item.onClick}
             >
               <p className="text-lg font-bold text-white">{item.label}</p>

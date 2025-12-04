@@ -39,7 +39,7 @@ function DocumentaryList() {
   return (
     <>
       <div className="text-lg mb-3 font-semibold">{t('sections.radio-dacumentary')}</div>
-      <div className="grid gap-x-2 gap-y-7 mb-10 px-1 grid-cols-4">
+      <div className="grid gap-x-2 gap-y-7 mb-10 grid-cols-4">
         {isLoading
           ? Array.from({ length: 4 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />

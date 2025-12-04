@@ -1,13 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 import defaultTheme from 'tailwindcss/defaultTheme';
-import { transform } from 'typescript';
 
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Roboto', ...defaultTheme.fontFamily.sans],
+        sans: ['Pretendard', ...defaultTheme.fontFamily.sans],
       },
       keyframes: {
         'toggle-off': {

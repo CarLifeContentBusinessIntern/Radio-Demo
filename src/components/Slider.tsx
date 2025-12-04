@@ -1,4 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
@@ -22,11 +21,6 @@ function Slider({ images }: SliderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [hasSwiped, setHasSwiped] = useState(false);
 
-  const { data: episodes, refetch } = useQuery({
-    queryKey: ['random-episodes', 'daily-mix'],
-    queryFn: fetchRandomEpisodes,
-  });
-
   const prevSlide = () => {
     if (currentIndex > 0) {
       setCurrentIndex((prev) => prev - 1);
@@ -37,6 +31,21 @@ function Slider({ images }: SliderProps) {
     if (currentIndex < sliderLength - 1) {
       setCurrentIndex((prev) => prev + 1);
     }
+  };
+
+  const handleSlideEnd = () => {
+    setIsDragging(false);
+
+    // threshold: 슬라이드 이동을 결정하는 최소 거리
+    const threshold = window.innerWidth * 0.03;
+
+    if (touchPosition < -threshold && currentIndex < sliderLength - 1) {
+      nextSlide();
+    } else if (touchPosition > threshold && currentIndex > 0) {
+      prevSlide();
+    }
+
+    setTouchPosition(0);
   };
 
   const onTouchStart = (e: React.TouchEvent) => {
@@ -58,17 +67,38 @@ function Slider({ images }: SliderProps) {
   };
 
   const onTouchEnd = () => {
-    setIsDragging(false);
+    handleSlideEnd();
+  };
 
-    const threshold = window.innerWidth * 0.03;
+  const onMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setTouchStart(e.clientX);
+    setIsDragging(true);
+    setHasSwiped(false);
+  };
 
-    if (touchPosition < -threshold && currentIndex < 1) {
-      nextSlide();
-    } else if (touchPosition > threshold && currentIndex > 0) {
-      prevSlide();
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+
+    const currentMouse = e.clientX;
+    const diff = currentMouse - touchStart;
+    setTouchPosition(diff);
+
+    if (Math.abs(diff) > 10) {
+      setHasSwiped(true);
     }
+  };
 
-    setTouchPosition(0);
+  const onMouseUp = () => {
+    if (!isDragging) return;
+
+    handleSlideEnd();
+  };
+
+  const onMouseLeave = () => {
+    if (isDragging) {
+      onMouseUp();
+    }
   };
 
   const getTransform = () => {
@@ -80,6 +110,18 @@ function Slider({ images }: SliderProps) {
     return baseTransform;
   };
 
+  const handleBannerClick = async (index: number) => {
+    const reset = index === 0;
+
+    const freshEpisodes = await fetchRandomEpisodes({ reset });
+
+    if (freshEpisodes && freshEpisodes.length > 0) {
+      navigate(`/player/${freshEpisodes[0].id}`, {
+        state: { isLive: false, playlist: freshEpisodes, originType: 'program' },
+      });
+    }
+  };
+
   return (
     <div className="relative">
       <div
@@ -87,6 +129,10 @@ function Slider({ images }: SliderProps) {
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseLeave}
       >
         <div
           className={`flex ${isDragging ? '' : 'transition-transform duration-500 ease-out'}`}
@@ -99,16 +145,18 @@ function Slider({ images }: SliderProps) {
               onClick={() => {
                 if (hasSwiped) return;
 
-                refetch();
-                navigate(`/player/${episodes?.[0].id}`, {
-                  state: { isLive: false, playlist: episodes, originType: 'program' },
-                });
+                if (index > 0) {
+                  navigate(`/setting/preference`);
+                } else {
+                  handleBannerClick(index);
+                }
               }}
             >
               <img
                 src={image.background}
                 alt={`배너 배경 ${index}`}
                 className="w-full h-[172px] object-cover"
+                draggable={false}
               />
 
               {image.content}
