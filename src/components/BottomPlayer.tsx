@@ -107,18 +107,19 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         />
       </div>
 
-      <div className="flex max-w-screen-xl items-stretch justify-center w-full">
+      <div className="flex  items-stretch justify-center w-full">
         {/* 컨트롤 버튼 */}
-        <div className="flex items-center gap-2 mr-8 self-stretch" onClick={handleControlsClick}>
-          <div
-            className="h-full aspect-[3/2] flex items-center justify-center"
+        <div className="flex items-center gap-2 w-fit mr-8" onClick={handleControlsClick}>
+          <button
+            className="w-12 h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => !isOnAirEpisode && handlePlayBarPrev()}
+            disabled={isOnAirEpisode}
           >
             <TbPlayerSkipBackFilled size={25} />
-          </div>
+          </button>
 
           <button
-            className="relative h-full aspect-[3/2] flex items-center justify-center disabled:cursor-not-allowed"
+            className="relative w-12 h-12 flex items-center justify-center disabled:cursor-not-allowed"
             onClick={togglePlayPause}
             disabled={isLoading}
           >
@@ -131,16 +132,17 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
             )}
           </button>
 
-          <div
-            className="h-full aspect-[3/2] flex items-center justify-center"
+          <button
+            className="w-12 h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => !isOnAirEpisode && handlePlayBarNext()}
+            disabled={isOnAirEpisode}
           >
             <TbPlayerSkipForwardFilled size={25} />
-          </div>
+          </button>
         </div>
 
         {/* 에피소드 정보 */}
-        <div className="flex flex-col flex-grow min-w-0 overflow-hidden text-right mr-4">
+        <div className="flex flex-col flex-grow flex-1 min-w-0 overflow-hidden text-right mr-4">
           <p className="text-base font-semibold truncate">
             {isOnAirEpisode
               ? liveEpisode.title
@@ -154,7 +156,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         </div>
 
         {/* 썸네일 */}
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 w-fit">
           {imageUrl ? (
             <ImageWithSkeleton
               src={imageUrl}
