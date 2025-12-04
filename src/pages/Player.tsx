@@ -161,7 +161,7 @@ function Player() {
             className="absolute inset-0 backdrop-blur-lg"
             style={{
               background:
-                'radial-gradient(ellipse 65vh 70vh at 0% 50%, rgba(255, 255, 255, 0.15) 10%, black 100%)',
+                'radial-gradient(ellipse 60vh 70vh at 0% 50%, rgba(255, 255, 255, 0.15) 10%, black 100%)',
             }}
           />
         </div>

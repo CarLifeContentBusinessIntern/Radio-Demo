@@ -26,7 +26,7 @@ function AIPickAfter() {
       background: BannerBackground,
       icon: BannerIcon,
       content: (
-        <div className="absolute w-full -top-10">
+        <div className="absolute w-full -top-11">
           <div className="flex justify-center items-center">
             <div className="flex items-center justify-between w-full max-w-[900px] px-4">
               <img src={BannerIcon} className="w-1/2 max-w-[400px] h-[260px]" />
@@ -35,10 +35,12 @@ function AIPickAfter() {
                 <p className="font-bold text-2xl">{t('ai-pick.banner-after-1')}</p>
                 <p className="font-medium text-lg my-2">
                   {t('ai-pick.banner-after-2-start')}
-                  <span className="text-[#3D7D6D]">{t('ai-pick.banner-after-2-highlight')}</span>
+                  <span className="text-[#3D7D6D] font-bold">
+                    {t('ai-pick.banner-after-2-highlight')}
+                  </span>
                   {t('ai-pick.banner-after-2-end')}
                 </p>
-                <button className="font-bold text-base bg-[#202020]/30 px-5 py-3 rounded-full flex items-center gap-3 cursor-pointer">
+                <button className="font-bold text-base bg-[#202020]/30 px-5 py-2 rounded-full flex items-center gap-3 cursor-pointer">
                   <MdOutlinePlayCircle size={20} />
                   <p>{t('ai-pick.banner-after-3')}</p>
                 </button>
