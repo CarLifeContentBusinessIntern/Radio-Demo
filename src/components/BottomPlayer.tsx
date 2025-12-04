@@ -142,7 +142,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         </div>
 
         {/* 에피소드 정보 */}
-        <div className="flex flex-col flex-grow flex-1 min-w-0 overflow-hidden text-right mr-4">
+        <div className="flex flex-col flex-grow min-w-0 overflow-hidden text-right mr-4">
           <p className="text-base font-semibold truncate">
             {isOnAirEpisode
               ? liveEpisode.title
