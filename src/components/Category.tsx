@@ -17,7 +17,6 @@ function Category({ title, type }: CategoryInterface) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isEnglish } = useIsEnglish();
-
   const language = isEnglish ? 'en' : 'ko';
 
   const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
@@ -38,7 +37,6 @@ function Category({ title, type }: CategoryInterface) {
       return data as unknown as CategoryType[];
     },
   });
-
   const ItemComponent = type === 'radio' ? CircleViewItem : GridViewItem;
 
   return (
