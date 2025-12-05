@@ -17,7 +17,7 @@ export const handleClickSeries = (
       state: {
         title: item.title,
         id: item.id,
-        isAudioDrama: true,
+        isSmallRound: true,
       },
     });
     return;
