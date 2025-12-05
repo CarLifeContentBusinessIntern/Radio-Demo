@@ -20,13 +20,17 @@ export const VersionProvider = ({ children }: { children: ReactNode }) => {
   const { isEnglish } = useIsEnglish();
 
   const [isLiveVersion, setIsLiveVersion] = useState(() => {
-    const savedLiveVersion = localStorage.getItem(RADIO_LIVE_VER);
-    return savedLiveVersion === 'true';
+    try {
+      const savedLiveVersion = localStorage.getItem(RADIO_LIVE_VER);
+      // localStorage에 값이 없으면(첫 방문) true를, 있으면 저장된 값을 사용
+      return savedLiveVersion === null ? true : savedLiveVersion === 'true';
+    } catch (error) {
+      console.error('Failed to access localStorage:', error);
+      return true; // 에러 발생 시 기존 기본값인 true로 복구
+    }
   });
 
   const [isRadioVersion, setIsRadioVersion] = useState(() => {
-    // 영어일 때는 무조건 false, 아니면 localStorage 값 사용
-    if (isEnglish) return false;
     const savedRadioVersion = localStorage.getItem(RADIO_VER);
     return savedRadioVersion === 'true';
   });
@@ -57,9 +61,7 @@ export const VersionProvider = ({ children }: { children: ReactNode }) => {
 
   const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
 
-  const toggleRadioVersion = () => {
-    setIsRadioVersion((prev) => !prev);
-  };
+  const toggleRadioVersion = () => setIsRadioVersion((prev) => !prev);
 
   const toggleAIVoiceSearchVersion = () => setIsAIVoiceSearchVersion((prev) => !prev);
 

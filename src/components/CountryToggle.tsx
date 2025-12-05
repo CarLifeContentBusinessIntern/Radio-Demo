@@ -18,10 +18,7 @@ function CountryToggle() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(() => {
-    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return savedLanguage === 'en' ? 'US' : 'KR';
-  });
+  const [selectedCountry, setSelectedCountry] = useState('KR');
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const countries: Country[] = [
@@ -31,9 +28,13 @@ function CountryToggle() {
 
   // 초기 언어 설정 및 i18n 동기화
   useEffect(() => {
-    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (savedLanguage && savedLanguage !== i18n.language) {
-      i18n.changeLanguage(savedLanguage);
+    try {
+      const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (savedLanguage && savedLanguage !== i18n.language) {
+        i18n.changeLanguage(savedLanguage);
+      }
+    } catch (error) {
+      console.error('Failed to access localStorage:', error);
     }
   }, []);
 
@@ -60,8 +61,11 @@ function CountryToggle() {
     setSelectedCountry(country.code);
     setIsOpen(false);
 
-    // localStorage에 저장
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, country.language);
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, country.language);
+    } catch (error) {
+      console.error('Failed to write to localStorage:', error);
+    }
 
     await i18n.changeLanguage(country.language);
 
