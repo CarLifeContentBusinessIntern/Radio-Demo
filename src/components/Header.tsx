@@ -68,9 +68,9 @@ const HomeHeader = () => {
               onClick={() => navigate(link.path)}
             >
               {link.icon ? (
-                <img src={link.icon} alt={link.name} className="h-6 w-6 transition-all" />
+                <img src={link.icon} alt={link.name} className="h-5 w-5 transition-all" />
               ) : (
-                <div className="bg-gray-600 w-6 h-6" />
+                <div className="bg-gray-600 w-5 h-5" />
               )}
               <p className="text-base whitespace-nowrap transition-all">{link.name}</p>
             </button>
@@ -100,7 +100,7 @@ const SearchHeader = () => {
         <img src={BackArrowIcon} alt="Back" className="w-6 h-6" />
       </button>
       <img src={PickleLogo} alt="Pickle Logo" className="w-7 h-7 flex-shrink-0" />
-      <div className="relative flex-grow h-10 my-2 border-2  border-white rounded-xl flex items-center">
+      <div className="relative flex-grow h-10 my-2 border-2 mr-14 border-white rounded-xl flex items-center">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <IoSearch size={24} className="w-7 h-7" />
         </div>

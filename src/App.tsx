@@ -140,7 +140,7 @@ function AppRoutes() {
             defaultType="search"
             defaultTitle="검색"
             scrollbar={true}
-            paddingX={true}
+            paddingX={false}
             paddingB={true}
           />
         }
