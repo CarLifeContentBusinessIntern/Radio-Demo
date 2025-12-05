@@ -10,6 +10,8 @@ interface Country {
   language: string;
 }
 
+const MAIN_TABS = ['/', '/radio', '/episodes/recent', '/ai-pick'];
+
 function CountryToggle() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
@@ -48,8 +50,7 @@ function CountryToggle() {
 
     await i18n.changeLanguage(country.language);
 
-    const mainTabs = ['/', '/radio', '/episodes/recent', '/ai-pick'];
-    const isMainTab = mainTabs.includes(location.pathname);
+    const isMainTab = MAIN_TABS.includes(location.pathname);
 
     if (!isMainTab) {
       navigate('/');
