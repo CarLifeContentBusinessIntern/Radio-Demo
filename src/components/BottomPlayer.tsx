@@ -107,11 +107,11 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
         />
       </div>
 
-      <div className="flex  items-stretch justify-center w-full">
+      <div className="flex items-stretch justify-center w-full">
         {/* 컨트롤 버튼 */}
-        <div className="flex items-center gap-2 w-fit mr-8" onClick={handleControlsClick}>
+        <div className="flex items-center gap-2 w-fit mr-4" onClick={handleControlsClick}>
           <button
-            className="w-12 h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-[84px] h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => !isOnAirEpisode && handlePlayBarPrev()}
             disabled={isOnAirEpisode}
           >
@@ -119,7 +119,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           </button>
 
           <button
-            className="relative w-12 h-12 flex items-center justify-center disabled:cursor-not-allowed"
+            className="relative w-[84px] h-12 flex items-center justify-center disabled:cursor-not-allowed"
             onClick={togglePlayPause}
             disabled={isLoading}
           >
@@ -133,7 +133,7 @@ function BottomPlayer({ id, title }: BottomPlayerProps) {
           </button>
 
           <button
-            className="w-12 h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-[84px] h-12 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => !isOnAirEpisode && handlePlayBarNext()}
             disabled={isOnAirEpisode}
           >

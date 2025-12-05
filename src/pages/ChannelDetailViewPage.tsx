@@ -41,7 +41,7 @@ function ChannelDetailViewPage() {
   }, [programData, setPlaylist]);
 
   return (
-    <div className="flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-1 mr-20">
       {isLoading
         ? Array.from({ length: 8 }).map((_, index) => <ListViewItem isLoading={true} key={index} />)
         : programData?.episodes?.map((episode) => {

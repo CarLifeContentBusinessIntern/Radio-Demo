@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
 import KR from '../assets/ko.png';
 import US from '../assets/us.png';
 
@@ -9,8 +10,12 @@ interface Country {
   language: string;
 }
 
+const MAIN_TABS = ['/', '/radio', '/episodes/recent', '/ai-pick'];
+
 function CountryToggle() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('KR');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,6 +49,12 @@ function CountryToggle() {
     setIsOpen(false);
 
     await i18n.changeLanguage(country.language);
+
+    const isMainTab = MAIN_TABS.includes(location.pathname);
+
+    if (!isMainTab) {
+      navigate('/');
+    }
   };
 
   const currentCountry = countries.find((c) => c.code === selectedCountry);

@@ -321,6 +321,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
             originType,
             recentSeriesId,
             isPlaylistOpen: false,
+            useOriginalAudio: true,
           };
         }
 

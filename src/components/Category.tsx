@@ -19,6 +19,8 @@ function Category({ title, type }: CategoryInterface) {
   const { isEnglish } = useIsEnglish();
   const language = isEnglish ? 'en' : 'ko';
 
+  const language = isEnglish ? 'en' : 'ko';
+
   const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
     queryKey: ['categories', type, language],
     queryFn: async () => {
@@ -59,6 +61,7 @@ function Category({ title, type }: CategoryInterface) {
                       state: {
                         title: item.title,
                         type: `${type}_category`,
+                        isSmallRound: true,
                       },
                     });
                   } else {

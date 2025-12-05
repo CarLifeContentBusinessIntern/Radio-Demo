@@ -92,7 +92,7 @@ function GridViewPage({ rectangle }: GridViewPageProps = {}) {
               title={item.title}
               subTitle={item.subtitle}
               img={item.img_url}
-              isRounded={type !== 'podcast_category'}
+              isRounded={true}
               onClick={() => {
                 if (isSeriesEpisodes) {
                   if (

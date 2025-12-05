@@ -140,7 +140,7 @@ function AppRoutes() {
             defaultType="search"
             defaultTitle="검색"
             scrollbar={true}
-            paddingX={true}
+            paddingX={false}
             paddingB={true}
           />
         }
@@ -168,7 +168,9 @@ function AppRoutes() {
       </Route>
 
       <Route
-        element={<Layout defaultType="curation" scrollbar={true} paddingX={true} paddingB={true} />}
+        element={
+          <Layout defaultType="curation" scrollbar={true} paddingX={false} paddingB={true} />
+        }
       >
         <Route element={<PlayerLayout />}>
           <Route path="/channel-detail/:id" element={<ChannelDetailViewPage />} />
