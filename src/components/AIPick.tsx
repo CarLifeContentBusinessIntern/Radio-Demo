@@ -24,7 +24,7 @@ interface AIPickProps {
 }
 
 function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' } }: AIPickProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { isAIVoiceSearchVersion } = useVersion();
   const { isEnglish } = useIsEnglish();
@@ -45,8 +45,8 @@ function AIPick({ bannerContent, sectionTitleKey, moodPrefix = { ko: '', en: '' 
     isFetching,
     isLoading,
   } = useQuery({
-    queryKey: ['random-episodes', moodPrefix],
-    queryFn: () => fetchRandomEpisodes({ count: 5, reset: false }),
+    queryKey: ['random-episodes', moodPrefix, i18n.language],
+    queryFn: () => fetchRandomEpisodes({ count: 5, reset: false, language: i18n.language }),
     refetchOnWindowFocus: false,
   });
 
