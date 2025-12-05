@@ -256,7 +256,7 @@ function Player() {
               />
 
               <div
-                className={`absolute flex justify-between w-[60%] max-w-[300px] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
+                className={`absolute flex justify-between w-[27%] transition-all duration-300 ease-in-out ${effectiveIsLive ? 'invisible' : ''} ${isMoreBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 invisible'} z-20 mt-8`}
                 style={{ top: vh(-1) }}
               >
                 <button onClick={() => handleSkip(-15)}>
