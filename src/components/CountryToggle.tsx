@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import KR from '../assets/ko.png';
 import US from '../assets/us.png';
 
@@ -11,6 +12,7 @@ interface Country {
 
 function CountryToggle() {
   const { i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('KR');
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,7 @@ function CountryToggle() {
     setIsOpen(false);
 
     await i18n.changeLanguage(country.language);
+    navigate('/');
   };
 
   const currentCountry = countries.find((c) => c.code === selectedCountry);
