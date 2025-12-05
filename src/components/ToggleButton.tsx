@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function ToggleButton({
   language,
@@ -10,8 +10,19 @@ function ToggleButton({
   setIsActivate: (isActivate: boolean) => void;
 }) {
   const [action, setAction] = useState('');
+  const prevIsActivateRef = useRef(isActivate);
+  const isUserInteractionRef = useRef(false);
+
+  useEffect(() => {
+    if (!isUserInteractionRef.current && prevIsActivateRef.current !== isActivate) {
+      setAction('');
+    }
+    prevIsActivateRef.current = isActivate;
+    isUserInteractionRef.current = false;
+  }, [isActivate]);
 
   const handleToggle = () => {
+    isUserInteractionRef.current = true;
     if (isActivate) {
       setIsActivate(false);
       setAction('animate-toggle-off');
