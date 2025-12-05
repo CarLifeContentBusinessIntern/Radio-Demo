@@ -63,8 +63,8 @@ function LiveRadio() {
 
   return (
     <>
-      <div className="text-lg mb-7 font-semibold">ON-AIR 🔴</div>
-      <div className="grid gap-x-4 gap-y-7 mb-16 grid-cols-4">
+      <div className="text-lg mb-3 font-semibold">ON-AIR 🔴</div>
+      <div className="grid gap-x-2 gap-y-7 mb-10 grid-cols-4">
         {isLoading
           ? Array.from({ length: 8 }).map((_, index) => (
               <GridViewItem isLoading={true} key={index} />
