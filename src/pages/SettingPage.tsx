@@ -29,7 +29,7 @@ function SettingPage() {
     {
       id: 'version',
       label: t('setting.version-info'),
-      rightContent: <p className="text-lg font-bold text-white">v.3.0.0</p>,
+      rightContent: <p className="text-lg font-bold text-white">v.2.0.0</p>,
     },
     {
       id: 'function',
