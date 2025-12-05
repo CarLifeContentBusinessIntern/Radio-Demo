@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchRandomEpisodes } from '../api/randomEpisodes';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 
 interface SliderImage {
   background: string;
@@ -20,6 +21,7 @@ function Slider({ images }: SliderProps) {
   const [touchPosition, setTouchPosition] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [hasSwiped, setHasSwiped] = useState(false);
+  const { isEnglish } = useIsEnglish();
 
   const prevSlide = () => {
     if (currentIndex > 0) {
@@ -113,7 +115,8 @@ function Slider({ images }: SliderProps) {
   const handleBannerClick = async (index: number) => {
     const reset = index === 0;
 
-    const freshEpisodes = await fetchRandomEpisodes({ reset });
+    const language = isEnglish ? 'en' : 'ko';
+    const freshEpisodes = await fetchRandomEpisodes({ count: 5, reset: reset, language: language });
 
     if (freshEpisodes && freshEpisodes.length > 0) {
       navigate(`/player/${freshEpisodes[0].id}`, {
