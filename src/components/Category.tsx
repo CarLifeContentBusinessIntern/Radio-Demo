@@ -19,8 +19,6 @@ function Category({ title, type }: CategoryInterface) {
   const { isEnglish } = useIsEnglish();
   const language = isEnglish ? 'en' : 'ko';
 
-  const language = isEnglish ? 'en' : 'ko';
-
   const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
     queryKey: ['categories', type, language],
     queryFn: async () => {

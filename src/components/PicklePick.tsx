@@ -69,7 +69,7 @@ function PicklePick() {
                 img={item.img_url}
                 onClick={() =>
                   //오디오 드라마일 경우 그리드 뷰
-                  item.title === '오디오 드라마'
+                  item.title === '오디오 드라마' || item.title === 'K-Audio Drama'
                     ? handleClickSeries(navigate, item, t('toast.no-contents'), 'curation')
                     : handleClickSeries(navigate, item, t('toast.no-contents'), 'rectangle')
                 }

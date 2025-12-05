@@ -9,5 +9,4 @@ export type CategoryType = {
   type: 'radio' | 'podcast';
   language: string;
   programs: ProgramType[];
-  language: string;
 };
