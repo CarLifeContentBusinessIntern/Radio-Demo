@@ -29,7 +29,7 @@ const SettingItem = memo(
 
     return (
       <div>
-        <div className="flex items-center h-32 justify-between">
+        <div className="flex items-center h-[90px] justify-between">
           <p className="text-lg">{label}</p>
 
           <div className="relative w-48 h-14" ref={dropdownRef}>

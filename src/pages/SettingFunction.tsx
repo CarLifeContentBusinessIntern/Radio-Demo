@@ -11,7 +11,7 @@ interface SettingItemProps {
 
 const SettingItem = memo(({ label, isEnabled, onToggle }: SettingItemProps) => (
   <div>
-    <div className="flex px-4 items-center h-32 justify-between">
+    <div className="flex px-4 items-center h-[90px] justify-between">
       <p className="text-lg">{label}</p>
       {isEnabled ? (
         <PiToggleRightFill size={50} className="cursor-pointer" onClick={onToggle} />
