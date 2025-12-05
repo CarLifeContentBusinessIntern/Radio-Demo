@@ -41,7 +41,7 @@ function Search() {
             className="rounded-lg"
           />
           <div className="flex flex-col flex-grow gap-2">
-            <div className="h-4 w-3/4 bg-[#2A2A2E] animate-pulse" />
+            <div className="h-4 w-full bg-[#2A2A2E] animate-pulse" />
             <div className="h-3 w-1/2 bg-[#2A2A2E] animate-pulse" />
           </div>
         </div>
@@ -50,8 +50,8 @@ function Search() {
   );
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-8 mr-20 mt-5">
+      <div className="flex flex-col gap-3">
         <p className="text-lg">{t('sections.channel')}</p>
 
         {isLoading ? (

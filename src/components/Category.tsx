@@ -18,13 +18,16 @@ function Category({ title, type }: CategoryInterface) {
   const { t } = useTranslation();
   const { isEnglish } = useIsEnglish();
 
+  const language = isEnglish ? 'en' : 'ko';
+
   const { data: categories = [], isLoading } = useQuery<CategoryType[]>({
-    queryKey: ['categories', type],
+    queryKey: ['categories', type, language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('categories')
         .select('*, programs(*)')
         .eq('type', type)
+        .eq('language', language)
         .order('order', { ascending: true });
 
       if (error) {
@@ -50,14 +53,15 @@ function Category({ title, type }: CategoryInterface) {
               <ItemComponent
                 key={item.id}
                 isLoading={false}
-                title={isEnglish ? item.en_title || item.title : item.title}
+                title={item.title}
                 img={item.img_url}
                 onClick={() => {
                   if (item.programs?.length > 0) {
                     navigate(`/curation/${item.id}`, {
                       state: {
-                        title: isEnglish ? item.en_title || item.title : item.title,
+                        title: item.title,
                         type: `${type}_category`,
+                        isSmallRound: true,
                       },
                     });
                   } else {
