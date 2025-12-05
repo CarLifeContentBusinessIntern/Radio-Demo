@@ -62,7 +62,7 @@ const HomeHeader = () => {
           return (
             <button
               key={link.name}
-              className={`flex flex-col items-center gap-1 transition-opacity pt-1 group ${
+              className={`flex flex-col items-center gap-1 w-[56p] transition-opacity pt-1 group ${
                 isActive ? 'opacity-100' : 'opacity-60'
               }`}
               onClick={() => navigate(link.path)}
