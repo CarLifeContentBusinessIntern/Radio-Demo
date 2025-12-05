@@ -11,6 +11,7 @@ interface Country {
 }
 
 const MAIN_TABS = ['/', '/radio', '/episodes/recent', '/ai-pick'];
+const LANGUAGE_STORAGE_KEY = 'selected_language';
 
 function CountryToggle() {
   const { i18n } = useTranslation();
@@ -25,7 +26,19 @@ function CountryToggle() {
     { code: 'US', flag: US, language: 'en' },
   ];
 
-  // 초기 언어 설정
+  // 초기 언어 설정 및 i18n 동기화
+  useEffect(() => {
+    try {
+      const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      if (savedLanguage && savedLanguage !== i18n.language) {
+        i18n.changeLanguage(savedLanguage);
+      }
+    } catch (error) {
+      console.error('Failed to access localStorage:', error);
+    }
+  }, []);
+
+  // i18n 언어 변경 시 selectedCountry 동기화
   useEffect(() => {
     const currentLang = i18n.language;
     const country = countries.find((c) => c.language === currentLang);
@@ -47,6 +60,12 @@ function CountryToggle() {
   const handleCountrySelect = async (country: Country) => {
     setSelectedCountry(country.code);
     setIsOpen(false);
+
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, country.language);
+    } catch (error) {
+      console.error('Failed to write to localStorage:', error);
+    }
 
     await i18n.changeLanguage(country.language);
 
