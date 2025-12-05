@@ -58,9 +58,12 @@ function SettingPage() {
       <div className="flex justify-between items-center bg-gray-800 h-36 pl-16 pr-8">
         <div className="flex items-center">
           <img src={profileImage} className="w-24 h-24 rounded-full mr-7" />
-          <div className="flex flex-col gap-2">
-            <p className="text-base text-[#979DA9]">{t('user.name')}</p>
-            <p className="text-xl text-white font-bold">pickle@obigo.com</p>
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1">
+              <p className="text-xl text-white font-bold">{t('user.name')}</p>
+              <p>👑</p>
+            </div>
+            <p className="text-base text-[#979DA9]">pickle@obigo.com</p>
           </div>
         </div>
         <button className="bg-gray-500 rounded-xl h-16 px-16 flex items-center justify-center cursor-pointer">
