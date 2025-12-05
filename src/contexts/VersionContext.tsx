@@ -12,18 +12,55 @@ type VersionContext = {
 
 const VersionContext = createContext<VersionContext | undefined>(undefined);
 
+const RADIO_LIVE_VER = 'radio_live_version';
+const RADIO_VER = 'radio_version';
+const AI_VOICE_VER = 'ai_voice_version';
+
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
-  const [isLiveVersion, setIsLiveVersion] = useState(true);
-  const [isRadioVersion, setIsRadioVersion] = useState(true);
-  const [isAIVoiceSearchVersion, setIsAIVoiceSearchVersion] = useState(true);
   const { isEnglish } = useIsEnglish();
 
+  const [isLiveVersion, setIsLiveVersion] = useState(() => {
+    const savedLiveVersion = localStorage.getItem(RADIO_LIVE_VER);
+    return savedLiveVersion === 'true';
+  });
+
+  const [isRadioVersion, setIsRadioVersion] = useState(() => {
+    // 영어일 때는 무조건 false, 아니면 localStorage 값 사용
+    if (isEnglish) return false;
+    const savedRadioVersion = localStorage.getItem(RADIO_VER);
+    return savedRadioVersion === 'true';
+  });
+
+  const [isAIVoiceSearchVersion, setIsAIVoiceSearchVersion] = useState(() => {
+    const savedAIVoiceVersion = localStorage.getItem(AI_VOICE_VER);
+    return savedAIVoiceVersion === 'true';
+  });
+
   useEffect(() => {
-    setIsRadioVersion(!isEnglish);
+    localStorage.setItem(RADIO_LIVE_VER, String(isLiveVersion));
+  }, [isLiveVersion]);
+
+  useEffect(() => {
+    localStorage.setItem(RADIO_VER, String(isRadioVersion));
+  }, [isRadioVersion]);
+
+  useEffect(() => {
+    localStorage.setItem(AI_VOICE_VER, String(isAIVoiceSearchVersion));
+  }, [isAIVoiceSearchVersion]);
+
+  // 영어로 전환되면 라디오 버전 강제로 off
+  useEffect(() => {
+    if (isEnglish) {
+      setIsRadioVersion(false);
+    }
   }, [isEnglish]);
 
   const toggleLiveVersion = () => setIsLiveVersion((prev) => !prev);
-  const toggleRadioVersion = () => setIsRadioVersion((prev) => !prev);
+
+  const toggleRadioVersion = () => {
+    setIsRadioVersion((prev) => !prev);
+  };
+
   const toggleAIVoiceSearchVersion = () => setIsAIVoiceSearchVersion((prev) => !prev);
 
   const value = {

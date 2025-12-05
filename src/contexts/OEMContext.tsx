@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 interface OEMContextType {
   selectedOEM: string;
@@ -8,6 +8,7 @@ interface OEMContextType {
 const OEMContext = createContext<OEMContextType | undefined>(undefined);
 
 const DEFAULT_OEM = 'hyundai';
+const OEM_STORAGE_KEY = 'selected_oem';
 
 export const useOEM = () => {
   const context = useContext(OEMContext);
@@ -16,7 +17,14 @@ export const useOEM = () => {
 };
 
 export const OEMProvider = ({ children }: { children: ReactNode }) => {
-  const [selectedOEM, setSelectedOEM] = useState(DEFAULT_OEM);
+  const [selectedOEM, setSelectedOEM] = useState(() => {
+    const savedOEM = localStorage.getItem(OEM_STORAGE_KEY);
+    return savedOEM || DEFAULT_OEM;
+  });
+
+  useEffect(() => {
+    localStorage.setItem(OEM_STORAGE_KEY, selectedOEM);
+  }, [selectedOEM]);
 
   const contextValue = useMemo(() => ({ selectedOEM, setSelectedOEM }), [selectedOEM]);
 

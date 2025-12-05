@@ -11,13 +11,17 @@ interface Country {
 }
 
 const MAIN_TABS = ['/', '/radio', '/episodes/recent', '/ai-pick'];
+const LANGUAGE_STORAGE_KEY = 'selected_language';
 
 function CountryToggle() {
   const { i18n } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('KR');
+  const [selectedCountry, setSelectedCountry] = useState(() => {
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return savedLanguage === 'en' ? 'US' : 'KR';
+  });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const countries: Country[] = [
@@ -25,7 +29,15 @@ function CountryToggle() {
     { code: 'US', flag: US, language: 'en' },
   ];
 
-  // 초기 언어 설정
+  // 초기 언어 설정 및 i18n 동기화
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (savedLanguage && savedLanguage !== i18n.language) {
+      i18n.changeLanguage(savedLanguage);
+    }
+  }, []);
+
+  // i18n 언어 변경 시 selectedCountry 동기화
   useEffect(() => {
     const currentLang = i18n.language;
     const country = countries.find((c) => c.language === currentLang);
@@ -47,6 +59,9 @@ function CountryToggle() {
   const handleCountrySelect = async (country: Country) => {
     setSelectedCountry(country.code);
     setIsOpen(false);
+
+    // localStorage에 저장
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, country.language);
 
     await i18n.changeLanguage(country.language);
 
