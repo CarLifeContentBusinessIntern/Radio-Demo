@@ -59,7 +59,7 @@ function SettingPage() {
         <div className="flex items-center">
           <img src={profileImage} className="w-24 h-24 rounded-full mr-7" />
           <div className="flex flex-col gap-2">
-            <p className="text-base text-[#979DA9]">조이</p>
+            <p className="text-base text-[#979DA9]">{t('user.name')}</p>
             <p className="text-xl text-white font-bold">pickle@obigo.com</p>
           </div>
         </div>
