@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import RightArrowIcon from '../assets/rightArrowIcon.svg';
 import { useTranslation } from 'react-i18next';
-import PickleLogo from '../assets/pickle_logo.png';
+
+const profileImage = 'https://pub-a45bc992c0594356a8d32a71510a246b.r2.dev/images/profile.webp';
 
 function SettingPage() {
   const { t } = useTranslation();
@@ -56,8 +57,11 @@ function SettingPage() {
     <div>
       <div className="flex justify-between items-center bg-gray-800 h-36 pl-16 pr-8">
         <div className="flex items-center">
-          <img src={PickleLogo} className="w-24 h-24 rounded-full mr-7" />
-          <p className="text-base text-[#979DA9] font-bold">pickle@obigo.com</p>
+          <img src={profileImage} className="w-24 h-24 rounded-full mr-7" />
+          <div className="flex flex-col gap-2">
+            <p className="text-base text-[#979DA9]">조이</p>
+            <p className="text-xl text-white font-bold">pickle@obigo.com</p>
+          </div>
         </div>
         <button className="bg-gray-500 rounded-xl h-16 px-16 flex items-center justify-center cursor-pointer">
           <p className="text-base font-bold">{t('setting.logout')}</p>
