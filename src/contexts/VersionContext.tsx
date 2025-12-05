@@ -13,7 +13,7 @@ type VersionContext = {
 const VersionContext = createContext<VersionContext | undefined>(undefined);
 
 export const VersionProvider = ({ children }: { children: ReactNode }) => {
-  const [isLiveVersion, setIsLiveVersion] = useState(false);
+  const [isLiveVersion, setIsLiveVersion] = useState(true);
   const [isRadioVersion, setIsRadioVersion] = useState(true);
   const [isAIVoiceSearchVersion, setIsAIVoiceSearchVersion] = useState(true);
   const { isEnglish } = useIsEnglish();

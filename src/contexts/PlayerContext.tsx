@@ -121,7 +121,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     fetchEpisodes();
   }, []);
 
-  const DEFAULT_EPISODE_ID = 1;
+  const DEFAULT_EPISODE_ID = 10;
 
   const currentEpisodeData = useMemo<EpisodeType | undefined>(() => {
     if (state.currentEpisodeId === null) {
