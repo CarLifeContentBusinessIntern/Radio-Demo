@@ -119,7 +119,7 @@ export const PlayerProvider = ({ children }: { children: ReactNode }) => {
     }
 
     fetchEpisodes();
-  }, []);
+  }, [liveEpisode]);
 
   const DEFAULT_EPISODE_ID = 10;
 
