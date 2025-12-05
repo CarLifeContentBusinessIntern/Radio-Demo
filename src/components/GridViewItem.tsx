@@ -36,19 +36,20 @@ function GridViewItem({
     );
   }
 
+  const roundingClass = isRounded ? (isSmallRound ? 'rounded-[10px]' : 'rounded-[20px]') : '';
+  const imageContainerClasses = `w-full aspect-square ${roundingClass} mb-2`;
+
   return (
     <div className="cursor-pointer" onClick={onClick}>
       {img ? (
         <ImageWithSkeleton
           src={img}
           alt="썸네일"
-          className={`w-full aspect-square ${isRounded ? (isSmallRound ? 'rounded-[10px]' : 'rounded-[20px]') : ''} mb-2 object-cover`}
-          skeletonClassName={`w-full aspect-square mb-2 ${isRounded ? (isSmallRound ? 'rounded-[10px]' : 'rounded-[20px]') : ''} `}
+          className={`w-full aspect-square ${imageContainerClasses} : ''} mb-2 object-cover`}
+          skeletonClassName={`w-full aspect-square mb-2 ${imageContainerClasses} : ''} `}
         />
       ) : (
-        <div
-          className={`bg-gray-600 w-full aspect-square ${isRounded ? (isSmallRound ? 'rounded-[10px]' : 'rounded-[20px]') : ''} mb-2`}
-        />
+        <div className={`bg-gray-600 w-full aspect-square ${imageContainerClasses} : ''} mb-2`} />
       )}
       <p className="text-base px-1 font-semibold truncate">{title}</p>
       <p className="text-sm text-gray-400 px-1 truncate">{subTitle}</p>
