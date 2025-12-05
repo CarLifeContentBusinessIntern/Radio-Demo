@@ -5,6 +5,7 @@ import type { SectionItemType } from '../types/section';
 import GridViewItem from './GridViewItem';
 import { useOEM } from '../contexts/OEMContext';
 import { useTranslation } from 'react-i18next';
+import { useIsEnglish } from '../hooks/useIsEnglish';
 
 export const handleClickSeries = (
   navigate: NavigateFunction,
@@ -47,6 +48,9 @@ function PicklePick() {
   const { selectedOEM } = useOEM();
   const { data: sectionData, isLoading } = useSection(1, selectedOEM);
   const { t } = useTranslation();
+  const { isEnglish } = useIsEnglish();
+  const audioDramaTitle = isEnglish ? 'K-Audio Drama' : '오디오 드라마';
+
   return (
     <>
       <div className="text-lg mb-3 font-semibold">{t('sections.pickle-pick')}</div>
@@ -69,7 +73,7 @@ function PicklePick() {
                 img={item.img_url}
                 onClick={() =>
                   //오디오 드라마일 경우 그리드 뷰
-                  item.title === '오디오 드라마' || item.title === 'K-Audio Drama'
+                  item.title === audioDramaTitle
                     ? handleClickSeries(navigate, item, t('toast.no-contents'), 'curation')
                     : handleClickSeries(navigate, item, t('toast.no-contents'), 'rectangle')
                 }
